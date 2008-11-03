@@ -1,11 +1,10 @@
 /*
- * opencog/atomspace/TLB.cc
+ * examples/modules/CustomAtomTypesModule.h
  *
- * Copyright (C) 2002-2007 Novamente LLC
+ * Copyright (C) 2008 by Singularity Institute for Artificial Intelligence
  * All Rights Reserved
  *
- * Written by Thiago Maia <thiago@vettatech.com>
- *            Andre Senna <senna@vettalabs.com>
+ * Written by Gustavo Gama <gama@vettalabs.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License v3 as
@@ -23,21 +22,32 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "TLB.h"
+#ifndef _OPENCOG_CUSTOM_ATOM_TYPES_MODULE_H
+#define _OPENCOG_CUSTOM_ATOM_TYPES_MODULE_H
 
-#include <opencog/util/platform.h>
+#include <string>
 
-#ifdef USE_TLB_MAP
+#include <opencog/server/Factory.h>
+#include <opencog/server/Module.h>
 
-using namespace opencog;
+namespace opencog
+{
 
-// Low-lying values are reserved for "non-real" atoms. Real atom start after the
-// last definable type (opencog::NOTYPE) opencog::NOTYPE is defined as
-// ((1 << (8 * sizeof(opencog::Type))) - 1), which is 65535 when Type is "unsigned
-// short int"
-unsigned long TLB::uuid = (1 << (8 * sizeof(opencog::Type)));
+class CustomAtomTypesModule : public Module
+{
+public:
 
-std::map<Handle, const Atom*> TLB::handle_map;
-std::map<const Atom*, Handle> TLB::atom_map;
+    static const char* id() {
+        static const char* _id = "opencog::CustomAtomTypesModule";
+        return _id;
+    }
 
-#endif
+    CustomAtomTypesModule();
+    ~CustomAtomTypesModule();
+    void init();
+
+}; // class
+
+} // namespace opencog
+
+#endif // _OPENCOG_CUSTOM_ATOM_TYPES_MODULE_H
