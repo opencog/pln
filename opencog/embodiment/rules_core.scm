@@ -178,7 +178,7 @@
 ;     http://wiki.opencog.org/w/TimeServer
 ;
 
-(define CURRENT_TIMESTAMP (list) )
+(define CURRENT_TIMESTAMP 0)
 
 ;||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 ;
