@@ -1,10 +1,10 @@
 /*
- * opencog/persist/file/CompositeRenumber.cc
+ * opencog/learning/PatternMiner/PatternMiner.h
  *
- * Copyright (C) 2002-2007 Novamente LLC
+ * Copyright (C) 2012 by OpenCog Foundation
  * All Rights Reserved
  *
- * Written by Welter Silva <welter@vettalabs.com>
+ * Written by Shujing Ke <rainkekekeke@gmail.com> Scott Jones <troy.scott.j@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License v3 as
@@ -22,24 +22,37 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <stdlib.h>
+#ifndef _OPENCOG_PATTERNMINER_PATTERNMINER_H
+#define _OPENCOG_PATTERNMINER_PATTERNMINER_H
+#include <map>
+#include <vector>
+#include "Pattern.h"
+#include "HTree.h"
+#include <opencog/atomspace/AtomSpace.h>
 
-#include <opencog/util/platform.h>
+using namespace std;
 
-#include "CompositeRenumber.h"
-#include "CoreUtils.h"
-
-using namespace opencog;
-
-void CompositeRenumber::updateVersionHandles(CompositeTruthValuePtr ctv,
-                                             HandMapPtr handles)
+namespace opencog
 {
-    VersionedTruthValueMap newVersionedTVs;
-    for (VersionedTruthValueMap::const_iterator itr = ctv->versionedTVs.begin();
-            itr != ctv->versionedTVs.end(); itr++) {
-        VersionHandle key = itr->first;
-        CoreUtils::updateHandle(&(key.substantive), handles);
-        newVersionedTVs[key] = itr->second;
+ namespace PatternMiner
+{
+
+ class PatternMiner
+ {
+private:
+    HTree* htree;
+    AtomSpace* atomSpace;
+public:
+    PatternMiner(AtomSpace* _atomSpace): atomSpace(_atomSpace)
+    {
+        htree = new HTree();
     }
-    ctv->versionedTVs = newVersionedTVs;
+
+    void processOneInputStream(HandleSeq inputSteam);
+
+ };
+
 }
+}
+
+#endif //_OPENCOG_PATTERNMINER_PATTERNMINER_H
