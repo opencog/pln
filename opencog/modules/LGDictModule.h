@@ -1,9 +1,9 @@
 /*
- * RuleEngineModule.h
+ * LGDictMoudle.h
  *
- * Copyright (C) 2014 Misgana Bayetta
+ * Copyright (C) 2014 OpenCog Foundation
  *
- * Author: Misgana Bayetta <misgana.bayetta@gmail.com>  Sept 2014
+ * Author: William Ma <https://github.com/williampma>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License v3 as
@@ -21,23 +21,39 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef RULEENGINEMODULE_H_
-#define RULEENGINEMODULE_H_
+#ifndef _OPENCOG_LG_DICT_MODULE_H
+#define _OPENCOG_LG_DICT_MODULE_H
 
-#include "InferenceSCM.h"
-
+#include <link-grammar/dict-api.h>
 #include <opencog/server/Module.h>
-#include <opencog/reasoning/engine/forwardchainer/ForwardChainer.h>
+#include <opencog/atomspace/Handle.h>
 
-namespace opencog {
-class RuleEngineModule: public Module {
-private:
-    InferenceSCM * iscm_;
+#include <opencog/nlp/lg-dict/LGDictSCM.h>
+
+namespace opencog
+{
+namespace nlp
+{
+
+/**
+ * An OpenCog module for reading LG dictionary.
+ *
+ * This module links to the necessary scheme bindings code for accessing the
+ * Link Grammar dictionary.
+ */
+class LGDictModule : public Module
+{
 public:
-	RuleEngineModule(CogServer&);
-	virtual ~RuleEngineModule();
-	const char * id(void);
-	virtual void init(void);
+    LGDictModule(CogServer&);
+    virtual ~LGDictModule();
+    const char * id(void);
+    virtual void init(void);
+
+private:
+    LGDictSCM* m_scm;
 };
-} /*end of namsepace opencog*/
-#endif /* RULEENGINEMODULE_H_ */
+
+}
+}
+
+#endif // _OPENCOG_LG_DICT_MODULE_H

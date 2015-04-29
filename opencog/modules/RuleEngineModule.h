@@ -1,9 +1,9 @@
 /*
- * RuleEngineModule.cc
+ * RuleEngineModule.h
  *
  * Copyright (C) 2014 Misgana Bayetta
  *
- *  * Author: Misgana Bayetta <misgana.bayetta@gmail.com>  Sept 2014
+ * Author: Misgana Bayetta <misgana.bayetta@gmail.com>  Sept 2014
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License v3 as
@@ -21,22 +21,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "InferenceSCM.h"
-#include "RuleEngineModule.h"
+#ifndef RULEENGINEMODULE_H_
+#define RULEENGINEMODULE_H_
 
-using namespace opencog;
+#include <opencog/server/Module.h>
+#include <opencog/reasoning/engine/InferenceSCM.h>
 
-DECLARE_MODULE(RuleEngineModule);
-
-RuleEngineModule::RuleEngineModule(CogServer &cs) :
-		Module(cs) {
-	iscm_ = NULL;
-}
-
-RuleEngineModule::~RuleEngineModule() {
-	delete iscm_;
-}
-
-void RuleEngineModule::init(void) {
-	iscm_ = new InferenceSCM();
-}
+namespace opencog {
+class RuleEngineModule: public Module {
+private:
+    InferenceSCM * iscm_;
+public:
+	RuleEngineModule(CogServer&);
+	virtual ~RuleEngineModule();
+	const char * id(void);
+	virtual void init(void);
+};
+} /*end of namsepace opencog*/
+#endif /* RULEENGINEMODULE_H_ */
