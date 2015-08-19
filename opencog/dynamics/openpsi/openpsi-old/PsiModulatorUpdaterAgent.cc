@@ -79,20 +79,20 @@ bool PsiModulatorUpdaterAgent::Modulator::updateModulator (AtomSpace & atomSpace
 {
     // Update LatestLink containig latest modulator level
     std::string predicateName = this->modulatorName + "Modulator";
-    Handle modulatorPredicateNode = atomSpace.addNode(PREDICATE_NODE, predicateName.c_str());
+    Handle modulatorPredicateNode = atomSpace.add_node(PREDICATE_NODE, predicateName.c_str());
     TruthValuePtr stv = SimpleTruthValue::createTV(this->currentModulatorValue, 1);
 
     std::vector <Handle> outgoings;
-    Handle listLink = atomSpace.addLink(LIST_LINK, outgoings);
+    Handle listLink = atomSpace.add_link(LIST_LINK, outgoings);
     outgoings.push_back(modulatorPredicateNode);
     outgoings.push_back(listLink);
-    Handle evaluationLink = atomSpace.addLink(EVALUATION_LINK, outgoings);
-    atomSpace.setTV(evaluationLink, stv);
+    Handle evaluationLink = atomSpace.add_link(EVALUATION_LINK, outgoings);
+    atomSpace.set_TV(evaluationLink, stv);
 
 //    Handle evaluationLink = AtomSpaceUtil::setPredicateValue(atomSpace, predicateName, stv);
     TimeServer timeServer(atomSpace);
-    Handle atTimeLink = timeServer.addTimeInfo(evaluationLink,
-        timeStamp, stv);
+    Handle atTimeLink = timeServer.addTimeInfo(evaluationLink, 
+                                               timeStamp, DEFAULT_TIMEDOMAIN, stv);
 
     AtomSpaceUtil::updateLatestModulator(atomSpace, atTimeLink, modulatorPredicateNode);
 
@@ -217,6 +217,7 @@ void PsiModulatorUpdaterAgent::run()
         modulator.runUpdater(atomSpace);
     }
 
+    TimeServer timeServer(atomSpace);
     // Set the updated value to AtomSpace
     for (Modulator & modulator : this->modulatorList) {
         modulator.updateModulator(atomSpace, timeStamp);
