@@ -42,11 +42,14 @@
 ;;;;;;;;;;;;;;;;
 
 ; Load the rules (use load for relative path w.r.t. to that file)
-(define config-dir (dirname (current-filename)))
-(define (prepend-config-dir fp) (string-append config-dir "/" fp))
-(define rule-files (list "rules/deduction.scm"
-                         "rules/modus-ponens.scm"))
-(for-each (lambda (fp) (load (prepend-config-dir fp))) rule-files)
+(define rule-files (list "pln-rules/deduction.scm"
+                         "../../../opencog/reasoning/pln/rules/modus-ponens.scm"
+                         "pln-rules/implication-or.scm"
+                         "pln-rules/equivalence-transformation-rule.scm"
+                         "pln-rules/hack.scm"
+                   )
+)
+(for-each load rule-files)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Associate rules to PLN ;;
@@ -54,15 +57,17 @@
 
 ; List the rules and their weights.
 (define rules (list (list pln-rule-deduction-name 1)
-                    (list pln-rule-modus-ponens-name 1))
+                    (list pln-rule-modus-ponens-name 1)
+                    (list pln-rule-equivalence-transformation-name 1)
+              )
 )
 
 ; Associate rules to PLN
 (ure-add-rules pln-rbs rules)
 
-;;;;;;;;;;;;;;;;;;;;;
-;; Other paramters ;;
-;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;
+;; Other parameters ;;
+;;;;;;;;;;;;;;;;;;;;;;
 
 ; Termination criteria parameters
 (ure-set-num-parameter pln-rbs "URE:maximum-iterations" 20)
