@@ -1,0 +1,56 @@
+from pln.common import *
+import os
+
+
+def fuzzy_conjunction_introduction_formula(conj, conj_set):
+    atoms = conj_set.out
+    args = list(unpack_args(*conj_set.out, tv=True))
+    min_s = torch.min(torch.stack(tuple(x.mean for x in args)))
+    min_c = torch.min(torch.stack(tuple(x.confidence for x in args)))
+    result = TTruthValue(torch.stack([min_s, min_c]))
+    cog_merge_hi_conf_tv(conj, result)
+    return conj
+
+
+def precise_modus_ponens_strength_formula(sA, sAB, snotAB):
+    return sAB * sA + snotAB * (1 - sA)
+
+
+def modus_ponens_formula(B, AB, A):
+    sA = get_tv(A).mean
+    cA = get_tv(A).confidence
+    sAB = get_tv(AB).mean
+    cAB = get_tv(AB).confidence
+    snotAB = 0.2 # Huge hack
+    cnotAB = 1
+    new_tv = TTruthValue((precise_modus_ponens_strength_formula(sA, sAB, snotAB),
+                min(cAB, cnotAB, cA)))
+    cog_merge_hi_conf_tv(B, new_tv)
+    return B
+
+
+def add_members(rule_base):
+    atomspace = get_type_ctor_atomspace()
+    # add current
+    scheme_eval(atomspace, '(add-to-load-path "{0}")'.format(os.path.dirname(__file__)))
+
+    # load files
+    for f in ('consequent-disjunction-elimination.scm', 'fuzzy-disjunction-introduction.scm',
+              'modus-ponens.scm', 'contraposition.scm', 'fuzzy-conjunction-introduction.scm'):
+        scheme_eval(atomspace, '(load-from-path "' + f + '")')
+
+    # modus-ponens
+    MemberLink(DefinedSchemaNode("modus-ponens-inheritance-rule"), rule_base)
+    MemberLink(DefinedSchemaNode("modus-ponens-implication-rule"), rule_base)
+    MemberLink(DefinedSchemaNode("modus-ponens-subset-rule"), rule_base)
+    # disjunction & fuzzy-conjunction
+    for i in range(1, 6):
+        MemberLink(DefinedSchemaNode("fuzzy-disjunction-introduction-{0}ary-rule".format(i)), rule_base)
+        MemberLink(DefinedSchemaNode("fuzzy-conjunction-introduction-{0}ary-rule".format(i)), rule_base)
+    # consequent elimination
+    MemberLink(DefinedSchemaNode("consequent-disjunction-elimination-inheritance-rule"), rule_base)
+    MemberLink(DefinedSchemaNode("consequent-disjunction-elimination-implication-rule"), rule_base)
+
+    MemberLink(DefinedSchemaNode("crisp-contraposition-implication-scope-rule"), rule_base)
+    MemberLink(DefinedSchemaNode("contraposition-implication-rule"), rule_base)
+    MemberLink(DefinedSchemaNode("contraposition-inheritance-rule"), rule_base)
