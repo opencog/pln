@@ -8,6 +8,7 @@ from opencog.type_constructors import *
 from pln import  TTruthValue
 from pln import get_tv, set_tv
 from pln.rules import propositional
+from opencog.bindlink import execute_atom, evaluate_atom
 
 
 def init_pln():
@@ -15,7 +16,7 @@ def init_pln():
     propositional.add_members(rule_base)
     ExecutionLink(SchemaNode("URE:maximum-iterations"),
                   rule_base,
-                  NumberNode('75'))
+                  NumberNode('100'))
     return rule_base
 
 
@@ -52,8 +53,40 @@ class TestBasic(unittest.TestCase):
         self.assertTrue(abs(result.mean - 0.85) < 0.0001)
         self.assertTrue(abs(result.confidence - 0.9) < 0.0001)
 
+    def test_cons_disj_elimination(self):
+        rule_base = ConceptNode('PLN')
+        A = PredicateNode('A')
+        set_tv(A, (1.0, 1.0))
+        B = PredicateNode('B')
+        set_tv(B, (1.0, 1.0))
+        C = PredicateNode('C')
+        set_tv(C, (1.0, 1.0))
+        set_tv(ImplicationLink(A, C), (0.55, 0.55))
+        set_tv(ImplicationLink(A,
+                        OrLink(B, C)), (1.0, 1.0))
+
+        impl = ImplicationLink(A, B)
+        bc = BackwardChainer(self.atomspace, rule_base, impl)
+        bc.do_chain()
+        result = get_tv(bc.get_results().out[0])
+        self.assertTrue(result.mean == 1.0)
+        alpha = 0.9
+        self.assertTrue(result.confidence == alpha * 0.55)
+
+    def test_contraposition(self):
+        rule_base = ConceptNode('PLN')
+        A = PredicateNode('A')
+        set_tv(A, (1.0, 1.0))
+        B = PredicateNode('B')
+        set_tv(B, (1.0, 1.0))
+        set_tv(ImplicationLink(A, B), (1.0, 1.0))
+        NBNA = ImplicationLink(NotLink(B), NotLink(A))
+        bc = BackwardChainer(self.atomspace, rule_base, NBNA)
+        bc.do_chain()
+        result = bc.get_results().out[0]
+        self.assertTrue(0 < get_tv(result).confidence,
+                'fails due to https://github.com/opencog/opencog/issues/3465')
+
     def tearDown(self):
         self.atomspace = None
-        self.model = None
         finalize_opencog()
-
