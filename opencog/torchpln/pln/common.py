@@ -56,7 +56,7 @@ def get_tv(atom):
     return value
 
 
-def set_tv(atom, value, tv=False):
+def set_tv(atom, value):
     key = atom.atomspace.add_node(types.PredicateNode, "cogNet-tv")
     if not isinstance(value, TTruthValue):
         value = TTruthValue(value)

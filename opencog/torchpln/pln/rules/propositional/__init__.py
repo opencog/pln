@@ -49,6 +49,44 @@ def consequent_disjunction_elimination_formula(conclusion, *premises):
         return AB
 
 
+def crisp_contraposition_scope_precondition(PQ):
+    if (0.999 < get_tv(PQ).mean) < (0.999 < get_tv(PQ).confidence):
+        return TruthValue(1.0, 1.0)
+    return TruthValue(0.0, 1.0)
+
+
+def contraposition_formula(conclusion, *premises):
+    if len(premises) == 3:
+        NBNA = conclusion
+        AB = premises[0]
+        A = premises[1]
+        B = premises[2]
+        sAB = get_tv(AB).mean
+        cAB = get_tv(AB).confidence
+        sA = get_tv(A).mean
+        cA = get_tv(A).confidence
+        sB = get_tv(B).mean
+        cB = get_tv(B).confidence
+
+    if (0.999 < sAB) and (0.999 < cAB):
+        cog_merge_hi_conf_tv(NBNA, TTruthValue(sAB, cAB))
+        if 1 > sB:
+            sNBNA = sum(1, -sA, -sB, sAB * sA) / (1 - sB)
+            cNBNA = min(cAB, cA, cB)
+            cog_merge_hi_conf_tv(NBNA, TTruthValue(sNBNA, cNBNA))
+    return conclusion
+
+def crisp_contraposition_scope_formula(conclusion, *premises):
+    if len(premises) == 1:
+        NQNP = conclusion
+        PQ = premises[0]
+        sPQ = get_tv(PQ).mean
+        cPQ = get_tv(PQ).confidence
+        if (0.999 < sPQ) and (0.999 < cPQ):
+            cog_merge_hi_conf_tv(NQNP, TTruthValue(sPQ, cPQ))
+        return NQNP
+
+
 def add_members(rule_base):
     atomspace = get_type_ctor_atomspace()
     # add current
