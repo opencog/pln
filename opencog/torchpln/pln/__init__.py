@@ -6,3 +6,4 @@ from opencog.type_constructors import get_type_ctor_atomspace
 
 import __main__
 __main__.pln = sys.modules[__name__]
+from .common import TTruthValue, get_tv, set_tv
