@@ -29,6 +29,26 @@ def modus_ponens_formula(B, AB, A):
     return B
 
 
+def consequent_disjunction_elimination_formula(conclusion, *premises):
+    if len(premises) == 2:
+        ABC = premises[0]
+        AC = premises[1]
+        sABC = get_tv(ABC).mean
+        cABC = get_tv(ABC).confidence
+        sAC = get_tv(AC).mean
+        cAC = get_tv(AC).confidence
+        alpha = 0.9 # Confidence-loss
+                    # coefficient. TODO replace by
+                    # something more meaningful
+        AB = conclusion
+        precondition = (sAC <= sABC) and (sAC < 1)
+        sAB = ((sABC - sAC) / (1 - sAC)) if precondition else 1
+        cAB = (alpha * min(cABC, cAC)) if precondition else 0
+        if 0 < cAB:
+            cog_merge_hi_conf_tv(AB, TTruthValue(sAB, cAB))
+        return AB
+
+
 def add_members(rule_base):
     atomspace = get_type_ctor_atomspace()
     # add current
