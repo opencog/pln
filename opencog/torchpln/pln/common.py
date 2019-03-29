@@ -1,3 +1,4 @@
+import weakref
 import torch
 from opencog.atomspace import types, PtrValue, Atom
 from opencog.scheme_wrapper import scheme_eval
@@ -8,6 +9,18 @@ MEAN = 0
 CONFIDENCE = 1
 
 class TTruthValue(torch.Tensor):
+    @staticmethod
+    def __new__(cls, *args):
+        if len(args) == 1:
+            assert(len(args[0]) == 2)
+            instance = super().__new__(cls, *args)
+        elif len(args) == 2:
+            instance = super().__new__(cls, args)
+        else:
+            raise RuntimeError("Expecting tuple of two number, \
+                    tensor of len 2 or two numbers, got {0}".format(args))
+        instance._stv = None
+        return instance
 
     @property
     def mean(self):
@@ -16,6 +29,19 @@ class TTruthValue(torch.Tensor):
     @property
     def confidence(self):
         return self[CONFIDENCE]
+
+    @property
+    def stv(self):
+        raise NotImplementedError("working with stv is not implemented")
+
+    @stv.setter
+    def stv(self, stv):
+        raise NotImplementedError("setting stv requires weak reference support\n \
+                for simple truth value type")
+
+    def __update_stv(self, *args):
+        self._stv.mean = self.mean
+        self._stv.confidence = self.confidence
 
 
 def get_tv(atom):
@@ -32,8 +58,10 @@ def get_tv(atom):
 
 def set_tv(atom, value, tv=False):
     key = atom.atomspace.add_node(types.PredicateNode, "cogNet-tv")
-    assert isinstance(value, TTruthValue)
+    if not isinstance(value, TTruthValue):
+        value = TTruthValue(value)
     atom.set_value(key, PtrValue(value))
+    atom.tv = TruthValue(value.mean, value.confidence)
 
 
 def gt_zero_confidence(atom):
