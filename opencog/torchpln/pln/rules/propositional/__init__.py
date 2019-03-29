@@ -4,9 +4,9 @@ import os
 
 def fuzzy_conjunction_introduction_formula(conj, conj_set):
     atoms = conj_set.out
-    args = list(unpack_args(*conj_set.out, tv=True))
-    min_s = torch.min(torch.stack(tuple(x.mean for x in args)))
-    min_c = torch.min(torch.stack(tuple(x.confidence for x in args)))
+    tvs = list(get_tv(x) for x in conj_set.out)
+    min_s = torch.min(torch.stack(tuple(x.mean for x in tvs)))
+    min_c = torch.min(torch.stack(tuple(x.confidence for x in tvs)))
     result = TTruthValue(torch.stack([min_s, min_c]))
     cog_merge_hi_conf_tv(conj, result)
     return conj
