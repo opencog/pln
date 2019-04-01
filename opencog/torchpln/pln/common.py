@@ -44,19 +44,19 @@ class TTruthValue(torch.Tensor):
         self._stv.confidence = self.confidence
 
 
-def get_tv(atom):
+def get_ttv(atom):
     key = atom.atomspace.add_node(types.PredicateNode, "cogNet-tv")
     value = atom.get_value(key)
     if value is None:
         default = TTruthValue([atom.tv.mean, atom.tv.confidence])
-        set_tv(atom, default)
+        set_ttv(atom, default)
         value = default
     else:
         value = value.value()
     return value
 
 
-def set_tv(atom, value):
+def set_ttv(atom, value):
     key = atom.atomspace.add_node(types.PredicateNode, "cogNet-tv")
     if not isinstance(value, TTruthValue):
         value = TTruthValue(value)
@@ -65,13 +65,13 @@ def set_tv(atom, value):
 
 
 def gt_zero_confidence(atom):
-    tensor_tv = get_tv(atom)
+    tensor_tv = get_ttv(atom)
     result = TruthValue(0 < tensor_tv.confidence, 1)
     return result
 
 
 def cog_merge_hi_conf_tv(atom, tv):
-    old_tv = get_tv(atom)
+    old_tv = get_ttv(atom)
     if old_tv.confidence < tv.confidence:
-        set_tv(atom, tv)
+        set_ttv(atom, tv)
         atom.tv = TruthValue(float(tv.mean), float(tv.confidence))

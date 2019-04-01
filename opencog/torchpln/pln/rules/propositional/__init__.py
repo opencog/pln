@@ -4,7 +4,7 @@ import os
 
 def fuzzy_conjunction_introduction_formula(conj, conj_set):
     atoms = conj_set.out
-    tvs = list(get_tv(x) for x in conj_set.out)
+    tvs = list(get_ttv(x) for x in conj_set.out)
     min_s = torch.min(torch.stack(tuple(x.mean for x in tvs)))
     min_c = torch.min(torch.stack(tuple(x.confidence for x in tvs)))
     result = TTruthValue(torch.stack([min_s, min_c]))
@@ -17,10 +17,10 @@ def precise_modus_ponens_strength_formula(sA, sAB, snotAB):
 
 
 def modus_ponens_formula(B, AB, A):
-    sA = get_tv(A).mean
-    cA = get_tv(A).confidence
-    sAB = get_tv(AB).mean
-    cAB = get_tv(AB).confidence
+    sA = get_ttv(A).mean
+    cA = get_ttv(A).confidence
+    sAB = get_ttv(AB).mean
+    cAB = get_ttv(AB).confidence
     snotAB = 0.2 # Huge hack
     cnotAB = 1
     new_tv = TTruthValue((precise_modus_ponens_strength_formula(sA, sAB, snotAB),
@@ -33,10 +33,10 @@ def consequent_disjunction_elimination_formula(conclusion, *premises):
     if len(premises) == 2:
         ABC = premises[0]
         AC = premises[1]
-        sABC = get_tv(ABC).mean
-        cABC = get_tv(ABC).confidence
-        sAC = get_tv(AC).mean
-        cAC = get_tv(AC).confidence
+        sABC = get_ttv(ABC).mean
+        cABC = get_ttv(ABC).confidence
+        sAC = get_ttv(AC).mean
+        cAC = get_ttv(AC).confidence
         alpha = 0.9 # Confidence-loss
                     # coefficient. TODO replace by
                     # something more meaningful
@@ -50,7 +50,7 @@ def consequent_disjunction_elimination_formula(conclusion, *premises):
 
 
 def crisp_contraposition_scope_precondition(PQ):
-    if (0.999 < get_tv(PQ).mean) < (0.999 < get_tv(PQ).confidence):
+    if (0.999 < get_ttv(PQ).mean) < (0.999 < get_ttv(PQ).confidence):
         return TruthValue(1.0, 1.0)
     return TruthValue(0.0, 1.0)
 
@@ -61,12 +61,12 @@ def contraposition_formula(conclusion, *premises):
         AB = premises[0]
         A = premises[1]
         B = premises[2]
-        sAB = get_tv(AB).mean
-        cAB = get_tv(AB).confidence
-        sA = get_tv(A).mean
-        cA = get_tv(A).confidence
-        sB = get_tv(B).mean
-        cB = get_tv(B).confidence
+        sAB = get_ttv(AB).mean
+        cAB = get_ttv(AB).confidence
+        sA = get_ttv(A).mean
+        cA = get_ttv(A).confidence
+        sB = get_ttv(B).mean
+        cB = get_ttv(B).confidence
 
     if (0.999 < sAB) and (0.999 < cAB):
         cog_merge_hi_conf_tv(NBNA, TTruthValue(sAB, cAB))
@@ -80,8 +80,8 @@ def crisp_contraposition_scope_formula(conclusion, *premises):
     if len(premises) == 1:
         NQNP = conclusion
         PQ = premises[0]
-        sPQ = get_tv(PQ).mean
-        cPQ = get_tv(PQ).confidence
+        sPQ = get_ttv(PQ).mean
+        cPQ = get_ttv(PQ).confidence
         if (0.999 < sPQ) and (0.999 < cPQ):
             cog_merge_hi_conf_tv(NQNP, TTruthValue(sPQ, cPQ))
         return NQNP
