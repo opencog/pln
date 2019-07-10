@@ -24,7 +24,7 @@ def set_ttv(atom, value):
 
 def gt_zero_confidence(atom):
     tensor_tv = get_ttv(atom)
-    result = TruthValue(0 < tensor_tv.confidence, 1)
+    result = TruthValue(1 if 0 < tensor_tv.confidence else 0, 1)
     return result
 
 
