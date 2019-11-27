@@ -1,4 +1,4 @@
-Probabilistic Logic Network
+test-ciProbabilistic Logic Network
 ===========================
 
 Probabilistic Logic Network, or PLN for short, is a logic invented by
