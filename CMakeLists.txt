@@ -1,5 +1,5 @@
 #
-# Master Opencog CMake file.
+# Master PLN CMake file.
 #
 # General organization:
 # -- check for different compilers, OS'es
@@ -19,7 +19,9 @@ IF(CMAKE_VERSION VERSION_GREATER 3.0.2)
 	CMAKE_POLICY(SET CMP0037 OLD)
 ENDIF(CMAKE_VERSION VERSION_GREATER 3.0.2)
 
-PROJECT(opencog)
+# Project name and version
+PROJECT(pln)
+SET(SEMANTIC_VERSION 0.1.1)
 
 # ----------------------------------------------------------
 # User-modifiable options. Feel free to change these!
@@ -102,60 +104,20 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
 	ENDIF (CMAKE_BUILD_TYPE STREQUAL "Coverage")
 ENDIF (CMAKE_COMPILER_IS_GNUCXX)
 
-# ----------------------------------------------------
-# Do the windows build.
-
-IF (WIN32)
-	ADD_DEFINITIONS(-DWIN32)
-	IF (CYGWIN)
-		ADD_DEFINITIONS(-DCYGWIN)
-	#   SET(WIN32 1)
-	ENDIF (CYGWIN)
-
-	# It is "not unix" when the code is compiled under windows but not
-	# under cygwin
-	IF (NOT UNIX)
-		ADD_DEFINITIONS(-DWIN32_NOT_UNIX)
-		FIND_PACKAGE(PThreads REQUIRED)
-		FIND_PACKAGE(STLPort REQUIRED)
-		INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/include/win32" ${PTHREADS_INCLUDE_DIR} ${STLPORT_INCLUDE_DIR})
-		LINK_LIBRARIES(${PTHREADS_LIBRARY} ${STLPORT_LIBRARIES})
-		ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE)
-	ELSE (NOT UNIX)
-		LINK_LIBRARIES(pthread)
-		IF (CYGWIN)
-			SET(CMAKE_SHARED_LINKER_FLAGS "-Wl")
-		ELSE (CYGWIN)
-			SET(CMAKE_SHARED_LINKER_FLAGS "-Wl,--enable-new-dtags")
-		ENDIF (CYGWIN)
-	ENDIF (NOT UNIX)
-ENDIF (WIN32)
-
 # ===============================================================
 # Check for existance of various required, optional packages.
 # Listed in alphabetical order, more or less.
 # CogUtil must come first, because it supplies various FindXXX macros.
 
-# Add the 'lib' dir to cmake's module search path
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/lib/")
-
 # Cogutil
-FIND_PACKAGE(CogUtil 2.0.1 CONFIG REQUIRED)
+FIND_PACKAGE(CogUtil CONFIG REQUIRED)
 IF (COGUTIL_FOUND)
-    MESSAGE(STATUS "CogUtil found.")
+    MESSAGE(STATUS "CogUtil version ${COGUTIL_VERSION} found.")
     ADD_DEFINITIONS(-DHAVE_COGUTIL)
     SET(HAVE_COGUTIL 1)
 ELSE (COGUTIL_FOUND)
     MESSAGE(FATAL_ERROR "CogUtil missing: it is needed!")
 ENDIF (COGUTIL_FOUND)
-
-# add the 'cmake' directory from cogutil to search path
-list(APPEND CMAKE_MODULE_PATH  ${COGUTIL_DATA_DIR}/cmake)
-
-include(${COGUTIL_DATA_DIR}/cmake/Summary.cmake)
-
-# ===================================================================
-# Check for existance of various required, optional packages.
 
 # AtomSpace
 FIND_PACKAGE(AtomSpace 5.0.3 CONFIG REQUIRED)
@@ -167,35 +129,20 @@ ELSE (ATOMSPACE_FOUND)
 	MESSAGE(FATAL_ERROR "AtomSpace missing: it is needed!")
 ENDIF (ATOMSPACE_FOUND)
 
-# CogServer
-FIND_PACKAGE(CogServer 1.0.0 CONFIG)
-IF (COGSERVER_FOUND)
-	MESSAGE(STATUS "CogServer found.")
-	ADD_DEFINITIONS(-DHAVE_SERVER)
-	SET(HAVE_SERVER 1)
-ELSE (COGSERVER_FOUND)
-	MESSAGE(STATUS "CogServer was not found.")
-ENDIF (COGSERVER_FOUND)
-
-# AttentionBank
-FIND_PACKAGE(AttentionBank 1.0.0 CONFIG)
-IF (ATTENTIONBANK_FOUND)
-	MESSAGE(STATUS "AttentionBank found.")
-	ADD_DEFINITIONS(-DHAVE_BANK)
-	SET(HAVE_BANK 1)
-ELSE (ATTENTIONBANK_FOUND)
-	MESSAGE(STATUS "AttentionBank was not found. OpenPsi and Ghost will not be built.")
-ENDIF (ATTENTIONBANK_FOUND)
-
 # URE
-FIND_PACKAGE(URE 1.0.0 CONFIG)
+FIND_PACKAGE(URE 1.0.0 CONFIG REQUIRED)
 IF (URE_FOUND)
 	MESSAGE(STATUS "URE found.")
 	ADD_DEFINITIONS(-DHAVE_URE)
 	SET(HAVE_URE 1)
 ELSE (URE_FOUND)
-	MESSAGE(STATUS "URE was not found. PLN will not be built.")
+	MESSAGE(STATUS "URE missing: it is needed!")
 ENDIF (URE_FOUND)
+
+# add the 'cmake' directory from cogutil to search path
+list(APPEND CMAKE_MODULE_PATH  ${COGUTIL_DATA_DIR}/cmake)
+include(OpenCogGccOptions)
+include(Summary)
 
 # ----------------------------------------------------------
 # Check for boost. We need dynamic-linked, threaded libs by default.
@@ -237,27 +184,6 @@ IF (NOT CXXTEST_FOUND)
 ENDIF (NOT CXXTEST_FOUND)
 
 # ----------------------------------------------------------
-# Glasgow Haskell compiler
-FIND_PACKAGE(GHC)
-IF (GHC_FOUND)
-	ADD_DEFINITIONS(-DHAVE_GHC)
-	SET(HAVE_GHC 1)
-ELSE (GHC_FOUND)
-	SET(GHC_DIR_MESSAGE "GHC was not found; Haskell bindings will not be built.")
-	MESSAGE(STATUS "${GHC_DIR_MESSAGE}")
-ENDIF (GHC_FOUND)
-
-FIND_PACKAGE(Stack)
-IF (STACK_FOUND)
-	ADD_DEFINITIONS(-DHAVE_STACK)
-	SET(HAVE_STACK 1)
-	SET(STACK_FOUND_MESSAGE "The Haskell Tool Stack found.")
-ELSE (STACK_FOUND)
-	SET(STACK_FOUND_MESSAGE "The Haskell Tool Stack not found.")
-ENDIF (STACK_FOUND)
-MESSAGE(STATUS "${STACK_FOUND_MESSAGE}")
-
-# ----------------------------------------------------------
 # This is required for Guile
 FIND_LIBRARY(GMP_LIBRARY gmp)
 FIND_PATH(GMP_INCLUDE_DIR gmp.h)
@@ -274,129 +200,6 @@ ELSE (GUILE_FOUND AND GMP_LIBRARY AND GMP_INCLUDE_DIR)
 	MESSAGE(STATUS "${GUILE_DIR_MESSAGE}")
 ENDIF (GUILE_FOUND AND GMP_LIBRARY AND GMP_INCLUDE_DIR)
 
-# ----------------------------------------------------------
-# Link-Grammar is needed for several NLP subsystems
-# Only 5.6.2 or newer has the required API in it.
-FIND_PACKAGE(LinkGrammar 5.6.2)
-IF (LINK_GRAMMAR_FOUND)
-	SET(HAVE_LINK_GRAMMAR 1)
-	INCLUDE_DIRECTORIES(${LINK_GRAMMAR_INCLUDE_DIRS})
-ELSE (LINK_GRAMMAR_FOUND)
-	MESSAGE(STATUS "Link Grammar missing: needed for NLP.")
-ENDIF (LINK_GRAMMAR_FOUND)
-
-FIND_PACKAGE(UUID)
-IF (UUID_FOUND)
-	SET(HAVE_UUID 1)
-	INCLUDE_DIRECTORIES(${UUID_INCLUDE_DIRS})
-	ADD_DEFINITIONS(${UUID_DEFINITIONS})
-ELSE (UUID_FOUND)
-	MESSAGE(STATUS "UUID library missing: needed for NLP.")
-ENDIF (UUID_FOUND)
-
-# ----------------------------------------------------------
-# Python and Cython
-#
-# NOTE: Python interpreter is needed for runing python unit tests,
-# and for running the FindCython module.
-#
-# Search for Python3 first, and use that, if found. Else use Python2.
-# To use Python2 only from the build directory run the following
-# rm CMakeCache.txt && cmake -DCMAKE_DISABLE_FIND_PACKAGE_Python3Interp=TRUE ..
-
-FIND_PACKAGE(Python3Interp)
-IF (3.4.0 VERSION_LESS "${PYTHON3_VERSION_STRING}")
-	SET (HAVE_PY_INTERP 1)
-	SET (PYTHON_VER python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
-	MESSAGE(STATUS "Python ${PYTHON3_VERSION_STRING} interpreter found.")
-ENDIF()
-
-IF (NOT HAVE_PY_INTERP)
-	FIND_PACKAGE(PythonInterp)
-	IF (2.7.0 VERSION_LESS ${PYTHON_VERSION_STRING})
-		SET (HAVE_PY_INTERP 1)
-		SET (PYTHON_VER python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
-		MESSAGE(STATUS "Python ${PYTHON_VERSION_STRING} interpreter found.")
-	ENDIF()
-ENDIF()
-
-FIND_PACKAGE(PythonLibs)
-IF (PYTHONLIBS_FOUND AND
-     ((PYTHON3INTERP_FOUND AND 3.4.0 VERSION_LESS ${PYTHONLIBS_VERSION_STRING})
-     OR
-     (2.7.0 VERSION_LESS ${PYTHONLIBS_VERSION_STRING})))
-	SET (HAVE_PY_LIBS 1)
-	MESSAGE(STATUS "Python ${PYTHONLIBS_VERSION_STRING} libraries found.")
-ELSE()
-	MESSAGE(STATUS "Python libraries NOT found.")
-ENDIF()
-
-# Cython is used to generate python bindings.
-IF(HAVE_PY_INTERP)
-	FIND_PACKAGE(Cython 0.23.0)
-
-	IF (CYTHON_FOUND AND HAVE_PY_LIBS)
-		ADD_DEFINITIONS(-DHAVE_CYTHON)
-		SET(HAVE_CYTHON 1)
-
-		# Find python destination dir for python bindings
-		# because it may differ on each operating system.
-		EXECUTE_PROCESS(
-			COMMAND ${PYTHON_EXECUTABLE} "${PROJECT_SOURCE_DIR}/scripts/get_python_lib.py" "${CMAKE_INSTALL_PREFIX}"
-			OUTPUT_VARIABLE PYTHON_DEST
-		)
-
-		# Replace new line at end
-		STRING(REPLACE "\n" "" PYTHON_DEST "${PYTHON_DEST}")
-		IF ("${PYTHON_DEST}" STREQUAL "")
-			MESSAGE(FATAL_ERROR "Python destination dir not found")
-		ELSE ("${PYTHON_DEST}" STREQUAL "")
-			MESSAGE(STATUS "Python destination dir found: ${PYTHON_DEST}" )
-		ENDIF ("${PYTHON_DEST}" STREQUAL "")
-
-		# thunk
-		SET(PYTHON_ROOT "${PYTHON_DEST}")
-		SET(PYTHON_DEST "${PYTHON_DEST}/opencog")
-
-		MESSAGE(STATUS
-			"Python install dir: ${PYTHON_DEST}" )
-
-	ELSE (CYTHON_FOUND AND HAVE_PY_LIBS)
-		IF(NOT CYTHON_FOUND)
-			MESSAGE(STATUS "Cython executable not found.")
-		ENDIF(NOT CYTHON_FOUND)
-	ENDIF (CYTHON_FOUND AND HAVE_PY_LIBS)
-
-	# Nosetests will find and automatically run python tests.
-	IF (PYTHON3INTERP_FOUND)
-		FIND_PROGRAM(NOSETESTS_EXECUTABLE nosetests3)
-	ELSE ()
-		FIND_PROGRAM(NOSETESTS_EXECUTABLE nosetests-2.7)
-	ENDIF ()
-	IF (NOT NOSETESTS_EXECUTABLE)
-		MESSAGE(STATUS "nosetests not found: needed for python tests")
-	ENDIF ()
-	IF (NOSETESTS_EXECUTABLE AND CYTHON_FOUND AND HAVE_PY_LIBS)
-		SET(HAVE_NOSETESTS 1)
-		MESSAGE(STATUS "Using nosetests executable " ${NOSETESTS_EXECUTABLE})
-	ENDIF (NOSETESTS_EXECUTABLE AND CYTHON_FOUND AND HAVE_PY_LIBS)
-ENDIF(HAVE_PY_INTERP)
-
-# ----------------------------------------------------------
-# Optional, currently needed only to hush up DRD in util/Logger.cc
-FIND_PACKAGE(VALGRIND)
-IF (VALGRIND_FOUND)
-	MESSAGE(STATUS "VALGRIND was found.")
-	IF (VALGRIND_INCLUDE_DIR)
-		MESSAGE(STATUS "VALGRIND devel headers found.")
-		ADD_DEFINITIONS(-DHAVE_VALGRIND)
-	ELSE (VALGRIND_INCLUDE_DIR)
-		MESSAGE(STATUS "VALGRIND devel headers NOT FOUND: needed for thread debugging.")
-	ENDIF (VALGRIND_INCLUDE_DIR)
-ELSE (VALGRIND_FOUND)
-	MESSAGE(STATUS "VALGRIND missing: needed for thread debugging.")
-ENDIF (VALGRIND_FOUND)
-
 # ===================================================================
 # Global includes
 
@@ -405,7 +208,7 @@ ENDIF (VALGRIND_FOUND)
 
 # Set default include paths.
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR} ${Boost_INCLUDE_DIRS}
-	${COGUTIL_INCLUDE_DIR} ${ATOMSPACE_INCLUDE_DIR})
+	${COGUTIL_INCLUDE_DIR} ${ATOMSPACE_INCLUDE_DIR} ${URE_INCLUDE_DIR})
 
 # Macros that define how atom types get declared.
 IF (NOT DEFINED ATOMSPACE_DATA_DIR)
@@ -470,20 +273,8 @@ IF(HAVE_URE)
 	SET(HAVE_PLN 1)
 ENDIF(HAVE_URE)
 
-IF(HAVE_ATOMSPACE AND HAVE_GUILE AND HAVE_BANK)
-	SET(HAVE_OPENPSI 1)
-ENDIF(HAVE_ATOMSPACE AND HAVE_GUILE AND HAVE_BANK)
-
-IF(HAVE_ATOMSPACE AND HAVE_GUILE AND HAVE_LINK_GRAMMAR AND HAVE_UUID)
-	SET(HAVE_NLP 1)
-ENDIF(HAVE_ATOMSPACE AND HAVE_GUILE AND HAVE_LINK_GRAMMAR AND HAVE_UUID)
-
-IF(HAVE_BANK AND HAVE_OPENPSI AND HAVE_NLP)
-	SET(HAVE_GHOST 1)
-ENDIF(HAVE_BANK AND HAVE_OPENPSI AND HAVE_NLP)
-
-ADD_SUBDIRECTORY(lib)
 ADD_SUBDIRECTORY(opencog)
+ADD_SUBDIRECTORY(lib)
 
 IF (CXXTEST_FOUND)
 	ADD_CUSTOM_TARGET(tests)
@@ -519,44 +310,12 @@ IF (CXXTEST_FOUND)
 	ENDIF (CMAKE_BUILD_TYPE STREQUAL "Coverage")
 ENDIF (CXXTEST_FOUND)
 
-ADD_SUBDIRECTORY(examples EXCLUDE_FROM_ALL)
-
-IF (NOT WIN32)
-	ADD_CUSTOM_TARGET (examples
-		# using CMAKE_BUILD_TOOL results in teh cryptic error message
-		# warning: jobserver unavailable: using -j1.  Add `+' to parent make rule.
-		# This is because make doesn't know how to pass jobserver args to
-		# the submake.  So, instead, just use $(MAKE) (with round parens)
-		# -- that will do the right thing.
-		# COMMAND ${CMAKE_BUILD_TOOL}
-		COMMAND $(MAKE)
-		WORKING_DIRECTORY examples
-		COMMENT "Building examples"
-	)
-ENDIF (NOT WIN32)
-
 ADD_CUSTOM_TARGET(cscope
 	COMMAND find opencog examples tests -name '*.cc' -o -name '*.h' -o -name '*.cxxtest' -o -name '*.scm' > ${CMAKE_SOURCE_DIR}/cscope.files
 	COMMAND cscope -b
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 	COMMENT "Generating CScope database"
 )
-
-ADD_SUBDIRECTORY(experiments EXCLUDE_FROM_ALL)
-
-IF (NOT WIN32)
-	ADD_CUSTOM_TARGET (experiments
-		# using CMAKE_BUILD_TOOL results in teh cryptic error message
-		# warning: jobserver unavailable: using -j1.  Add `+' to parent make rule.
-		# This is because make doesn't know how to pass jobserver args to
-		# the submake.  So, instead, just use $(MAKE) (with round parens)
-		# -- that will do the right thing.
-		# COMMAND ${CMAKE_BUILD_TOOL}
-		COMMAND $(MAKE)
-		WORKING_DIRECTORY experiments
-		COMMENT "Building experiments"
-	)
-ENDIF (NOT WIN32)
 
 # ===================================================================
 # Packaging
@@ -571,17 +330,14 @@ STRING(TIMESTAMP UTC_DATE %Y%m%d UTC)
 # that it is owned by the builder thus avoiding 'Permission denied' error when
 # packaging.
 FILE(WRITE "${PROJECT_BINARY_DIR}/install_manifest.txt")
-## It doesn't have a header-file declaring the version similar to cogutil and
-## atomspace.
-SET(SEMANTIC_VERSION 0.1.4)
 
 ## Cpack configuration
 SET(CPACK_GENERATOR "DEB")
 SET(CPACK_PACKAGE_CONTACT "opencog@googlegroups.com")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 SET(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/packages")
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Open Cognition Framework")
-SET(CPACK_PACKAGE_NAME "opencog-dev")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Probabilistic Logic Network")
+SET(CPACK_PACKAGE_NAME "pln-dev")
 SET(CPACK_PACKAGE_VENDOR "opencog.org")
 SET(CPACK_PACKAGE_VERSION "${SEMANTIC_VERSION}-${UTC_DATE}")
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
@@ -593,7 +349,6 @@ SET(CPACK_PACKAGE_EXECUTABLES "cogserver" "The Open Cognition Framework")
 ## Debian specific configurations
 SET(DEPENDENCY_LIST
 	"guile-2.2-dev (>= 2.2.2)"
-	"python-dev (>= 2.7.5)"
 	"libboost-date-time-dev (>= ${MIN_BOOST})"
 	"libboost-filesystem-dev (>= ${MIN_BOOST})"
 	"libboost-program-options-dev (>= ${MIN_BOOST})"
@@ -605,6 +360,7 @@ SET(DEPENDENCY_LIST
 	"libstdc++6 (>= 4.7)"
 	"libcogutil-dev (>= 2.0.2)"
 	"atomspace-dev (>= 5.0.3)"
+        "ure-dev (>= 1.0.0)"
 )
 
 STRING(REPLACE ";" ", " MAIN_DEPENDENCIES "${DEPENDENCY_LIST}")
@@ -614,23 +370,9 @@ SET(CPACK_DEBIAN_PACKAGE_HOMEPAGE "http://opencog.org")
 INCLUDE(CPack)
 
 # ===================================================================
-# documentation
-FIND_PACKAGE(Doxygen)
-ADD_SUBDIRECTORY(doc EXCLUDE_FROM_ALL)
-
-# ===================================================================
 # Show a summary of what we found, what we will do.
 
-SUMMARY_ADD("Cython bindings" "Cython (python) bindings" HAVE_CYTHON)
-SUMMARY_ADD("Doxygen" "Code documentation" DOXYGEN_FOUND)
-SUMMARY_ADD("Python tests" "Python bindings nose tests" HAVE_NOSETESTS)
-SUMMARY_ADD("Unit tests" "Unit tests" CXXTEST_FOUND)
-SUMMARY_ADD("NLP" "Natural Language Processing tools" HAVE_NLP)
-SUMMARY_ADD("OpenPsi" "MicroPsi OpenCog implementation" HAVE_OPENPSI)
-SUMMARY_ADD("Ghost" "Ghost chatbot" HAVE_GHOST)
-SUMMARY_ADD("Haskell codes" "Logic via Lojban" HAVE_STACK AND BUILD_LOJBAN)
 SUMMARY_ADD("PLN" "Probabilistic Logic Network" HAVE_PLN)
-SUMMARY_ADD("REST Events" "REST Atomspace Event Publisher module"
-	HAVE_EVENT_PUBLISHING_DEPENDENCIES)
+SUMMARY_ADD("Unit tests" "Unit tests" CXXTEST_FOUND)
 
 SUMMARY_SHOW()
