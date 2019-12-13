@@ -108,7 +108,7 @@ workflows:
       - pln
       - package:
           requires:
-            - opencog
+            - ure
           filters:
             branches:
               only: master
