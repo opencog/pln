@@ -108,7 +108,7 @@ workflows:
       - pln
       - package:
           requires:
-            - ure
+            - pln
           filters:
             branches:
               only: master
