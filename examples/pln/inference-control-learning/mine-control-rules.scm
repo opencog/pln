@@ -44,12 +44,12 @@
   (let* ((texts-cpt (mk-texts inference-rule negative))
          (ipat (initpat inference-rule negative))
          (patterns (cog-mine texts-cpt
-                             minsup
+                             #:minimum-support minsup
                              #:maximum-iterations miter
-                             #:initpat ipat))
-         (patterns-lst (cog-outgoing-set patterns))
-         (ctrl-rules (map pattern->ctrl-rule patterns-lst)))
-    ;; (icl-logger-fine "Mined patterns-lst = ~a" patterns-lst)
+                             #:initial-pattern ipat
+                             #:surprisingness 'none))
+         (ctrl-rules (map pattern->ctrl-rule patterns)))
+    ;; (icl-logger-fine "Mined patterns = ~a" patterns)
     ;; (icl-logger-fine "Mined ctrl-rules = ~a" ctrl-rules)
     ctrl-rules))
 
