@@ -1,4 +1,4 @@
-;; Contain the main inference control learning experiment loop
+;; Contain the main inference control meta-learning experiment loop
 
 ;; Load utils
 (load "icl-parameters.scm")

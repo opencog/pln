@@ -1,4 +1,4 @@
-;; Utilities for the inference control learning experiment
+;; Utilities for the inference control meta-learning experiment
 
 (use-modules (srfi srfi-1))
 (use-modules (ice-9 threads))
