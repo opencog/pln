@@ -1,9 +1,9 @@
-Distributed Inference Control Learning
-======================================
+Distributed Inference Control Meta-Learning
+===========================================
 
-Inference Control Learning in the URE (Unified Rule Engine) is the
-process of learning how to efficiently guide reasoning to produce new
-knowledge, validate conjectures, etc.
+Inference Control Meta-Learning in the URE (Unified Rule Engine) is
+the process of learning how to efficiently guide reasoning to produce
+new knowledge, validate conjectures, etc.
 
 Efficient reasoning is amongst the hardest problems in computer
 science. One way to tackle it is to learn how to bias reasoning to be
@@ -259,7 +259,7 @@ context-free) control rules, though that seems to be really a minimum.
 
 So it seems a few workstations, each with a dozen cores and dozen GB
 of RAM would be able run a moderate scale (beyond toyish) inference
-control learning experiment in about a day. A couple of hours for
+control meta-learning experiment in about a day. A couple of hours for
 solving 100+ problem instances, and perhaps the rest of the day for
 mining and producing control rules, the effort depending essentially
 on how sophisticated we want it to be, which is hard to determine in

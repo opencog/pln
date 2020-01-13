@@ -4,11 +4,12 @@
 ;; Problem set size (number of problems to solve per iteration) ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define pss 100)
-;; (define pss 50)
+;; (define pss 100) ;; That one may crash guile with "Too many root sets"
+(define pss 50)
 ;; (define pss 20)
 ;; (define pss 10)
 ;; (define pss 5)
+;; (define pss 2)
 ;; (define pss 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24,6 +25,7 @@
 
 (define piter 20)
 ;; (define piter 10)
+;; (define piter 2)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Minimum support for mining control rule patterns ;;

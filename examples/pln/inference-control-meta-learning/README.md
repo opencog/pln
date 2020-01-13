@@ -1,17 +1,17 @@
-Inference Control Learning
-==========================
+Inference Control Meta-Learning
+===============================
 
-Experiment with inference control learning. The plan is to
+Experiment with inference control meta-learning. The procedure
 
-1. run a series of backward inferences,
-2. create a corpus of inference traces,
-3. Run the pattern miner and other learning algorithms over them,
-4. build inference control rules out of these patterns,
-5. repeat while reusing these learned inference control rules to speed
-   up the backward chainer.
+1. Runs a series of backward inferences.
+2. Creates a corpus of inference traces.
+3. Runs the pattern miner and other learning algorithms over them.
+4. Builds inference control rules out of these patterns.
+5. Repeats while reusing these learned inference control rules to
+   speed up the backward chainer.
 
 For now it is a toy experiment with a small taylored series over a
-small, constant knowledge-base. No ECAN is even necessary.
+small, constant knowledge-base. No ECAN is necessary.
 
 Knowledge-base
 --------------
@@ -132,9 +132,7 @@ guile -l icl.scm
 
 it will automatically run the experiment. After a while you can see
 that at the second meta-iteration the number of problems solved has
-significantly gone up. In that experiment only context-free control
-rules are learned, but that is enough, so no pattern miner is actually
-used for now.
+significantly gone up.
 
 The remaining sections explain how it all works.
 

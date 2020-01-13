@@ -1,4 +1,4 @@
-;; Contain the main inference control learning experiment loop
+;; Contain the main inference control meta-learning experiment loop
 
 ;; Load utils
 (load "icl-parameters.scm")
@@ -12,7 +12,7 @@
 
 ;; Set loggers levels
 (cog-logger-set-level! "info")
-(icl-logger-set-level! "debug")
+(icl-logger-set-level! "info")
 (ure-logger-set-level! "info")
 
 ;; Set loggers stdout

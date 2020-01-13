@@ -1,11 +1,10 @@
-;; Utilities for the inference control learning experiment
+;; Utilities for the inference control meta-learning experiment
 
 (use-modules (srfi srfi-1))
 (use-modules (ice-9 threads))
 (use-modules (opencog logger))
 (use-modules (opencog randgen))
 (use-modules (opencog exec))
-(use-modules (opencog query))
 (use-modules (opencog ure))
 (use-modules (opencog miner))
 
@@ -191,8 +190,8 @@
   (for-each (lambda (src) (cp-as src dst)) atomspaces))
 
 ;; Redefine cog-cp and cog-cp-all to return a list of copied atoms
-;; (indeed these are not the same the ones in the source). Take care
-;; of not overwriting TVs with higher confidences by lower ones.
+;; (indeed these are not the same as the ones in the source). Take
+;; care of not overwriting TVs with higher confidences by lower ones.
 ;;
 ;; TODO: replace by cog-cp now that it has been updated.
 (define (icl-cp AS LST)
