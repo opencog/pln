@@ -164,7 +164,56 @@
 
   *unspecified*)
 
+(define-public (pln-add-rule-by-name rule-name)
+"
+  Call ure-add-rule-by-name on the PLN rule base. See
+
+    (help ure-add-rule-by-name)
+
+  for more info.
+"
+  (define current-as (cog-set-atomspace! pln-atomspace))
+  (ure-add-rule-by-name (pln-mk-rb) rule-name)
+  (cog-set-atomspace! current-as)
+
+  *unspecified*)
+
+(define-public (pln-add-rules-by-names rule-names)
+"
+  Call ure-add-rules-by-names on the PLN rule base. See
+
+    (help ure-add-rules-by-names)
+
+  for more info.
+"
+  (define current-as (cog-set-atomspace! pln-atomspace))
+  (ure-rm-rules-by-names (pln-mk-rb) rule-names)
+  (cog-set-atomspace! current-as)
+
+  *unspecified*)
+
+(define-public (pln-rm-rule-by-name rule-name)
+"
+  Call ure-rm-rule-by-name on the PLN rule base. See
+
+    (help ure-rm-rule-by-name)
+
+  for more info.
+"
+  (define current-as (cog-set-atomspace! pln-atomspace))
+  (ure-rm-rule-by-name (pln-mk-rb) rule-name)
+  (cog-set-atomspace! current-as)
+
+  *unspecified*)
+
 (define-public (pln-rm-rules-by-names rule-names)
+"
+  Call ure-rm-rules-by-names on the PLN rule base. See
+
+    (help ure-rm-rules-by-names)
+
+  for more info.
+"
   (define current-as (cog-set-atomspace! pln-atomspace))
   (ure-rm-rules-by-names (pln-mk-rb) rule-names)
   (cog-set-atomspace! current-as)
