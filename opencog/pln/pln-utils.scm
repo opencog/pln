@@ -2,6 +2,7 @@
 
 (use-modules (opencog))
 (use-modules (opencog exec))
+(use-modules (opencog logger))
 (use-modules (opencog ure))
 
 ; ----------------------------------------------------------------------------
@@ -66,7 +67,7 @@
   (cog-set-atomspace! current-as)
   pln-atomspace-rb)
 
-(define-public (pln-load #:key (rule-base ('standard)))
+(define* (pln-load #:key (rule-base ('standard)))
 "
   Load and configure the PLN rule base.
 
@@ -97,6 +98,7 @@
 
   ;; Load rule files
   (pln-load-rules "term/deduction")
+  (pln-load-rules "term/crisp-deduction")
   (pln-load-rules "propositional/modus-ponens")
   (pln-load-rules "propositional/contraposition")
   (pln-load-rules "propositional/fuzzy-conjunction-introduction")
@@ -107,43 +109,43 @@
   (pln-load-meta-rules "predicate/conditional-partial-instantiation")
 
   ;; Attach rules to PLN rule-base
-  (let ((rlst
-         (case rule-base
-           (('empty) (list))
-           (('standard) (list
-                         ;; Deduction
-                         "deduction-implication-rule"
-                         "deduction-subset-rule"
-                         "deduction-inheritance-rule"
+  (let ((rlst (cond ((equal? rule-base 'empty)
+                     (list))
+                    ((equal? rule-base 'standard)
+                     (list
+                      ;; Deduction
+                      "deduction-implication-rule"
+                      "deduction-subset-rule"
+                      "deduction-inheritance-rule"
 
-                         ;; Modus Ponens
-                         "modus-ponens-inheritance-rule"
-                         "modus-ponens-implication-rule"
-                         "modus-ponens-subset-rule"
+                      ;; Modus Ponens
+                      "modus-ponens-inheritance-rule"
+                      "modus-ponens-implication-rule"
+                      "modus-ponens-subset-rule"
 
-                         ;; Contraposition
-                         "crisp-contraposition-implication-scope-rule"
-                         "contraposition-implication-rule"
-                         "contraposition-inheritance-rule"
+                      ;; Contraposition
+                      "crisp-contraposition-implication-scope-rule"
+                      "contraposition-implication-rule"
+                      "contraposition-inheritance-rule"
 
-                         ;; Fuzzy Conjunction Introduction
-                         "fuzzy-conjunction-introduction-1ary-rule"
-                         "fuzzy-conjunction-introduction-2ary-rule"
-                         "fuzzy-conjunction-introduction-3ary-rule"
-                         "fuzzy-conjunction-introduction-4ary-rule"
-                         "fuzzy-conjunction-introduction-5ary-rule"
+                      ;; Fuzzy Conjunction Introduction
+                      "fuzzy-conjunction-introduction-1ary-rule"
+                      "fuzzy-conjunction-introduction-2ary-rule"
+                      "fuzzy-conjunction-introduction-3ary-rule"
+                      "fuzzy-conjunction-introduction-4ary-rule"
+                      "fuzzy-conjunction-introduction-5ary-rule"
 
-                         ;; Fuzzy Disjunction Introduction
-                         "fuzzy-disjunction-introduction-1ary-rule"
-                         "fuzzy-disjunction-introduction-2ary-rule"
-                         "fuzzy-disjunction-introduction-3ary-rule"
-                         "fuzzy-disjunction-introduction-4ary-rule"
-                         "fuzzy-disjunction-introduction-5ary-rule"
+                      ;; Fuzzy Disjunction Introduction
+                      "fuzzy-disjunction-introduction-1ary-rule"
+                      "fuzzy-disjunction-introduction-2ary-rule"
+                      "fuzzy-disjunction-introduction-3ary-rule"
+                      "fuzzy-disjunction-introduction-4ary-rule"
+                      "fuzzy-disjunction-introduction-5ary-rule"
 
-                         ;; Conditional Full Instantiation
-                         "conditional-full-instantiation-implication-scope-meta-rule"
-                         "conditional-full-instantiation-implication-meta-rule"
-                         "conditional-full-instantiation-inheritance-meta-rule")))))
+                      ;; Conditional Full Instantiation
+                      "conditional-full-instantiation-implication-scope-meta-rule"
+                      "conditional-full-instantiation-implication-meta-rule"
+                      "conditional-full-instantiation-inheritance-meta-rule")))))
 
     (ure-add-rules-by-names (pln-mk-rb) rlst))
 
@@ -257,3 +259,5 @@
   See (help cog-bc) for more info.
 "
   (apply cog-bc (cons (pln-rb) args)))
+
+(export pln-load)
