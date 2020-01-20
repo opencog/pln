@@ -32,9 +32,7 @@
 
 (define rule-filenames
   (list "rules/predicate/conditional-direct-evaluation.scm"
-        "rules/crisp/propositional/true-conjunction-introduction.scm"
-        )
-  )
+        "rules/propositional/crisp-conjunction-introduction.scm"))
 (for-each load-from-path rule-filenames)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

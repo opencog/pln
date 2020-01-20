@@ -2,8 +2,9 @@
 ADD_GUILE_MODULE(FILES
 	consequent-disjunction-elimination.scm
 	modus-ponens.scm
-   contraposition.scm
+	contraposition.scm
 	fuzzy-conjunction-introduction.scm
+	crisp-conjunction-introduction.scm
 	fuzzy-disjunction-introduction.scm
 	formulas.scm
 	MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog/pln/rules/propositional"
