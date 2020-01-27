@@ -1,3 +1,5 @@
+;; TODO: should be moved under term, and be generalized
+
 ;; Conditional Direct Evaluation Rule
 ;;
 ;; I
@@ -30,6 +32,7 @@
       (GroundedSchema "scm: conditional-direct-evaluation-implication-scope-formula")
       (Variable "$I"))))
 
+;; TODO: generalize this code and move it to some util file
 (define (conditional-direct-evaluation-implication-scope-formula I)
   ;; (cog-logger-debug "conditional-direct-evaluation-implication-scope-formula I = ~a" I)
   (let* ((out (cog-outgoing-set I))

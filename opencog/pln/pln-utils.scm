@@ -1,3 +1,9 @@
+;; TODO: Load all rules at start up, and only add rule bases
+;;
+;; pln-add-rule-base
+;; pln-list-rule-bases
+;; pln-list-rule-base-rules
+
 (use-modules (srfi srfi-1))
 
 (use-modules (opencog))
@@ -99,6 +105,7 @@
   ;; Load rule files
   (pln-load-rules "term/deduction")
   (pln-load-rules "term/crisp-deduction")
+  (pln-load-rules "term/inheritance-direct-introduction")
   (pln-load-rules "propositional/modus-ponens")
   (pln-load-rules "propositional/contraposition")
   (pln-load-rules "propositional/fuzzy-conjunction-introduction")
