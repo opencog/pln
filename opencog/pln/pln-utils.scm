@@ -5,45 +5,89 @@
 (use-modules (opencog logger))
 (use-modules (opencog ure))
 
-; ----------------------------------------------------------------------------
+;; Atomspace containing all PLN rules. All operations of loading
+;; rules, etc, take place in this atomspace to not pollute the current
+;; atomspace.
+(define-public pln-atomspace (cog-new-atomspace))
+
+(cog-logger-set-level! "debug")
+
+(define-public (pln-load-from-path FILENAME)
+"
+  pln-load-from-path FILENAME
+
+  Like load-from-path but load the content into pln-atomspace. Used to
+  load PLN rules without polluting the current atomspace.
+"
+  ;; Switch to PLN atomspace
+  (define current-as (cog-set-atomspace! pln-atomspace))
+
+  (load-from-path FILENAME)
+
+  ;; Switch back to previous space
+  (cog-set-atomspace! current-as)
+
+  ;; Avoid confusing the user with a return value
+  *unspecified*)
+
+(define-public (pln-rule-type->filename RULE-TYPE)
+"
+  pln-rule-type->filename RULE-TYPE
+
+  Turn a rule type string turn it into a filename ready to be loaded
+  using load-from-path. More precisely returns
+
+  opencog/pln/rules/<RULE-TYPE>.scm
+"
+  (string-append "opencog/pln/rules/" RULE-TYPE ".scm"))
+
+(define-public (pln-meta-rule-type->filename META-RULE-TYPE)
+"
+  pln-meta-rule-type->filename META-RULE-TYPE
+
+  Turn a meta-rule type string turn it into a filename ready to be
+  loaded using load-from-path. More precisely returns
+
+  opencog/pln/meta-rules/<META-RULE-TYPE>.scm
+"
+  (string-append "opencog/pln/meta-rules/" META-RULE-TYPE ".scm"))
+
 (define-public (pln-load-rules RULE-TYPE)
 "
   pln-load-rules RULE-TYPE
 
-  Loads the different variations of the rules known by RULE-TYPE. A RULE-TYPE
-  may include the categorization of the rule. For example, 'term/deduction'
-  implies that the rule to be loaded is the term-logic deduction rule.
-"
-  ; NOTE:
-  ; 1. If a rule needs formula defined in formulas.scm then the rule file
-  ;    should load it.
-  ; 2. Rule files are assumed to be named as "RULE-TYPE.scm"
-  ; 3. load-from-path is used so as to be able to use build_dir/opencog/scm,
-  ;    even when the module isn't installed.
+  Loads the different variations of the rules known by RULE-TYPE in
+  pln-atomspace. A RULE-TYPE may include the categorization of the
+  rule. For example, 'term/deduction' implies that the rule to be loaded
+  is the term-logic deduction rule.
 
-  (load-from-path (string-append "opencog/pln/rules/" RULE-TYPE ".scm"))
-)
-
-(define-public (pln-load-meta-rules RULE-TYPE)
+  Notes:
+    1. If a rule needs formula defined in formulas.scm then the rule file
+       should load it.
+    2. Rule files are assumed to be named as \"RULE-TYPE.scm\"
+    3. load-from-path is used so as to be able to use build_dir/opencog/scm,
+       even when the module isn't installed.
 "
-  pln-load-meta-rules RULE-TYPE
+  (pln-load-from-path (pln-rule-type->filename RULE-TYPE)))
+
+(define-public (pln-load-meta-rules META-RULE-TYPE)
+"
+  pln-load-meta-rules META-RULE-TYPE
 
   Loads the different variations of the meta rules known by
-  RULE-TYPE. A RULE-TYPE may include the categorization of the rule. For
-  example, 'predicate/conditional-full-instantiation' implies that the
-  rule to be loaded is the term-logic deduction rule.
+  META-RULE-TYPE in pln-atomspace. A META-RULE-TYPE may include the
+  categorization of the rule. For example,
+  'predicate/conditional-full-instantiation' implies that the rule to be
+  loaded is the predicate-logic conditional instantiation rule.
+
+  Note:
+    1. If a rule needs formula defined in formulas.scm then the rule file
+       should load it.
+    2. Rule files are assumed to be named as \"META-RULE-TYPE.scm\"
+    3. load-from-path is used so as to be able to use build_dir/opencog/scm,
+       even when the module isn't installed.
 "
-  ; NOTE:
-  ; 1. If a rule needs formula defined in formulas.scm then the rule file
-  ;    should load it.
-  ; 2. Rule files are assumed to be named as "RULE-TYPE.scm"
-  ; 3. load-from-path is used so as to be able to use build_dir/opencog/scm,
-  ;    even when the module isn't installed.
-
-  (load-from-path (string-append "opencog/pln/meta-rules/" RULE-TYPE ".scm"))
-)
-
-(define-public pln-atomspace (cog-new-atomspace))
+  (pln-load-from-path (pln-meta-rule-type->filename META-RULE-TYPE)))
 
 (define-public (pln-mk-rb)
 "
@@ -51,8 +95,7 @@
 
   (Concept \"pln-rb\")
 "
-  (cog-new-node 'ConceptNode "pln-rb")
-)
+  (cog-new-node 'ConceptNode "pln-rb"))
 
 (define-public (pln-rb)
 "
@@ -67,9 +110,11 @@
   (cog-set-atomspace! current-as)
   pln-atomspace-rb)
 
-(define* (pln-load #:key (rule-base ('standard)))
+(define* (pln-load #:key (rule-base 'standard))
 "
-  Load and configure the PLN rule base.
+  Load and configure PLN rules. All or most PLN rules will be loaded
+  in pln-atomspace, however depending on the choosen rule base only
+  some might be used.
 
   Usage: (pln-load #:rule-base rb)
 
@@ -93,12 +138,10 @@
       pln-add-rule-by-name, pln-add-rules-by-names,
       pln-rm-rule-by-name and pln-rm-rules-by-names.
 "
-  ;; Switch to PLN atomspace
-  (define current-as (cog-set-atomspace! pln-atomspace))
-
   ;; Load rule files
   (pln-load-rules "term/deduction")
   (pln-load-rules "term/crisp-deduction")
+  (pln-load-rules "term/inheritance-direct-introduction")
   (pln-load-rules "propositional/modus-ponens")
   (pln-load-rules "propositional/contraposition")
   (pln-load-rules "propositional/fuzzy-conjunction-introduction")
@@ -146,16 +189,13 @@
                       "conditional-full-instantiation-implication-scope-meta-rule"
                       "conditional-full-instantiation-implication-meta-rule"
                       "conditional-full-instantiation-inheritance-meta-rule")))))
-
-    (ure-add-rules-by-names (pln-mk-rb) rlst))
-
-  ;; Switch back to previous space
-  (cog-set-atomspace! current-as)
+    (cog-logger-info "pln-load rlst=~a" rlst)
+    (pln-add-rules-by-names rlst))
 
   ;; Avoid confusing the user with a return value
   *unspecified*)
 
-(define-public (pln-prt-atomspace)
+(define-public (pln-prt-pln-atomspace)
 "
   Print all PLN rules loaded in pln-atomspace
 "
@@ -165,6 +205,12 @@
 
   ;; Avoid confusing the user with a return value
   *unspecified*)
+
+(define-public (pln-prt-atomspace)
+"
+  Like pln-prt-pln-atomspace.
+"
+  (pln-prt-pln-atomspace))
 
 (define-public (pln-weighted-rules)
 "
@@ -211,7 +257,8 @@
   for more info.
 "
   (define current-as (cog-set-atomspace! pln-atomspace))
-  (ure-rm-rules-by-names (pln-mk-rb) rule-names)
+  (cog-logger-info "pln-add-rules-by-names rule-names=~a" rule-names)
+  (ure-add-rules-by-names (pln-mk-rb) rule-names)
   (cog-set-atomspace! current-as)
 
   *unspecified*)
