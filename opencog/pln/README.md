@@ -66,14 +66,20 @@ Then a PLN rule-base must be loaded
 (pln-load)
 ```
 
-At the moment only one rule-base is provided, in the future that same
-command will likely accept optional arguments to load subsets or
-supersets of PLN.
+which loads the standard rule-base by default. One can load different
+rule-bases, see `(help pln-load)` for more details.
 
 The rules are loaded in an auxilary atomspace in order not to pollute
-the current atomspace. That auxilary atomspace can be accessed via the
-`pln-atomspace` variable. In addition the `pln` modules offers helpers
-to display its content without having to switch to it
+the current atomspace.  That auxilary atomspace can be accessed via
+the `pln-atomspace` variable.  If one wants to load a user defined
+rule, one may use the helper
+
+```scheme
+(pln-load-from-path FILENAME)
+```
+
+In addition the `pln` modules offers helpers to display its content
+without having to switch to it
 
 ```scheme
 (pln-prt-atomspace)
@@ -82,7 +88,7 @@ to display its content without having to switch to it
 To simply list its rule names and weights
 
 ```scheme
-(pln-list-rules)
+(pln-weighted-rules)
 ```
 
 By default all rules have a default TV as weight, corresponding to a
