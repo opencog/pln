@@ -1,6 +1,6 @@
 ;; Load PLN
 (use-modules (opencog pln))
-(pln-load)
+(pln-load)                              ; Use the standard rule-base
 
 (use-modules (opencog logger))
 (use-modules (opencog ure))
@@ -19,7 +19,12 @@
                   listener-like-song-from-same-author))
 (define target (Evaluation like (List marry what)))
 
-;; Remove irrelevant rules to speed up reasoning
+;; Remove irrelevant rules. Another option could be to load the empty
+;; rule-base with
+;;
+;; (pln-load #:rule-base 'empty)
+;;
+;; and add PLN rules, as done in the ancestors PLN example.
 (pln-rm-rules-by-names (list
                         ;; Remove deduction rules
                         "deduction-implication-rule"
