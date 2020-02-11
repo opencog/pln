@@ -10,8 +10,6 @@
 ;; atomspace.
 (define-public pln-atomspace (cog-new-atomspace))
 
-(cog-logger-set-level! "debug")
-
 (define-public (pln-load-from-path FILENAME)
 "
   pln-load-from-path FILENAME
@@ -189,7 +187,6 @@
                       "conditional-full-instantiation-implication-scope-meta-rule"
                       "conditional-full-instantiation-implication-meta-rule"
                       "conditional-full-instantiation-inheritance-meta-rule")))))
-    (cog-logger-info "pln-load rlst=~a" rlst)
     (pln-add-rules-by-names rlst))
 
   ;; Avoid confusing the user with a return value
@@ -257,7 +254,6 @@
   for more info.
 "
   (define current-as (cog-set-atomspace! pln-atomspace))
-  (cog-logger-info "pln-add-rules-by-names rule-names=~a" rule-names)
   (ure-add-rules-by-names (pln-mk-rb) rule-names)
   (cog-set-atomspace! current-as)
 
