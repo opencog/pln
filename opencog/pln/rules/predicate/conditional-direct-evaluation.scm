@@ -111,7 +111,7 @@
        (strength (if (> antecedent-length 0)
                         (exact->inexact (/ inter-length antecedent-length))
                         0))
-       (confidence (exact->inexact (/ antecedent-length K))))
+       (confidence (exact->inexact (/ antecedent-length (+ antecedent-length K)))))
     (stv strength confidence)))
 
 ;; Name the rule

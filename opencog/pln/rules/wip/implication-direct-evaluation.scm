@@ -115,7 +115,7 @@
          (TV-strength (if (> P-length 0)
                           (exact->inexact (/ P-inter-Q-length P-length))
                           0))
-         (TV-confidence (exact->inexact (/ P-length K))))
+         (TV-confidence (exact->inexact (/ P-length (+ P-length K)))))
     ;; (cog-logger-debug "[PLN-Induction] P = ~a" P)
     ;; (cog-logger-debug "[PLN-Induction] Q = ~a" Q)
     ;; (cog-logger-debug "[PLN-Induction] P-true-enough-terms = ~a" P-true-enough-terms) 
