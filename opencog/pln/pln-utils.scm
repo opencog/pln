@@ -209,6 +209,12 @@
 "
   (pln-prt-pln-atomspace))
 
+(define-public (pln-rules)
+"
+  List all rules in the PLN rule base.
+"
+  (ure-rules (pln-rb)))
+
 (define-public (pln-weighted-rules)
 "
   List all weighted rules in the PLN rule base.
@@ -286,6 +292,16 @@
   (cog-set-atomspace! current-as)
 
   *unspecified*)
+
+(define-public (pln-rm-all-rules)
+"
+  Remove all rules for the PLN rule base. See
+
+    (help ure-rm-all-rules)
+
+  for more info.
+"
+  (ure-rm-all-rules (pln-rb)))
 
 (define-public (pln-fc . args)
 "
