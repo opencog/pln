@@ -12,27 +12,24 @@
 
 ;; Rule
 (define inheritance-direct-introduction-rule
-  (Bind
-    (VariableSet
-      (TypedVariable
-        (Variable "$A")
-        (Type "ConceptNode"))
-      (TypedVariable
-        (Variable "$B")
-        (Type "ConceptNode")))
-    (Present
-      (Variable "$A")
-      (Variable "$B"))
-    (ExecutionOutput
-      (GroundedSchema "scm: inheritance-direct-introduction")
-      (List
-        ;; Conclusion
-        (Inheritance
-          (Variable "$A")
-          (Variable "$B"))
-        ;; Premises
-        (Variable "$A")
-        (Variable "$B")))))
+  (let* ((A (Variable "$A"))
+         (B (Variable "$B"))
+         (CT (Type "ConceptNode")))
+    (Bind
+      (VariableSet
+        (TypedVariable A CT)
+        (TypedVariable B CT))
+      (Present
+        A
+        B)
+      (ExecutionOutput
+        (GroundedSchema "scm: inheritance-direct-introduction")
+        (List
+          ;; Conclusion
+          (Inheritance A B)
+          ;; Premises
+          A
+          B)))))
 
 ;; Helpers
 (define (variable? X)
@@ -56,15 +53,15 @@
 (define (inheritance-evidence->tv A-mbrs B-mbrs)
   (cog-logger-debug "(inheritance-evidence->tv A-mbrs=~a B-mbrs=~a)" A-mbrs B-mbrs)
   (let* ;; TODO consider TVs of the members
-       (A-size (length A-mbrs))
-       (AB-mbrs (lset-intersection equal? A-mbrs B-mbrs))
-       (AB-size (length AB-mbrs))
-       (strength (if (< 0 A-size)
-                     (exact->inexact (/ AB-size A-size))
-                     1))
-       (confidence (if (< 0 A-size)
-                       (count->confidence A-size)
-                       0)))
+       ((A-size (length A-mbrs))
+        (AB-mbrs (lset-intersection equal? A-mbrs B-mbrs))
+        (AB-size (length AB-mbrs))
+        (strength (if (< 0 A-size)
+                      (exact->inexact (/ AB-size A-size))
+                      1))
+        (confidence (if (< 0 A-size)
+                        (count->confidence A-size)
+                        0)))
     (stv strength confidence)))
 
 ;; Formula

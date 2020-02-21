@@ -17,24 +17,24 @@
 ;;
 ;; TODO: replace by generator.
 (define subset-condition-negation-rule
-  (define A (Variable "$A"))
-  (define B (Variable "$B"))
-  (define CT (Type "ConceptNode"))
-  (Bind
-    (VariableSet
-      (TypedVariable A CT)
-      (TypedVariable B CT))
-    (Present
-      (Subset A B))
-    (ExecutionOutput
-      (GroundedSchema "scm: subset-condition-negation")
-      (List
-        ;; Conclusion
-        (Subset (Not A) B)
-        ;; Premises
-        (Subset A B)
-        A
-        B))))
+  (let* ((A (Variable "$A"))
+         (B (Variable "$B"))
+         (CT (Type "ConceptNode")))
+    (Bind
+      (VariableSet
+        (TypedVariable A CT)
+        (TypedVariable B CT))
+      (Present
+        (Subset A B))
+      (ExecutionOutput
+        (GroundedSchema "scm: subset-condition-negation")
+        (List
+          ;; Conclusion
+          (Subset (Not A) B)
+          ;; Premises
+          (Subset A B)
+          A
+          B)))))
 
 ;; Formula
 (define (subset-condition-negation conclusion . premises)
@@ -47,10 +47,10 @@
              (As (cog-mean A))
              (Ac (cog-confidence A))
              (Bs (cog-mean B))
-             (NSs (if (< A-s 1)
+             (NSs (if (< As 1)
                       (/ (- Bs (* Ss As)) (- 1 As))
                       1))
-             (NSc (if (< A-s 1) Ac 0))
+             (NSc (if (< As 1) Ac 0))
              (NStv (stv NSs NSc)))
         (cog-merge-hi-conf-tv! NS NStv))))
 

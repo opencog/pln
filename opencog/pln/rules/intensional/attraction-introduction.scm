@@ -24,28 +24,28 @@
 ;; now the prior of B is 1.
 
 ;; Rule for Subset (TODO: replace by generator)
-(define subset-attraction-rule
-  (define A (Variable "$A"))
-  (define B (Variable "$B"))
-  (define CT (Type "ConceptNode"))
-  (BindLink
-    (VariableSet
-      (TypedVariable A CT)
-      (TypedVariable B CT))
-    (Present
-      (Subset A B)
-      (Subset (Not A) B))
-    (ExecutionOutputLink
-      (GroundedSchemaNode "scm: attraction")
-      (ListLink
-        ;; Conclusion
-        (Attraction A B)
-        ;; Premises
+(define subset-attraction-introduction-rule
+  (let* ((A (Variable "$A"))
+         (B (Variable "$B"))
+         (CT (Type "ConceptNode")))
+    (BindLink
+      (VariableSet
+        (TypedVariable A CT)
+        (TypedVariable B CT))
+      (Present
         (Subset A B)
-        (Subset (Not A) B)))))
+        (Subset (Not A) B))
+      (ExecutionOutputLink
+        (GroundedSchemaNode "scm: attraction-introduction")
+        (ListLink
+          ;; Conclusion
+          (Attraction A B)
+          ;; Premises
+          (Subset A B)
+          (Subset (Not A) B))))))
 
 ;; Formula
-(define (attraction conclusion . premises)
+(define (attraction-introduction conclusion . premises)
   (if (= (length premises) 2)
       (let* ((ATT conclusion)
              (SAB (car premises))
@@ -56,5 +56,7 @@
         (cog-merge-hi-conf-tv! ATT ATTtv))))
 
 ; Name the rule
-(define subset-attraction-rule-name (DefinedSchemaNode "subset-attraction-rule"))
-(DefineLink subset-attraction-rule-name subset-attraction-rule)
+(define subset-attraction-introduction-rule-name
+  (DefinedSchemaNode "subset-attraction-introduction-rule"))
+(DefineLink subset-attraction-introduction-rule-name
+  subset-attraction-introduction-rule)

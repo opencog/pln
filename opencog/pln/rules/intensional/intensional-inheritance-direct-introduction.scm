@@ -9,6 +9,7 @@
 ;;
 ;; A
 ;; B
+;; precondition: there exists X, (Attraction A X) and (Attraction B X)
 ;; |-
 ;; IntensionalInheritance <TV>
 ;;   A
@@ -67,24 +68,39 @@
 
 ;; Rule
 (define intensional-inheritance-direct-introduction-rule
-  (define A (Variable "$A"))
-  (define B (Variable "$B"))
-  (define CT (Type "ConceptNode"))
-  (Bind
-    (VariableSet
-      (TypedVariable A CT)
-      (TypedVariable A CT))
-    (Present
-      A
-      B)
-    (ExecutionOutput
-      (GroundedSchema "scm: intensional-inheritance-direct-introduction")
-      (List
-        ;; Conclusion
-        (IntensionalInheritance A B)
-        ;; Premises
-        A
-        B))))
+  (let* ((A (Variable "$A"))
+         (B (Variable "$B"))
+         (X (Variable "$X"))
+         (CT (Type "ConceptNode")))
+    (Bind
+      (VariableSet
+        (TypedVariable A CT)
+        (TypedVariable B CT))
+      (And
+        (Present
+          A
+          B)
+        ;; There exists X such that
+        ;;
+        ;; (Attraction A X)
+        ;; (Attraction B X)
+        ;;
+        ;; are present in the atomspace
+        (Satisfaction
+          (TypedVariable X CT)
+          (Present
+            (Attraction A X)
+            (Attraction B X)))
+        ;; A and B are different
+        (Not (Equal A B)))
+      (ExecutionOutput
+        (GroundedSchema "scm: intensional-inheritance-direct-introduction")
+        (List
+          ;; Conclusion
+          (IntensionalInheritance A B)
+          ;; Premises
+          A
+          B)))))
 
 ;; Formula
 (define (intensional-inheritance-direct-introduction conclusion . premises)
@@ -108,21 +124,21 @@
   ;; Attraction <TV>
   ;;   A
   ;;   X
-  (define (numerator A-ats B)
-    (define (fuzzy-intersect A-at)
-      (let* ((pat (gdr A-at))
-             (B-at (cog-link 'AttractionLink B pat)))
-        (if (null? B-at)
+  (define (numerator A B-ats)
+    (define (fuzzy-intersect B-at)
+      (let* ((pat (gdr B-at))
+             (A-at (cog-link 'AttractionLink A pat)))
+        (if (null? A-at)
             0
-            (min (cog-mean B-at) (cog-mean A-at)))))
-    (fold + 0 (map fuzzy-intersect A-ats)))
+            (min (cog-mean A-at) (cog-mean B-at)))))
+    (fold + 0 (map fuzzy-intersect B-ats)))
 
-  ;; Given the attraction links of A calculate the fuzzy sum of the
-  ;; patterns of A expressed as
+  ;; Given the attraction links of B calculate the fuzzy sum of the
+  ;; patterns of B expressed as
   ;;
-  ;; Sum_x pattern-of(X,A)
-  (define (denominator A-ats)
-    (fold + 0 (map cog-mean A-ats)))
+  ;; Sum_x pattern-of(X,B)
+  (define (denominator B-ats)
+    (fold + 0 (map cog-mean B-ats)))
 
   ;; (cog-logger-debug "(intensional-inheritance-direct-introduction conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 2)
@@ -130,11 +146,12 @@
              (A (car premises))
              (B (cadr premises))
              ;; Fetch all patterns of A (i.e. AttractionLink targets)
-             (A-ats (get-attractions A))
-             (TVs (numerator A-ats B) / (denominator A-ats))
-             (TVc (count->confidence (length A-ats)))
+             (B-ats (get-attractions B))
+             (dnt (denominator B-ats))
+             (TVs (if (< 0 dnt) (/ (numerator B-ats A) dnt) 1))
+             (TVc (count->confidence (length B-ats)))
              (TV (stv TVs TVc)))
-        (cog-merge-hi-conf-tv! IntInh TV))))
+        (if (< 0 TVc) (cog-merge-hi-conf-tv! IntInh TV)))))
 
 ; Name the rule
 (define intensional-inheritance-direct-introduction-rule-name
