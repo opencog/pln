@@ -147,6 +147,7 @@
   (pln-load-rules "propositional/fuzzy-disjunction-introduction")
   (pln-load-rules "intensional/attraction-introduction")
   (pln-load-rules "intensional/intensional-inheritance-direct-introduction")
+  (pln-load-rules "intensional/intensional-similarity-direct-introduction")
 
   ;; Load meta rule files
   (pln-load-meta-rules "predicate/conditional-full-instantiation")
