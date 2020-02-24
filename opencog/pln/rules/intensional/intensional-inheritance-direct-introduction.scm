@@ -112,7 +112,7 @@
   (define (get-attractions A)
     (let* ((at-links (cog-filter 'AttractionLink (cog-incoming-set A)))
            (A-at? (lambda (x) (equal? A (gar x)))))
-      (map gar (filter A-at? at-links))))
+      (filter A-at? at-links)))
     
   ;; Given the attraction links of A and B calculate the fuzzy
   ;; intersection between the patterns of A and B, expressed as
@@ -130,6 +130,7 @@
              (A-at (cog-link 'AttractionLink A pat)))
         (if (null? A-at)
             0
+            ;; TODO: maybe use (mean * confidence) instead of mean
             (min (cog-mean A-at) (cog-mean B-at)))))
     (fold + 0 (map fuzzy-intersect B-ats)))
 
@@ -145,10 +146,10 @@
       (let* ((IntInh conclusion)
              (A (car premises))
              (B (cadr premises))
-             ;; Fetch all patterns of A (i.e. AttractionLink targets)
+             ;; Fetch all attraction links and calculate TV 
              (B-ats (get-attractions B))
              (dnt (denominator B-ats))
-             (TVs (if (< 0 dnt) (/ (numerator B-ats A) dnt) 1))
+             (TVs (if (< 0 dnt) (/ (numerator A B-ats) dnt) 1))
              (TVc (count->confidence (length B-ats)))
              (TV (stv TVs TVc)))
         (if (< 0 TVc) (cog-merge-hi-conf-tv! IntInh TV)))))
