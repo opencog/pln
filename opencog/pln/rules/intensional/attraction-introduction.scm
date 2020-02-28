@@ -53,7 +53,7 @@
              (ATTs (max 0 (- (cog-mean SAB) (cog-mean SNAB))))
              (ATTc (min (cog-confidence SAB) (cog-confidence SNAB)))
              (ATTtv (stv ATTs ATTc)))
-        (cog-merge-hi-conf-tv! ATT ATTtv))))
+        (if (< 0 ATTc) (cog-merge-hi-conf-tv! ATT ATTtv)))))
 
 ; Name the rule
 (define subset-attraction-introduction-rule-name
