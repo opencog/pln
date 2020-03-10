@@ -94,9 +94,10 @@
         (List
           ;; Conclusion
           (IntensionalSimilarity A B)
-          ;; Premises
-          A
-          B)))))
+          ;; Premises (wrapped in Set because commutative)
+          (Set
+            A
+            B))))))
 
 ;; Formula
 (define (intensional-similarity-direct-introduction conclusion . premises)
@@ -148,10 +149,10 @@
     (fold + 0 (map fuzzy-union pats)))
 
   ;; (cog-logger-debug "(intensional-similarity-direct-introduction conclusion=~a . premises=~a)" conclusion premises)
-  (if (= (length premises) 2)
+  (if (= (length premises) 1)
       (let* ((IntInh conclusion)
-             (A (car premises))
-             (B (cadr premises))
+             (A (car (car premises)))
+             (B (cadr (car premises)))
              ;; Fetch all pattern attraction links and patterns
              (A-ats (get-attractions A))
              (B-ats (get-attractions B))
