@@ -226,9 +226,9 @@
 "
   (ure-weighted-rules (pln-rb)))
 
-(define-public (pln-set-rule-tv! rule-name tv)
+(define-public (pln-set-rule-tv! rule-alias tv)
 "
-  Set the weight TV of a given rule name, i.e. DefinedSchemaNode,
+  Set the weight TV of a given rule alias, i.e. DefinedSchemaNode,
   associated to the PLN rule base. Under the hood this sets the TV
   of
 
@@ -242,7 +242,7 @@
 
   *unspecified*)
 
-(define-public (pln-add-rule-by-name rule-name)
+(define-public (pln-add-rule-by-name rule-name . tv)
 "
   Call ure-add-rule-by-name on the PLN rule base. See
 
@@ -251,7 +251,7 @@
   for more info.
 "
   (define current-as (cog-set-atomspace! pln-atomspace))
-  (ure-add-rule-by-name (pln-mk-rb) rule-name)
+  (apply ure-add-rule-by-name (cons (pln-mk-rb) (cons rule-name tv)))
   (cog-set-atomspace! current-as)
 
   *unspecified*)
