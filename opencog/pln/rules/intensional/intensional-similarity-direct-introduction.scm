@@ -151,8 +151,8 @@
   ;; (cog-logger-debug "(intensional-similarity-direct-introduction conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 1)
       (let* ((IntInh conclusion)
-             (A (car (car premises)))
-             (B (cadr (car premises)))
+             (A (gar (car premises)))
+             (B (gdr (car premises)))
              ;; Fetch all pattern attraction links and patterns
              (A-ats (get-attractions A))
              (B-ats (get-attractions B))
