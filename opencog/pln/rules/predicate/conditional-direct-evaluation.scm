@@ -96,7 +96,6 @@
 ;; the implication
 (define (evidence->tv antecedent-terms consequent-terms)
   (let* ;; TODO replace by a distributional TV based calculation.
-      ((K 800) ; parameter to convert from count to confidence
        (true-enough? (lambda (A) (let* ((TV (cog-tv A))
                                         (s (cog-tv-mean TV))
                                         (c (cog-tv-confidence TV)))
@@ -111,7 +110,7 @@
        (strength (if (> antecedent-length 0)
                         (exact->inexact (/ inter-length antecedent-length))
                         0))
-       (confidence (exact->inexact (/ antecedent-length K))))
+       (confidence (count->confidence antecedent-length))
     (stv strength confidence)))
 
 ;; Name the rule

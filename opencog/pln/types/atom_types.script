@@ -1,0 +1,9 @@
+// Custom atom types used by PLN
+
+// Add IntensionalDifferenceLink. Introduced as an experiment for
+// relating reasoning and word2vec vector arithmetic. See rule
+//
+// opencog/pln/rules/intensional/intensional-difference-direct-introduction.scm
+//
+// for a formal definition of its semantics.
+INTENSIONAL_DIFFERENCE_LINK <- ORDERED_LINK,EVALUATABLE_LINK

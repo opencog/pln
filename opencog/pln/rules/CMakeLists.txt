@@ -7,5 +7,8 @@ ADD_SUBDIRECTORY(term)
 # Predicate logic rules
 ADD_SUBDIRECTORY(predicate)
 
+# Intensional reasoning rules
+ADD_SUBDIRECTORY(intensional)
+
 # Work in progress rules
 ADD_SUBDIRECTORY(wip)

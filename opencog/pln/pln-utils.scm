@@ -10,8 +10,6 @@
 ;; atomspace.
 (define-public pln-atomspace (cog-new-atomspace))
 
-(cog-logger-set-level! "debug")
-
 (define-public (pln-load-from-path FILENAME)
 "
   pln-load-from-path FILENAME
@@ -142,10 +140,15 @@
   (pln-load-rules "term/deduction")
   (pln-load-rules "term/crisp-deduction")
   (pln-load-rules "term/inheritance-direct-introduction")
+  (pln-load-rules "term/condition-negation")
   (pln-load-rules "propositional/modus-ponens")
   (pln-load-rules "propositional/contraposition")
   (pln-load-rules "propositional/fuzzy-conjunction-introduction")
   (pln-load-rules "propositional/fuzzy-disjunction-introduction")
+  (pln-load-rules "intensional/attraction-introduction")
+  (pln-load-rules "intensional/intensional-inheritance-direct-introduction")
+  (pln-load-rules "intensional/intensional-similarity-direct-introduction")
+  (pln-load-rules "intensional/intensional-difference-direct-introduction")
 
   ;; Load meta rule files
   (pln-load-meta-rules "predicate/conditional-full-instantiation")
@@ -189,7 +192,6 @@
                       "conditional-full-instantiation-implication-scope-meta-rule"
                       "conditional-full-instantiation-implication-meta-rule"
                       "conditional-full-instantiation-inheritance-meta-rule")))))
-    (cog-logger-info "pln-load rlst=~a" rlst)
     (pln-add-rules-by-names rlst))
 
   ;; Avoid confusing the user with a return value
@@ -212,15 +214,21 @@
 "
   (pln-prt-pln-atomspace))
 
+(define-public (pln-rules)
+"
+  List all rules in the PLN rule base.
+"
+  (ure-rules (pln-rb)))
+
 (define-public (pln-weighted-rules)
 "
   List all weighted rules in the PLN rule base.
 "
   (ure-weighted-rules (pln-rb)))
 
-(define-public (pln-set-rule-tv! rule-name tv)
+(define-public (pln-set-rule-tv! rule-alias tv)
 "
-  Set the weight TV of a given rule name, i.e. DefinedSchemaNode,
+  Set the weight TV of a given rule alias, i.e. DefinedSchemaNode,
   associated to the PLN rule base. Under the hood this sets the TV
   of
 
@@ -234,7 +242,7 @@
 
   *unspecified*)
 
-(define-public (pln-add-rule-by-name rule-name)
+(define-public (pln-add-rule-by-name rule-name . tv)
 "
   Call ure-add-rule-by-name on the PLN rule base. See
 
@@ -243,7 +251,7 @@
   for more info.
 "
   (define current-as (cog-set-atomspace! pln-atomspace))
-  (ure-add-rule-by-name (pln-mk-rb) rule-name)
+  (apply ure-add-rule-by-name (cons (pln-mk-rb) (cons rule-name tv)))
   (cog-set-atomspace! current-as)
 
   *unspecified*)
@@ -257,7 +265,6 @@
   for more info.
 "
   (define current-as (cog-set-atomspace! pln-atomspace))
-  (cog-logger-info "pln-add-rules-by-names rule-names=~a" rule-names)
   (ure-add-rules-by-names (pln-mk-rb) rule-names)
   (cog-set-atomspace! current-as)
 
@@ -290,6 +297,16 @@
   (cog-set-atomspace! current-as)
 
   *unspecified*)
+
+(define-public (pln-rm-all-rules)
+"
+  Remove all rules for the PLN rule base. See
+
+    (help ure-rm-all-rules)
+
+  for more info.
+"
+  (ure-rm-all-rules (pln-rb)))
 
 (define-public (pln-fc . args)
 "
