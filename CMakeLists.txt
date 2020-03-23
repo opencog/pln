@@ -57,16 +57,23 @@ ADD_DEFINITIONS(-DPROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 # CogUtil must come first, because it supplies various FindXXX macros.
 
 # Cogutil
-FIND_PACKAGE(CogUtil CONFIG REQUIRED)
+FIND_PACKAGE(CogUtil 2.0.1 CONFIG REQUIRED)
 IF (COGUTIL_FOUND)
-    MESSAGE(STATUS "CogUtil version ${COGUTIL_VERSION} found.")
-    ADD_DEFINITIONS(-DHAVE_COGUTIL)
-    SET(HAVE_COGUTIL 1)
+	MESSAGE(STATUS "CogUtil version ${COGUTIL_VERSION} found.")
+	ADD_DEFINITIONS(-DHAVE_COGUTIL)
+	SET(HAVE_COGUTIL 1)
 ELSE (COGUTIL_FOUND)
-    MESSAGE(FATAL_ERROR "CogUtil missing: it is needed!")
+	MESSAGE(FATAL_ERROR "CogUtil missing: it is needed!")
 ENDIF (COGUTIL_FOUND)
 
-# AtomSpace
+# add the 'cmake' directory from cogutil to search path
+list(APPEND CMAKE_MODULE_PATH  ${COGUTIL_DATA_DIR}/cmake)
+include(OpenCogGccOptions)
+include(Summary)
+
+# ------------------------------------------------------------
+# The atomspace is required.
+
 FIND_PACKAGE(AtomSpace 5.0.3 CONFIG REQUIRED)
 IF (ATOMSPACE_FOUND)
 	MESSAGE(STATUS "AtomSpace found.")
@@ -75,6 +82,16 @@ IF (ATOMSPACE_FOUND)
 ELSE (ATOMSPACE_FOUND)
 	MESSAGE(FATAL_ERROR "AtomSpace missing: it is needed!")
 ENDIF (ATOMSPACE_FOUND)
+
+# ----------------------------------------------------------
+# Python
+
+FIND_PACKAGE(Python3Interp)
+IF (3.4.0 VERSION_LESS ${PYTHON3_VERSION_STRING})
+   SET (HAVE_PY_INTERP 1)
+   SET (PYTHON_VER python3.5)
+   MESSAGE(STATUS "Python ${PYTHON3_VERSION_STRING} interpreter found.")
+ENDIF()
 
 # URE
 FIND_PACKAGE(URE 1.0.0 CONFIG REQUIRED)
