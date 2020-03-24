@@ -15,7 +15,7 @@ in the well known and proven framework of probability theory.
 
 ### Prequisite
 
-* [Unified Rule Engine](https://github.com/opencog/ure)
+* Build and install [Unified Rule Engine](https://github.com/opencog/ure)
 
 ### Building PLN
 
@@ -35,7 +35,7 @@ make -j
 
 ### Installing PLN
 
-After building, you MUST install PLN
+After building, you must install PLN
 
 ```bash
 sudo make install
