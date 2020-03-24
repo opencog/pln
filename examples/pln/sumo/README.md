@@ -1,5 +1,8 @@
 # Backward Chainer Experiments over SUMO
 
+**Warning:** this example does not use the new PLN API and thus is not
+recommanded for new users.
+
 ## Usage
 
 ### Import SUMO

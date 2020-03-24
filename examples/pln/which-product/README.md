@@ -1,5 +1,7 @@
 # Overview
 
+**WIP**
+
 Work in progress of a PLN inference to infer that the cost of some
 product is less than the cost of another. The facts about the products
 would be obtained via the NLP pipeline, and the conclusion would be

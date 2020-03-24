@@ -1,6 +1,9 @@
 Amusing honest friend
 =====================
 
+**Warning:** this example does not use the new PLN API and thus is not
+recommanded for new users.
+
 PLN demo involving deductive and abductive reasoning. Self is looking
 for an amusing honest friend and infers that Bob would be one based on
 his actions and the fact that friends tend to be honest (that's the
