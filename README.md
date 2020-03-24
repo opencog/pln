@@ -74,7 +74,7 @@ Examples
 --------
 
 PLN examples can be found under the [examples/pln](examples/pln)
-directory. In particular the following examples use the PLN module see
+directory. In particular the following examples use the `pln` module
 
 
 * [examples/pln/ancestors](examples/pln/ancestors)
