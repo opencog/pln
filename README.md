@@ -29,8 +29,6 @@ opencog/pln/meta-rules
 ```
 
 One can directly use these rules with the URE. Alternatively there is
-a scheme PLN module containing predifined rule sets, see
+a scheme PLN module containing predefined rule sets, see
 
-```
-<PLN_ROOT>/opencog/pln/README.md
-```
+[opencog/pln/README.md](opencog/pln/README.md)
