@@ -108,13 +108,13 @@
   (cog-set-atomspace! current-as)
   pln-atomspace-rb)
 
-(define* (pln-load #:key (rule-base 'standard))
+(define* (pln-load . rule-bases)
 "
   Load and configure PLN rules. All or most PLN rules will be loaded
   in pln-atomspace, however depending on the choosen rule base only
   some might be used.
 
-  Usage: (pln-load #:rule-base rb)
+  Usage: (pln-load rb)
 
   rb: [optional, default='standard] Rule base to load, with 2 rule
       bases supported so far
@@ -136,6 +136,8 @@
       pln-add-rule-by-name, pln-add-rules-by-names,
       pln-rm-rule-by-name and pln-rm-rules-by-names.
 "
+  (define rule-base (if (< 0 (length rule-bases)) (car rule-bases) 'standard))
+
   ;; Load rule files
   (pln-load-rules "term/deduction")
   (pln-load-rules "term/crisp-deduction")

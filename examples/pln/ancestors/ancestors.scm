@@ -1,6 +1,6 @@
 ;; Load PLN (with only the rule that matters)
 (use-modules (opencog pln))
-(pln-load #:rule-base 'empty)
+(pln-load 'empty)
 (pln-add-rule-by-name "present-deduction-inheritance-rule")
 
 ;; Load KB
