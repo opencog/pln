@@ -62,7 +62,23 @@ load the PLN module
 (use-modules (opencog pln))
 ```
 
-then load PLN rules with `pln-load`, and run the forward and backward
-chainers with `pln-fc` and `pln-bc`. More help can be found in guile's
-online help `(help pln-load)`, `(help pln-fc)` and `(help pln-bc)`, as
-well as in [opencog/pln/README.md](opencog/pln/README.md)
+then load PLN rules with functions `pln-load`, and run the forward and
+backward chainers with `pln-fc` and `pln-bc`. More help can be found in
+guile's online help `(help pln-load)`, `(help pln-fc)` and `(help pln-bc)`.
+
+More usage information can be found in
+
+[opencog/pln/README.md](opencog/pln/README.md)
+
+Examples
+--------
+
+PLN examples can be found under the [examples/pln](examples/pln)
+directory. In particular the following examples use the PLN module see
+
+
+[examples/pln/ancestors](examples/pln/ancestors)
+[examples/pln/good-songs](examples/pln/good-songs)
+
+The other examples can be informative but directly use the URE and
+thus are less user friendly.
