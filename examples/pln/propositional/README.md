@@ -1,6 +1,9 @@
 Propositional
 =============
 
+**Warning:** this example does not use the new PLN API and thus is not
+recommanded for new users.
+
 Simple example showing how to calculate the TV of a fuzzy proposition
 using the backward chainer.
 

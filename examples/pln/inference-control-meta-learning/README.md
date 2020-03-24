@@ -1,6 +1,10 @@
 Inference Control Meta-Learning
 ===============================
 
+**Warning:** this example does not use the new PLN API and thus is not
+recommanded for new users, though would not be recommanded to new
+users anyway due to its large complexity anyway.
+
 Experiment with inference control meta-learning. The procedure
 
 1. Runs a series of backward inferences.

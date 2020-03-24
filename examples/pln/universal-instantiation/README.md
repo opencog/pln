@@ -1,6 +1,9 @@
 Universal Instantiation
 =======================
 
+**Warning:** this example does not use the new PLN API and thus is not
+recommanded for new users.
+
 Simple example of universal instantiation, using the pattern matcher,
 the backward and forward chainers.
 
