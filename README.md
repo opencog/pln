@@ -77,8 +77,8 @@ PLN examples can be found under the [examples/pln](examples/pln)
 directory. In particular the following examples use the PLN module see
 
 
-[examples/pln/ancestors](examples/pln/ancestors)
-[examples/pln/good-songs](examples/pln/good-songs)
+* [examples/pln/ancestors](examples/pln/ancestors)
+* [examples/pln/good-songs](examples/pln/good-songs)
 
 The other examples can be informative but directly use the URE and
 thus are less user friendly.
