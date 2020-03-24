@@ -1,4 +1,4 @@
-# Term logic rules
+# Intensional rules
 ADD_GUILE_MODULE(FILES
 	attraction-introduction.scm
 	intensional-inheritance-direct-introduction.scm

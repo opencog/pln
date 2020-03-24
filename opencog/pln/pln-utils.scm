@@ -139,12 +139,12 @@
   ;; Load rule files
   (pln-load-rules "term/deduction")
   (pln-load-rules "term/crisp-deduction")
-  (pln-load-rules "term/inheritance-direct-introduction")
   (pln-load-rules "term/condition-negation")
   (pln-load-rules "propositional/modus-ponens")
   (pln-load-rules "propositional/contraposition")
   (pln-load-rules "propositional/fuzzy-conjunction-introduction")
   (pln-load-rules "propositional/fuzzy-disjunction-introduction")
+  (pln-load-rules "extensional/inheritance-direct-introduction")
   (pln-load-rules "intensional/attraction-introduction")
   (pln-load-rules "intensional/intensional-inheritance-direct-introduction")
   (pln-load-rules "intensional/intensional-similarity-direct-introduction")
