@@ -6,17 +6,20 @@
 ;;     A
 ;;     B
 ;;
+;; based on the direct evidence of patterns of A and B, and
+;; the intensional difference between them.
+;;
 ;; IntensionalDifferenceLink
 ;;   A
 ;;   B
 ;; AttractionLink
-;;   X
 ;;   A
-;; AttractionLink
 ;;   X
+;; AttractionLink
 ;;   B
+;;   X
 ;; |-
-;; MemberLink
+;; MemberLink <TV>
 ;;   X
 ;;   IntensionalDifferenceLink
 ;;     A
@@ -36,8 +39,8 @@
       (And
         (Present
           (IntensionalDifference A B)
-          (Attraction X A)
-          (Attraction X B)))
+          (Attraction A X)
+          (Attraction B X)))
       (ExecutionOutput
         (GroundedSchema "scm: intensional-difference-members-direct-introduction")
         (List
@@ -69,26 +72,26 @@
   ;; Given the attraction links of A and B, calculate the
   ;; strength of the TV expressed as
   ;;
-  ;; min(attraction(X,A), 1 - attraction(X,B))
+  ;; min(attraction(A,X), 1 - attraction(B,X))
   ;;
-  ;; where the attraction(X,A) is the strength of the TV of
+  ;; where the attraction(A,X) is the strength of the TV of
   ;;
   ;; Attraction <TV>
-  ;;   X
   ;;   A
+  ;;   X
   (define (get-strength A-at B-at)
     (min (cog-mean A-at) (- 1 (get-pattern-strength B-at))))
 
   ;; Given the attraction links of A and B, calculate the
   ;; confidence of the TV expressed as
   ;;
-  ;; min(attraction(X,A), attraction(X,B))
+  ;; min(attraction(A,X), attraction(B,X))
   ;;
-  ;; where the attraction(X,A) is the confidence of the TV of
+  ;; where the attraction(A,X) is the confidence of the TV of
   ;;
   ;; Attraction <TV>
-  ;;   X
   ;;   A
+  ;;   X
   (define (get-confidence A-at B-at)
     (min (cog-confidence A-at) (cog-confidence B-at)))
 
@@ -96,8 +99,8 @@
          (A (gar premise))
          (B (gdr premise))
          (memb (gar MembLink))
-         (A-at (get-attraction memb A))
-         (B-at (get-attraction memb B))
+         (A-at (get-attraction A memb))
+         (B-at (get-attraction B memb))
          (TVs (get-strength A-at B-at))
          (TVc (get-confidence A-at B-at))
          (TV (stv TVs TVc)))
