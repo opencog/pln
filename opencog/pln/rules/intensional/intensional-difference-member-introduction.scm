@@ -26,7 +26,7 @@
 ;;     B
 
 ;; Rule
-(define intensional-difference-members-direct-introduction-rule
+(define intensional-difference-member-introduction-rule
   (let* ((A (Variable "$A"))
          (B (Variable "$B"))
          (X (Variable "$X"))
@@ -42,7 +42,7 @@
           (Attraction A X)
           (Attraction B X)))
       (ExecutionOutput
-        (GroundedSchema "scm: intensional-difference-members-direct-introduction")
+        (GroundedSchema "scm: intensional-difference-member-introduction")
         (List
           ;; Conclusion
           (Member X (IntensionalDifference A B))
@@ -52,7 +52,7 @@
           (Attraction B X))))))
 
 ;; Formula
-(define (intensional-difference-members-direct-introduction conclusion . premises)
+(define (intensional-difference-member-introduction conclusion . premises)
   ;; Given an attraction link, return the strength which is
   ;; the product of the mean and the confidence of the TV on
   ;; on the attraction link
@@ -90,18 +90,18 @@
     (min (cog-confidence A-at) (cog-confidence B-at)))
 
   (let* ((MembLink conclusion)
-         (A (gar (list-ref premises 0)))
-         (B (gdr (list-ref premises 0)))
+         (A (gar (car premises)))
+         (B (gdr (car premises)))
          (memb (gar MembLink))
-         (A-at (list-ref premises 1))
-         (B-at (list-ref premises 2))
+         (A-at (cadr premises))
+         (B-at (caddr premises))
          (TVs (get-strength A-at B-at))
          (TVc (get-confidence A-at B-at))
          (TV (stv TVs TVc)))
     (if (< 0 TVc) (cog-merge-hi-conf-tv! MembLink TV))))
 
 ; Name the rule
-(define intensional-difference-members-direct-introduction-rule-name
-  (DefinedSchemaNode "intensional-difference-members-direct-introduction-rule"))
-(DefineLink intensional-difference-members-direct-introduction-rule-name
-  intensional-difference-members-direct-introduction-rule)
+(define intensional-difference-member-introduction-rule-name
+  (DefinedSchemaNode "intensional-difference-member-introduction-rule"))
+(DefineLink intensional-difference-member-introduction-rule-name
+  intensional-difference-member-introduction-rule)
