@@ -90,9 +90,6 @@
     (min (cog-confidence A-at) (cog-confidence B-at)))
 
   (let* ((MembLink conclusion)
-         (A (gar (car premises)))
-         (B (gdr (car premises)))
-         (memb (gar MembLink))
          (A-at (cadr premises))
          (B-at (caddr premises))
          (TVs (get-strength A-at B-at))
