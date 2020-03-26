@@ -46,19 +46,13 @@
         (List
           ;; Conclusion
           (Member X (IntensionalDifference A B))
-          ;; Premise
-          (IntensionalDifference A B))))))
+          ;; Premises
+          (IntensionalDifference A B)
+          (Attraction A X)
+          (Attraction B X))))))
 
 ;; Formula
-(define (intensional-difference-members-direct-introduction conclusion premise)
-  ;; Given two concepts A and B, return the attraction link
-  ;;
-  ;; Attraction <TV>
-  ;;   A
-  ;;   B
-  (define (get-attraction A B)
-    (cog-link 'AttractionLink A B))
-
+(define (intensional-difference-members-direct-introduction conclusion . premises)
   ;; Given an attraction link, return the strength which is
   ;; the product of the mean and the confidence of the TV on
   ;; on the attraction link
@@ -96,11 +90,11 @@
     (min (cog-confidence A-at) (cog-confidence B-at)))
 
   (let* ((MembLink conclusion)
-         (A (gar premise))
-         (B (gdr premise))
+         (A (gar (list-ref premises 0)))
+         (B (gdr (list-ref premises 0)))
          (memb (gar MembLink))
-         (A-at (get-attraction A memb))
-         (B-at (get-attraction B memb))
+         (A-at (list-ref premises 1))
+         (B-at (list-ref premises 2))
          (TVs (get-strength A-at B-at))
          (TVc (get-confidence A-at B-at))
          (TV (stv TVs TVc)))
