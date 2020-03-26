@@ -4,5 +4,6 @@ ADD_GUILE_MODULE(FILES
 	intensional-inheritance-direct-introduction.scm
 	intensional-similarity-direct-introduction.scm
 	intensional-difference-direct-introduction.scm
+	intensional-difference-member-introduction.scm
 	MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog/pln/rules/intensional"
 )
