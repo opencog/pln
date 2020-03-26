@@ -53,16 +53,6 @@
 
 ;; Formula
 (define (intensional-difference-member-introduction conclusion . premises)
-  ;; Given an attraction link, return the strength which is
-  ;; the product of the mean and the confidence of the TV on
-  ;; on the attraction link
-  ;;
-  ;; Attraction <TV>
-  ;;   A
-  ;;   B
-  (define (get-pattern-strength at)
-      (if (null? at) 0 (* (cog-mean at) (cog-confidence at))))
-
   ;; Given the attraction links of A and B, calculate the
   ;; strength of the TV expressed as
   ;;
@@ -74,7 +64,7 @@
   ;;   A
   ;;   X
   (define (get-strength A-at B-at)
-    (min (cog-mean A-at) (- 1 (get-pattern-strength B-at))))
+    (min (cog-mean A-at) (- 1 (cog-mean B-at))))
 
   ;; Given the attraction links of A and B, calculate the
   ;; confidence of the TV expressed as
