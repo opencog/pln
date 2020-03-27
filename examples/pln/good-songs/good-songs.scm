@@ -22,7 +22,7 @@
 ;; Remove irrelevant rules. Another option could be to load the empty
 ;; rule-base with
 ;;
-;; (pln-load #:rule-base 'empty)
+;; (pln-load 'empty)
 ;;
 ;; and add PLN rules, as done in the ancestors PLN example.
 (pln-rm-rules-by-names (list

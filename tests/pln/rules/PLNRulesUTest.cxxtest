@@ -212,7 +212,7 @@ void PLNRulesUTest::test_not_introduction()
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
 
 	load_scm_files({"tests/pln/rules/simple-predicates.scm",
-	               "opencog/pln/rules/wip/not-introduction.scm"});
+	                "opencog/pln/rules/wip/not-introduction.scm"});
 
 	// Apply the rule
 	Handle results = eval.eval_h("(cog-execute! not-introduction-rule)");

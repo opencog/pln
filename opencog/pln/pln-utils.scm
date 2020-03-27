@@ -108,13 +108,13 @@
   (cog-set-atomspace! current-as)
   pln-atomspace-rb)
 
-(define* (pln-load #:key (rule-base 'standard))
+(define-public (pln-load . rule-bases)
 "
   Load and configure PLN rules. All or most PLN rules will be loaded
   in pln-atomspace, however depending on the choosen rule base only
   some might be used.
 
-  Usage: (pln-load #:rule-base rb)
+  Usage: (pln-load rb)
 
   rb: [optional, default='standard] Rule base to load, with 2 rule
       bases supported so far
@@ -136,15 +136,18 @@
       pln-add-rule-by-name, pln-add-rules-by-names,
       pln-rm-rule-by-name and pln-rm-rules-by-names.
 "
+  (define rule-base (if (< 0 (length rule-bases)) (car rule-bases) 'standard))
+
   ;; Load rule files
   (pln-load-rules "term/deduction")
   (pln-load-rules "term/crisp-deduction")
-  (pln-load-rules "term/inheritance-direct-introduction")
   (pln-load-rules "term/condition-negation")
   (pln-load-rules "propositional/modus-ponens")
   (pln-load-rules "propositional/contraposition")
   (pln-load-rules "propositional/fuzzy-conjunction-introduction")
   (pln-load-rules "propositional/fuzzy-disjunction-introduction")
+  (pln-load-rules "extensional/extensional-similarity-direct-introduction")
+  (pln-load-rules "extensional/subset-direct-introduction")
   (pln-load-rules "intensional/attraction-introduction")
   (pln-load-rules "intensional/intensional-inheritance-direct-introduction")
   (pln-load-rules "intensional/intensional-similarity-direct-introduction")
@@ -324,4 +327,12 @@
 "
   (apply cog-bc (cons (pln-rb) args)))
 
-(export pln-load)
+;; TODO: maybe move to ure as well
+(define-public (pln-execute-rule-by-name rule-name)
+"
+  Execute a rule given its name, for instance
+
+  (pln-execute-rule-by-name \"deduction-subset-rule\")
+"
+  ;; TODO
+)
