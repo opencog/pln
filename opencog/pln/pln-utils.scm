@@ -108,7 +108,7 @@
   (cog-set-atomspace! current-as)
   pln-atomspace-rb)
 
-(define* (pln-load . rule-bases)
+(define-public (pln-load . rule-bases)
 "
   Load and configure PLN rules. All or most PLN rules will be loaded
   in pln-atomspace, however depending on the choosen rule base only
@@ -327,4 +327,12 @@
 "
   (apply cog-bc (cons (pln-rb) args)))
 
-(export pln-load)
+;; TODO: maybe move to ure as well
+(define-public (pln-execute-rule-by-name rule-name)
+"
+  Execute a rule given its name, for instance
+
+  (pln-execute-rule-by-name \"deduction-subset-rule\")
+"
+  ;; TODO
+)
