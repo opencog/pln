@@ -311,6 +311,78 @@
 "
   (ure-rm-all-rules (pln-rb)))
 
+(define (pln-set-attention-allocation value)
+"
+  Wrapper around ure-set-attention-allocation using (pln-rb) as rule base.
+
+  See (help ure-set-attention-allocation) for more info.
+"
+  (ure-set-attention-allocation (pln-rb) value))
+
+(define (pln-set-maximum-iterations rbs value)
+"
+  Wrapper around ure-set-maximum-iterations using (pln-rb) as rule base.
+
+  See (help ure-set-maximum-iterations) for more info.
+"
+  (ure-set-maximum-iterations (pln-rb) value))
+
+(define (pln-set-complexity-penalty rbs value)
+"
+  Wrapper around ure-set-complexity-penalty using (pln-rb) as rule base.
+
+  See (help ure-set-complexity-penalty) for more info.
+"
+  (ure-set-complexity-penalty (pln-rb) value))
+
+(define (pln-set-jobs rbs value)
+"
+  Wrapper around ure-set-jobs using (pln-rb) as rule base.
+
+  See (help ure-set-jobs) for more info.
+"
+  (ure-set-jobs (pln-rb) value))
+
+(define (pln-set-fc-retry-exhausted-sources rbs value)
+"
+  Wrapper around ure-set-fc-retry-exhausted-sources using (pln-rb) as rule base.
+
+  See (help ure-set-fc-retry-exhausted-sources) for more info.
+"
+  (ure-set-fc-retry-exhausted-sources (pln-rb) value))
+
+(define (pln-set-fc-full-rule-application rbs value)
+"
+  Wrapper around ure-set-fc-full-rule-application using (pln-rb) as rule base.
+
+  See (help ure-set-fc-full-rule-application) for more info.
+"
+  (ure-set-fc-full-rule-application (pln-rb) value))
+
+(define (pln-set-bc-maximum-bit-size rbs value)
+"
+  Wrapper around ure-set-bc-maximum-bit-size using (pln-rb) as rule base.
+
+  See (help ure-set-bc-maximum-bit-size) for more info.
+"
+  (ure-set-bc-maximum-bit-size (pln-rb) value))
+
+(define (pln-set-bc-mm-complexity-penalty rbs value)
+"
+  Wrapper around ure-set-bc-mm-complexity-penalty using (pln-rb) as rule base.
+
+  See (help ure-set-bc-mm-complexity-penalty) for more info.
+"
+  (ure-set-bc-mm-complexity-penalty (pln-rb) value))
+
+(define (pln-set-bc-mm-compressiveness rbs value)
+"
+  Wrapper around ure-set-bc-mm-compressiveness using (pln-rb) as rule base.
+
+  See (help ure-set-bc-mm-compressiveness) for more info.
+"
+  (ure-set-bc-mm-compressiveness (pln-rb) value))
+
 (define-public (pln-fc . args)
 "
   Wrapper around cog-fc using (pln-rb) as rule base.
