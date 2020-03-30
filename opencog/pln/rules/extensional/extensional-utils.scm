@@ -15,8 +15,8 @@
   (let* ((mbr-lnks (cog-filter 'MemberLink (cog-incoming-set C)))
          (nonvar-mbr-of-C? (lambda (x)
 			     (and (equal? C (gdr x))
-				  (not (variables? (gar x)))))))
-    (filter nonvar-member-of-C? mbr-lnks)))
+				  (not (variable? (gar x)))))))
+    (filter nonvar-mbr-of-C? mbr-lnks)))
 
 (define (get-members-of-concept C)
 "
