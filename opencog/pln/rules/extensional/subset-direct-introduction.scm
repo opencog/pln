@@ -33,11 +33,11 @@
 
 ;; Given a list of members of A and B calculate the TV of
 ;;
-;; ExtensionalInheritance
+;; SubsetLink
 ;;   A
 ;;   B
-(define (ext-inh-evidence->tv A-mbrs B-mbrs)
-  ;; (cog-logger-debug "(ext-inh-evidence->tv A-mbrs=~a B-mbrs=~a)" A-mbrs B-mbrs)
+(define (subset-evidence->tv A-mbrs B-mbrs)
+  ;; (cog-logger-debug "(subset-evidence->tv A-mbrs=~a B-mbrs=~a)" A-mbrs B-mbrs)
   (let* ;; TODO consider TVs of the members
        ((A-size (length A-mbrs))
         (AB-mbrs (lset-intersection equal? A-mbrs B-mbrs))
@@ -54,15 +54,15 @@
 (define (subset-direct-introduction conclusion . premises)
   ;; (cog-logger-debug "(subset-direct-introduction conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 2)
-      (let* ((Inh conclusion)
+      (let* ((Ss conclusion)
              (A (car premises))
              (B (cadr premises))
              ;; Fetch all members of A and B
              (A-mbrs (get-members A))
              (B-mbrs (get-members B))
              ;; Calculate the TV based on the members of A and B
-             (tv (ext-inh-evidence->tv A-mbrs B-mbrs)))
-        (cog-merge-hi-conf-tv! Inh tv))))
+             (tv (subset-evidence->tv A-mbrs B-mbrs)))
+        (cog-merge-hi-conf-tv! Ss tv))))
 
 (define subset-direct-introduction-rule-name
   (DefinedSchemaNode "subset-direct-introduction-rule"))
