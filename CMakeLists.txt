@@ -86,12 +86,7 @@ ENDIF (ATOMSPACE_FOUND)
 # ----------------------------------------------------------
 # Python
 
-FIND_PACKAGE(Python3Interp)
-IF (3.4.0 VERSION_LESS ${PYTHON3_VERSION_STRING})
-   SET (HAVE_PY_INTERP 1)
-   SET (PYTHON_VER python3.5)
-   MESSAGE(STATUS "Python ${PYTHON3_VERSION_STRING} interpreter found.")
-ENDIF()
+include(OpenCogFindPython)
 
 # URE
 FIND_PACKAGE(URE 1.0.0 CONFIG REQUIRED)
