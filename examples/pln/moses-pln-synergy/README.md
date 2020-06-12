@@ -1,5 +1,8 @@
 # MOSES PLN synergy demo
 
+**Warning:** this example does not use the new PLN API and thus is not
+recommanded for new users.
+
 Simple demo showing how PLN reasoning can be used to overcome the
 uncertainties resulting from the low number of samples during
 learning.

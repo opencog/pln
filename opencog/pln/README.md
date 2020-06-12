@@ -60,20 +60,29 @@ First, the module must be loaded
 (use-modules (opencog pln))
 ```
 
-Then a PLN rule-base must be loaded
+Then a PLN rule-base can be loaded with
 
 ```scheme
 (pln-load)
 ```
 
-At the moment only one rule-base is provided, in the future that same
-command will likely accept optional arguments to load subsets or
-supersets of PLN.
+which loads the standard rule-base by default. One can use this
+function to load different rule-bases. It is recommanded to load the
+empty rule base `(pln-load 'empty)` and then only add the necessary
+rules for solving the problem at hand. See `(help pln-load)` for more
+details.
 
 The rules are loaded in an auxilary atomspace in order not to pollute
-the current atomspace. That auxilary atomspace can be accessed via the
-`pln-atomspace` variable. In addition the `pln` modules offers helpers
-to display its content without having to switch to it
+the current atomspace.  That auxilary atomspace can be accessed via
+the `pln-atomspace` variable.  If one wants to load a user defined
+rule, one may use the helper
+
+```scheme
+(pln-load-from-path FILENAME)
+```
+
+In addition the `pln` modules offers helpers to display its content
+without having to switch to it
 
 ```scheme
 (pln-prt-atomspace)
@@ -82,7 +91,7 @@ to display its content without having to switch to it
 To simply list its rule names and weights
 
 ```scheme
-(pln-list-rules)
+(pln-weighted-rules)
 ```
 
 By default all rules have a default TV as weight, corresponding to a
@@ -129,6 +138,12 @@ and
 
 ### Examples
 
-PLN examples can be found under the `examples/pln` directory. In
-particular for an example using the PLN module see
-`examples/pln/good-songs`.
+PLN examples can be found under the [../../examples/pln](../../examples/pln)
+directory. In particular the following examples use the `pln` module
+
+
+* [../../examples/pln/ancestors](../../examples/pln/ancestors)
+* [../../examples/pln/good-songs](../../examples/pln/good-songs)
+
+The other examples can be informative but directly use the URE and
+thus are less user friendly.

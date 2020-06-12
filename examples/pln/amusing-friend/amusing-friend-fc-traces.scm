@@ -4,19 +4,21 @@
 ;; would like to query (only the target queries are given)
 (define (get-target-inference-steps target)
   (let* ((pat (Execution
-                 (Variable "$rule")
-                 (Variable "$iteration")
-                 (Variable "$Source")
-                 target))
+                (Variable "$rule")
+                (List
+                  (Variable "$Source")
+                  (Variable "$iteration"))
+                target))
          (gl (Get pat)))
     (List (cog-execute! gl) target (Number (cog-handle target)))))
 
 (define (get-source-inference-steps source)
   (let* ((pat (Execution
-                 (Variable "$rule")
-                 (Variable "$iteration")
-                 source
-                 (Variable "$target")))
+                (Variable "$rule")
+                (List
+                  source
+                  (Variable "$iteration"))
+                (Variable "$target")))
          (gl (Get pat)))
     (List (cog-execute! gl) source (Number (cog-handle source)))))
 

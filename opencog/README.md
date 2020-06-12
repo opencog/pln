@@ -1,1 +1,1 @@
-See `<ROOT_DIR>/opencog/pln/README.md`.
+See [pln/README.md](pln/README.md).
