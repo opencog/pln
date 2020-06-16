@@ -90,3 +90,6 @@ class TestBasic(unittest.TestCase):
     def tearDown(self):
         self.atomspace = None
         finalize_opencog()
+
+if __name__ == "__main__":
+    unittest.main()
