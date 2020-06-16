@@ -32,6 +32,7 @@
 #include <cxxtest/TestSuite.h>
 #include <string>
 #include <vector>
+#include <cmath>
 
 using namespace std;
 using namespace opencog;
@@ -108,6 +109,7 @@ public:
 	void test_conditional_full_instantiation_meta_rule();
 	void test_consequent_disjunction_elimination();
 	void test_contraposition();
+	void test_modus_ponens();
 };
 
 void PLNRulesUTest::tearDown()
@@ -900,4 +902,22 @@ void PLNRulesUTest::test_contraposition()
 	TS_ASSERT_EQUALS(result, target);
 	TS_ASSERT_LESS_THAN(0.9, result->getTruthValue()->get_mean());
 	TS_ASSERT_LESS_THAN(0.9, result->getTruthValue()->get_confidence());
+}
+
+void PLNRulesUTest::test_modus_ponens(){
+	logger().debug("BEGIN TEST: %s", __FUNCTION__);
+ 	load_scm_files({"opencog/pln/rules/propositional/contraposition.scm",
+                        "opencog/pln/rules/propositional/modus-ponens.scm",
+	                "tests/pln/rules/modus-ponens.scm"});
+       
+
+	Handle rbs = eval.eval_h("rbs");
+	Handle target = eval.eval_h("target");
+ 	BackwardChainer bc(as, rbs, target);
+	bc.do_chain();
+
+	// Check the result
+	Handle result = bc.get_results()->getOutgoingAtom(0);
+	TS_ASSERT_EQUALS(result, target);
+        TS_ASSERT(abs(0.68 - result->getTruthValue()->get_mean()) < 0.0001);
 }
