@@ -1,8 +1,5 @@
 (use-modules (opencog ure))
 
-(add-to-load-path "/home/noskill/projects/pln/opencog/pln/rules/propositional/")
-(load-from-path "modus-ponens.scm")
-(load-from-path "contraposition.scm")
 
 (define (make-rb rule_base)
     (MemberLink (DefinedSchemaNode "modus-ponens-inheritance-rule") rule_base)
