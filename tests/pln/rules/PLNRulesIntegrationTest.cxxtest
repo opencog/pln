@@ -1,0 +1,115 @@
+#include <opencog/guile/SchemeEval.h>
+#include <opencog/guile/SchemeSmob.h>
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/atomspace/AtomSpace.h>
+#include <opencog/ure/Rule.h>
+#include <opencog/ure/backwardchainer/BackwardChainer.h>
+#include <opencog/util/Logger.h>
+#include <opencog/util/algorithm.h>
+#include <cxxtest/TestSuite.h>
+#include <string>
+#include <vector>
+#include <cmath>
+
+
+using namespace opencog;
+
+/*
+ * Integration test for pln rules
+ * Test that the rules can be used together with each other.
+ */
+class PLNRulesIntegrationTest: public CxxTest::TestSuite
+{
+private:
+	AtomSpace as;
+	SchemeEval eval;
+
+public:
+	PLNRulesIntegrationTest() : eval(&as)
+	{
+		logger().set_level(Logger::DEBUG);
+		logger().set_timestamp_flag(false);
+		logger().set_print_to_stdout_flag(true);
+
+		ure_logger().set_level(Logger::DEBUG);
+		ure_logger().set_timestamp_flag(false);
+		ure_logger().set_print_to_stdout_flag(true);
+
+		std::string cur_ppp_dir = std::string(PROJECT_SOURCE_DIR),
+			cur_dir = cur_ppp_dir + "/tests/pln/rules",
+			src_rule_dir = cur_ppp_dir + "/opencog/pln/rules";
+		std::vector<std::string> load_paths = {cur_ppp_dir, cur_dir, src_rule_dir};
+		for (std::string& p : load_paths)
+		{
+			std::string eval_str = std::string("(add-to-load-path \"") + p + std::string("\")");
+			eval.eval(eval_str);
+		}
+
+		eval.eval("(use-modules (opencog))");
+		eval.eval("(use-modules (opencog attention-bank))");
+		eval.eval("(use-modules (opencog query))");
+		eval.eval("(use-modules (opencog exec))");
+		eval.eval("(use-modules (opencog logger))");
+		eval.eval("(use-modules (opencog ure))");
+		eval.eval("(use-modules (srfi srfi-1))");
+	}
+
+	~PLNRulesIntegrationTest()
+	{
+		// Erase the log file if no assertions failed.
+		if (!CxxTest::TestTracker::tracker().suiteFailed())
+			std::remove(logger().get_filename().c_str());
+	}
+
+	void setUp();
+	void tearDown();
+	void load_scm_files(std::vector<std::string>);
+
+	void test_modus_ponens();
+};
+
+void PLNRulesIntegrationTest::tearDown()
+{
+}
+
+void PLNRulesIntegrationTest::setUp()
+{
+	as.clear();
+}
+
+void PLNRulesIntegrationTest::load_scm_files(std::vector<std::string> files)
+{
+	std::string hd("(load-from-path \"");
+	std::string tl("\")");
+	for (auto f: files) {
+		std::string result = eval.eval(hd + f + tl);
+		logger().debug() << "[PLNRulesIntegrationTest] Loaded \"" << f << "\":"
+		                 << std::endl << result;
+	}
+}
+
+#define getarity(hand) hand->get_arity()
+
+static inline Handle bindlink(AtomSpace* as, const Handle& hlink)
+{
+   return HandleCast(hlink->execute(as));
+}
+
+
+void PLNRulesIntegrationTest::test_modus_ponens(){
+	logger().debug("BEGIN TEST: %s", __FUNCTION__);
+ 	load_scm_files({"opencog/pln/rules/propositional/contraposition.scm",
+                        "opencog/pln/rules/propositional/modus-ponens.scm",
+	                "tests/pln/rules/modus-ponens-contraposition.scm"});
+       
+
+	Handle rbs = eval.eval_h("rbs");
+	Handle target = eval.eval_h("target");
+ 	BackwardChainer bc(as, rbs, target);
+	bc.do_chain();
+
+	// Check the result
+	Handle result = bc.get_results()->getOutgoingAtom(0);
+	TS_ASSERT_EQUALS(result, target);
+        TS_ASSERT(abs(0.68 - result->getTruthValue()->get_mean()) < 0.0001);
+}
