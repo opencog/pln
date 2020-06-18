@@ -33,7 +33,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
 using namespace opencog;
 using namespace std;
 
