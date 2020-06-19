@@ -135,7 +135,7 @@ ENDIF (GUILE_FOUND AND GMP_LIBRARY AND GMP_INCLUDE_DIR)
 # Include configuration.
 
 # Set default include paths.
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR} ${Boost_INCLUDE_DIRS}
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}
 	${COGUTIL_INCLUDE_DIR} ${ATOMSPACE_INCLUDE_DIR} ${URE_INCLUDE_DIR})
 
 # Macros that define how atom types get declared.
@@ -277,18 +277,10 @@ SET(CPACK_PACKAGE_EXECUTABLES "cogserver" "The Open Cognition Framework")
 ## Debian specific configurations
 SET(DEPENDENCY_LIST
 	"guile-2.2-dev (>= 2.2.2)"
-	"libboost-date-time-dev (>= ${MIN_BOOST})"
-	"libboost-filesystem-dev (>= ${MIN_BOOST})"
-	"libboost-program-options-dev (>= ${MIN_BOOST})"
-	"libboost-regex-dev (>= ${MIN_BOOST})"
-	"libboost-serialization-dev (>= ${MIN_BOOST})"
-	"libboost-thread-dev (>= ${MIN_BOOST})"
-	"libboost-system-dev (>= ${MIN_BOOST})"
-	"libboost-random-dev (>= ${MIN_BOOST})"
 	"libstdc++6 (>= 4.7)"
 	"libcogutil-dev (>= 2.0.2)"
 	"atomspace-dev (>= 5.0.3)"
-        "ure-dev (>= 1.0.0)"
+	"ure-dev (>= 1.0.0)"
 )
 
 STRING(REPLACE ";" ", " MAIN_DEPENDENCIES "${DEPENDENCY_LIST}")
