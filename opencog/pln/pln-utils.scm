@@ -138,6 +138,9 @@
 "
   (define rule-base (if (< 0 (length rule-bases)) (car rule-bases) 'standard))
 
+  ;; Clear PLN atomspace
+  (pln-clear)
+
   ;; Load rule files
   (pln-load-rules "term/deduction")
   (pln-load-rules "term/crisp-deduction")
@@ -408,3 +411,24 @@
 "
   ;; TODO
 )
+
+;; TODO: move to ure
+(define-public (pln-add-rule rule-symbol)
+  (let* ((rule-name (string-append (symbol->string rule-symbol) "-rule")))
+    (pln-add-rule-by-name rule-name)))
+
+;; TODO: move to ure
+(define-public (pln-add-rules . rule-symbols)
+  (for-each pln-add-rule rule-symbols))
+
+;; TODO: move to ure
+(define-public (pln-clear)
+  ;; Switch to PLN atomspace and clear
+  (define current-as (cog-set-atomspace! pln-atomspace))
+  (clear)
+
+  ;; Switch back to previous space
+  (cog-set-atomspace! current-as)
+
+  ;; Avoid confusing the user with a return value
+  *unspecified*)
