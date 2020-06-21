@@ -151,6 +151,7 @@
   (pln-load-rules "propositional/fuzzy-disjunction-introduction")
   (pln-load-rules "extensional/extensional-similarity-direct-introduction")
   (pln-load-rules "extensional/subset-direct-introduction")
+  (pln-load-rules "extensional/conjunction-direct-introduction")
   (pln-load-rules "intensional/attraction-introduction")
   (pln-load-rules "intensional/intensional-inheritance-direct-introduction")
   (pln-load-rules "intensional/intensional-similarity-direct-introduction")
