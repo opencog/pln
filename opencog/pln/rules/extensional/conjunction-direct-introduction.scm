@@ -55,11 +55,12 @@
              (tv-c (count->confidence usize)))
         ;; Create members over the conjunction
         ;; TODO: use min tvs instead of (stv 1 1)
-        (map (lambda (x) (Member (stv 1 1) x conclusion)) AB-mbrs)
 
         ;; Update conjunction TV
-        (if (< 0 tv-s)                  ; Hack
-            (cog-merge-hi-conf-tv! conclusion (stv tv-s tv-c))))))
+        (if (and (< 0 tv-s) (< 0 tv-c))                 ; Hack
+            (let* ((tv (stv tv-s tv-c)))
+              (map (lambda (x) (Member (stv 1 1) x conclusion)) AB-mbrs)
+              (cog-merge-hi-conf-tv! conclusion (stv tv-s tv-c)))))))
 
 (define conjunction-direct-introduction-rule-name
   (DefinedSchemaNode "conjunction-direct-introduction-rule"))

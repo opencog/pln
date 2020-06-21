@@ -65,7 +65,8 @@
              (B-mbrs (get-members-of B))
              ;; Calculate the TV based on the members of A and B
              (tv (subset-evidence->tv A-mbrs B-mbrs)))
-        (cog-merge-hi-conf-tv! Ss tv))))
+        (if (and (< 0 (cog-tv-mean tv)) (< 0 (cog-tv-confidence tv)))
+            (cog-merge-hi-conf-tv! Ss tv)))))
 
 (define subset-direct-introduction-rule-name
   (DefinedSchemaNode "subset-direct-introduction-rule"))

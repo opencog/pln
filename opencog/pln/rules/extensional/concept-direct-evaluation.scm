@@ -1,12 +1,12 @@
 ;; Calculate the TV of a concept based on direct evidence
 ;;
-;; Member X1 A
+;; Member <TV1> X1 A
 ;; ...
-;; Member Xn A
+;; Member <TVn> Xn A
 ;; |-
 ;; A <TV>
 ;;
-;; where TV is calculated using direct evidence obtained from member.
+;; where TV is calculated using direct evidence obtained from member. For now we assume that TV1 to TVn are absolutely true.
 
 ;; Rule
 ;;
@@ -26,6 +26,12 @@
           (Member X A)
           (Member Y A)
           A)
+        (Evaluation
+          (GroundedPredicate "scm: absolutely-true")
+          (Member X A))
+        (Evaluation
+          (GroundedPredicate "scm: absolutely-true")
+          (Member Y A))
         (Not (Equal X Y)))
       (ExecutionOutput
         (GroundedSchema "scm: concept-direct-evaluation")
@@ -39,16 +45,20 @@
 
 ;; Formula
 (define (concept-direct-evaluation conclusion . premises)
-  (cog-logger-debug "(concept-direct-evaluation conclusion=~a . premises=~a)" conclusion premises)
+  ;; (cog-logger-debug "(concept-direct-evaluation conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 1)
-      (let* ((mbr-lnks (car premises))
+      (let* ((mbr-lnks (cog-outgoing-set (car premises)))
+             (mbr-lnk-A (car mbr-lnks))
+             (mbr-lnk-B (cadr mbr-lnks))
              (all-nodes (cog-get-atoms 'Node #f))
              (usize (length all-nodes)) ; TODO: replace this
                                         ; horrible hack
-             (tv-s (/ (cog-arity mbr-lnks) usize))
+             (vsize (if (not (equal? mbr-lnk-A mbr-lnk-B)) 2 1))
+             (tv-s (/ vsize usize))
              (tv-c (count->confidence usize)))
         ;; Update conjunction TV
-        (cog-merge-hi-conf-tv! conclusion (stv tv-s tv-c)))))
+        (if (< 0 tv-c)
+            (cog-merge-hi-conf-tv! conclusion (stv tv-s tv-c))))))
 
 (define concept-direct-evaluation-rule-name
   (DefinedSchemaNode "concept-direct-evaluation-rule"))
