@@ -80,8 +80,8 @@
 ;;   B
 (define (ext-sim-evidence->tv A B)
   (cog-logger-debug "(ext-sim-evidence->tv A=~a B=~a)" A B)
-  (let* ((A-mbr-lnks (get-member-links-of-concept A))
-	 (B-mbr-lnks (get-member-links-of-concept B))
+  (let* ((A-mbr-lnks (get-member-links-of A))
+	 (B-mbr-lnks (get-member-links-of B))
 	 (A-mbrs (map gar A-mbr-lnks))
 	 (B-mbrs (map gar B-mbr-lnks))
 	 (mbrs (lset-union equal? A-mbrs B-mbrs))

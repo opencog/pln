@@ -10,15 +10,18 @@
 ;; where TV is calculated using direct evidence obtained from member
 ;; links (thus is extensional, nor mixed).
 
+(load "extensional-utils.scm")
+
 ;; Rule
 (define subset-direct-introduction-rule
   (let* ((A (Variable "$A"))
          (B (Variable "$B"))
-         (CT (Type "ConceptNode")))
+         (CptT (Type 'Concept))
+         (AndT (Type 'And)))
     (Bind
       (VariableSet
-        (TypedVariable A CT)
-        (TypedVariable B CT))
+        (TypedVariable A (TypeChoice CptT AndT))
+        (TypedVariable B (TypeChoice CptT AndT)))
       (Present
         A
         B)
@@ -52,14 +55,14 @@
 
 ;; Formula
 (define (subset-direct-introduction conclusion . premises)
-  ;; (cog-logger-debug "(subset-direct-introduction conclusion=~a . premises=~a)" conclusion premises)
+  (cog-logger-debug "(subset-direct-introduction conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 2)
       (let* ((Ss conclusion)
              (A (car premises))
              (B (cadr premises))
              ;; Fetch all members of A and B
-             (A-mbrs (get-members A))
-             (B-mbrs (get-members B))
+             (A-mbrs (get-members-of A))
+             (B-mbrs (get-members-of B))
              ;; Calculate the TV based on the members of A and B
              (tv (subset-evidence->tv A-mbrs B-mbrs)))
         (cog-merge-hi-conf-tv! Ss tv))))
