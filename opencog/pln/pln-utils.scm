@@ -152,6 +152,8 @@
   (pln-load-rules "extensional/extensional-similarity-direct-introduction")
   (pln-load-rules "extensional/subset-direct-introduction")
   (pln-load-rules "extensional/conjunction-direct-introduction")
+  (pln-load-rules "extensional/concept-direct-evaluation")
+  (pln-load-rules "extensional/member-deduction")
   (pln-load-rules "intensional/attraction-introduction")
   (pln-load-rules "intensional/intensional-inheritance-direct-introduction")
   (pln-load-rules "intensional/intensional-similarity-direct-introduction")
