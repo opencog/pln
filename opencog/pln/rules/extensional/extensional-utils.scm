@@ -15,6 +15,7 @@
   (let* ((mbr-lnks (cog-filter 'MemberLink (cog-incoming-set C)))
          (nonvar-mbr-of-C? (lambda (x)
 			     (and (equal? C (gdr x))
+                                  (< 0 (cog-confidence x))
 				  (not (variable? (gar x)))))))
     (filter nonvar-mbr-of-C? mbr-lnks)))
 
