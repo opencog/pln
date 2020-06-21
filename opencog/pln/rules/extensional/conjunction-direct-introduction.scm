@@ -32,16 +32,18 @@
           ;; Conclusion
           (And A B)
           ;; Premises
-          A
-          B)))))
+          (Set
+            A
+            B))))))
 
 ;; Formula. Note that for now is also produces MemberLink while this
 ;; should probably go in a separate rule.
 (define (conjunction-direct-introduction conclusion . premises)
   (cog-logger-debug "(conjunction-direct-introduction conclusion=~a . premises=~a)" conclusion premises)
-  (if (= (length premises) 2)
-      (let* ((A (car premises))
-             (B (cadr premises))
+  (if (= (length premises) 1)
+      (let* ((operands (car premises))
+             (A (gar operands))
+             (B (gdr operands))
              ;; Fetch all members of A and B
              (A-mbrs (get-members-of A))
              (B-mbrs (get-members-of B))
@@ -56,7 +58,8 @@
         (map (lambda (x) (Member (stv 1 1) x conclusion)) AB-mbrs)
 
         ;; Update conjunction TV
-        (cog-merge-hi-conf-tv! conclusion (stv tv-s tv-c)))))
+        (if (< 0 tv-s)                  ; Hack
+            (cog-merge-hi-conf-tv! conclusion (stv tv-s tv-c))))))
 
 (define conjunction-direct-introduction-rule-name
   (DefinedSchemaNode "conjunction-direct-introduction-rule"))
