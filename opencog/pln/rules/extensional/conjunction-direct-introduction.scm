@@ -39,7 +39,7 @@
 ;; Formula. Note that for now is also produces MemberLink while this
 ;; should probably go in a separate rule.
 (define (conjunction-direct-introduction conclusion . premises)
-  (cog-logger-debug "(conjunction-direct-introduction conclusion=~a . premises=~a)" conclusion premises)
+  ;; (cog-logger-debug "(conjunction-direct-introduction conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 1)
       (let* ((operands (car premises))
              (A (gar operands))

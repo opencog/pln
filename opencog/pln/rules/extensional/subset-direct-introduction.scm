@@ -55,7 +55,7 @@
 
 ;; Formula
 (define (subset-direct-introduction conclusion . premises)
-  (cog-logger-debug "(subset-direct-introduction conclusion=~a . premises=~a)" conclusion premises)
+  ;; (cog-logger-debug "(subset-direct-introduction conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 2)
       (let* ((Ss conclusion)
              (A (car premises))
