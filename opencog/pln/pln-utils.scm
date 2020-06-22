@@ -317,7 +317,7 @@
 "
   (ure-rm-all-rules (pln-rb)))
 
-(define (pln-set-attention-allocation value)
+(define-public (pln-set-attention-allocation value)
 "
   Wrapper around ure-set-attention-allocation using (pln-rb) as rule base.
 
@@ -325,7 +325,7 @@
 "
   (ure-set-attention-allocation (pln-rb) value))
 
-(define (pln-set-maximum-iterations value)
+(define-public (pln-set-maximum-iterations value)
 "
   Wrapper around ure-set-maximum-iterations using (pln-rb) as rule base.
 
@@ -333,7 +333,7 @@
 "
   (ure-set-maximum-iterations (pln-rb) value))
 
-(define (pln-set-complexity-penalty value)
+(define-public (pln-set-complexity-penalty value)
 "
   Wrapper around ure-set-complexity-penalty using (pln-rb) as rule base.
 
@@ -341,7 +341,7 @@
 "
   (ure-set-complexity-penalty (pln-rb) value))
 
-(define (pln-set-jobs value)
+(define-public (pln-set-jobs value)
 "
   Wrapper around ure-set-jobs using (pln-rb) as rule base.
 
@@ -349,7 +349,7 @@
 "
   (ure-set-jobs (pln-rb) value))
 
-(define (pln-set-fc-retry-exhausted-sources value)
+(define-public (pln-set-fc-retry-exhausted-sources value)
 "
   Wrapper around ure-set-fc-retry-exhausted-sources using (pln-rb) as rule base.
 
@@ -357,7 +357,7 @@
 "
   (ure-set-fc-retry-exhausted-sources (pln-rb) value))
 
-(define (pln-set-fc-full-rule-application value)
+(define-public (pln-set-fc-full-rule-application value)
 "
   Wrapper around ure-set-fc-full-rule-application using (pln-rb) as rule base.
 
@@ -365,7 +365,7 @@
 "
   (ure-set-fc-full-rule-application (pln-rb) value))
 
-(define (pln-set-bc-maximum-bit-size value)
+(define-public (pln-set-bc-maximum-bit-size value)
 "
   Wrapper around ure-set-bc-maximum-bit-size using (pln-rb) as rule base.
 
@@ -373,7 +373,7 @@
 "
   (ure-set-bc-maximum-bit-size (pln-rb) value))
 
-(define (pln-set-bc-mm-complexity-penalty value)
+(define-public (pln-set-bc-mm-complexity-penalty value)
 "
   Wrapper around ure-set-bc-mm-complexity-penalty using (pln-rb) as rule base.
 
@@ -381,7 +381,7 @@
 "
   (ure-set-bc-mm-complexity-penalty (pln-rb) value))
 
-(define (pln-set-bc-mm-compressiveness value)
+(define-public (pln-set-bc-mm-compressiveness value)
 "
   Wrapper around ure-set-bc-mm-compressiveness using (pln-rb) as rule base.
 
