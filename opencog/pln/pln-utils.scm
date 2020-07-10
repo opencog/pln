@@ -251,34 +251,35 @@
 
   *unspecified*)
 
-(define-public (pln-add-rule-by-name rule-name . tv)
+(define-public (pln-add-rule rule . tv)
 "
-  Call ure-add-rule-by-name on the PLN rule base. See
+  Call ure-add-rule on the PLN rule base. See
 
-    (help ure-add-rule-by-name)
+    (help ure-add-rule)
 
   for more info.
 "
   (define current-as (cog-set-atomspace! pln-atomspace))
-  (apply ure-add-rule-by-name (cons (pln-mk-rb) (cons rule-name tv)))
+  (apply ure-add-rule (cons (pln-mk-rb) (cons rule tv)))
   (cog-set-atomspace! current-as)
 
   *unspecified*)
 
-(define-public (pln-add-rules-by-names rule-names)
+(define-public (pln-add-rules rules)
 "
-  Call ure-add-rules-by-names on the PLN rule base. See
+  Call ure-add-rules on the PLN rule base. See
 
-    (help ure-add-rules-by-names)
+    (help ure-add-rules)
 
   for more info.
 "
   (define current-as (cog-set-atomspace! pln-atomspace))
-  (ure-add-rules-by-names (pln-mk-rb) rule-names)
+  (ure-add-rules (pln-mk-rb) rule-names)
   (cog-set-atomspace! current-as)
 
   *unspecified*)
 
+;; TODO: use pln-rm-rule once generalized
 (define-public (pln-rm-rule-by-name rule-name)
 "
   Call ure-rm-rule-by-name on the PLN rule base. See
@@ -405,26 +406,16 @@
 "
   (apply cog-bc (cons (pln-rb) args)))
 
-;; TODO: maybe move to ure as well
-(define-public (pln-execute-rule-by-name rule-name)
+;; TODO: move to ure
+(define-public (pln-apply-rule rule-symbol)
 "
-  Execute a rule given its name, for instance
+  Execute a rule symbol, for instance
 
-  (pln-execute-rule-by-name \"deduction-subset-rule\")
+  (pln-apply-rule 'subset-deduction)
 "
   ;; TODO
 )
 
-;; TODO: move to ure
-(define-public (pln-add-rule rule-symbol)
-  (let* ((rule-name (string-append (symbol->string rule-symbol) "-rule")))
-    (pln-add-rule-by-name rule-name)))
-
-;; TODO: move to ure
-(define-public (pln-add-rules . rule-symbols)
-  (for-each pln-add-rule rule-symbols))
-
-;; TODO: move to ure
 (define-public (pln-clear)
   ;; Switch to PLN atomspace and clear
   (define current-as (cog-set-atomspace! pln-atomspace))
