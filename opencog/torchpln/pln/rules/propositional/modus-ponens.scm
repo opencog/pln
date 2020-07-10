@@ -53,10 +53,10 @@
     (And
       ;; Preconditions
       (Evaluation
-        (GroundedPredicate "scm: gt-zero-confidence")
+        (GroundedPredicate "py:pln.rules.propositional.gt_zero_confidence")
         A)
       (Evaluation
-        (GroundedPredicate "scm: gt-zero-confidence")
+        (GroundedPredicate "py:pln.rules.propositional.gt_zero_confidence")
         AB)
       ;; Pattern clauses
       (Present
@@ -64,14 +64,22 @@
         A))
     ;; Rewrite
     (ExecutionOutputLink
-      (GroundedSchemaNode "scm: modus-ponens")
+      (GroundedSchema "py:pln.rules.propositional.modus_ponens_formula")
       (ListLink
         B
         AB
         A)))))
 
-;; Formula
-(define (modus-ponens B AB A)
+(define modus-ponens-inheritance-rule
+  (gen-modus-ponens-rule InheritanceLink))
+
+(define modus-ponens-implication-rule
+  (gen-modus-ponens-rule ImplicationLink))
+
+(define modus-ponens-subset-rule
+  (gen-modus-ponens-rule SubsetLink))
+
+(define (modus-ponens-formula B AB A)
   (let
       ((sA (cog-mean A))
        (cA (cog-confidence A))
@@ -84,19 +92,6 @@
      (stv 
       (precise-modus-ponens-strength-formula sA sAB snotAB) 
       (min (min cAB cnotAB) cA)))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Deprecated naming, for backward compatibility only ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(define modus-ponens-inheritance-rule
-  (gen-modus-ponens-rule InheritanceLink))
-
-(define modus-ponens-implication-rule
-  (gen-modus-ponens-rule ImplicationLink))
-
-(define modus-ponens-subset-rule
-  (gen-modus-ponens-rule SubsetLink))
 
 ;; Name the rules
 (define modus-ponens-inheritance-rule-name
@@ -113,32 +108,3 @@
   (DefinedSchemaNode "modus-ponens-subset-rule"))
 (DefineLink modus-ponens-subset-rule-name
   modus-ponens-subset-rule)
-
-;;;;;;;;;;;;;;;;
-;; New naming ;;
-;;;;;;;;;;;;;;;;
-
-(define inheritance-modus-ponens-rule
-  (gen-modus-ponens-rule InheritanceLink))
-
-(define implication-modus-ponens-rule
-  (gen-modus-ponens-rule ImplicationLink))
-
-(define subset-modus-ponens-rule
-  (gen-modus-ponens-rule SubsetLink))
-
-;; Name the rules
-(define inheritance-modus-ponens-rule-name
-  (DefinedSchemaNode "inheritance-modus-ponens-rule"))
-(DefineLink inheritance-modus-ponens-rule-name
-  inheritance-modus-ponens-rule)
-
-(define implication-modus-ponens-rule-name
-  (DefinedSchemaNode "implication-modus-ponens-rule"))
-(DefineLink implication-modus-ponens-rule-name
-  implication-modus-ponens-rule)
-
-(define subset-modus-ponens-rule-name
-  (DefinedSchemaNode "subset-modus-ponens-rule"))
-(DefineLink subset-modus-ponens-rule-name
-  subset-modus-ponens-rule)

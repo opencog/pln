@@ -46,7 +46,7 @@
           BC)
         (Not (Identical A C)))
       (ExecutionOutput
-        (GroundedSchema "scm: deduction-formula")
+        (GroundedSchema "scm: deduction")
         (List
           ;; Conclusion
           AC
@@ -57,32 +57,8 @@
           AB
           BC)))))
 
-(define deduction-inheritance-rule
-  (let ((var-type (TypeChoice
-                    (TypeNode "ConceptNode")
-                    (TypeNode "AndLink")
-                    (TypeNode "OrLink")
-                    (TypeNode "NotLink"))))
-    (gen-deduction-rule InheritanceLink var-type)))
-
-(define deduction-implication-rule
-  (let ((var-type (TypeChoice
-                    (TypeNode "PredicateNode")
-                    (TypeNode "LambdaLink")
-                    (TypeNode "AndLink")
-                    (TypeNode "OrLink")
-                    (TypeNode "NotLink"))))
-    (gen-deduction-rule ImplicationLink var-type)))
-
-(define deduction-subset-rule
-  (let ((var-type (TypeChoice
-                    (TypeNode "ConceptNode")
-                    (TypeNode "AndLink")
-                    (TypeNode "OrLink")
-                    (TypeNode "NotLink"))))
-    (gen-deduction-rule SubsetLink var-type)))
-
-(define (deduction-formula conclusion . premises)
+;; Deduction formula
+(define (deduction conclusion . premises)
   (if (= (length premises) 2)
     (let*
         ((AC conclusion)
@@ -154,6 +130,35 @@
                                               ;; situation.
                     (cog-merge-hi-conf-tv! AC (stv sAC cAC)))))))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Deprecated naming, for backward compatibility only ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define deduction-inheritance-rule
+  (let ((var-type (TypeChoice
+                    (TypeNode "ConceptNode")
+                    (TypeNode "AndLink")
+                    (TypeNode "OrLink")
+                    (TypeNode "NotLink"))))
+    (gen-deduction-rule InheritanceLink var-type)))
+
+(define deduction-implication-rule
+  (let ((var-type (TypeChoice
+                    (TypeNode "PredicateNode")
+                    (TypeNode "LambdaLink")
+                    (TypeNode "AndLink")
+                    (TypeNode "OrLink")
+                    (TypeNode "NotLink"))))
+    (gen-deduction-rule ImplicationLink var-type)))
+
+(define deduction-subset-rule
+  (let ((var-type (TypeChoice
+                    (TypeNode "ConceptNode")
+                    (TypeNode "AndLink")
+                    (TypeNode "OrLink")
+                    (TypeNode "NotLink"))))
+    (gen-deduction-rule SubsetLink var-type)))
+
 ;; Name the rules
 (define deduction-inheritance-rule-name
   (DefinedSchemaNode "deduction-inheritance-rule"))
@@ -169,3 +174,48 @@
   (DefinedSchemaNode "deduction-subset-rule"))
 (DefineLink deduction-subset-rule-name
   deduction-subset-rule)
+
+;;;;;;;;;;;;;;;;
+;; New naming ;;
+;;;;;;;;;;;;;;;;
+
+(define inheritance-deduction-rule
+  (let ((var-type (TypeChoice
+                    (TypeNode "ConceptNode")
+                    (TypeNode "AndLink")
+                    (TypeNode "OrLink")
+                    (TypeNode "NotLink"))))
+    (gen-deduction-rule InheritanceLink var-type)))
+
+(define implication-deduction-rule
+  (let ((var-type (TypeChoice
+                    (TypeNode "PredicateNode")
+                    (TypeNode "LambdaLink")
+                    (TypeNode "AndLink")
+                    (TypeNode "OrLink")
+                    (TypeNode "NotLink"))))
+    (gen-deduction-rule ImplicationLink var-type)))
+
+(define subset-deduction-rule
+  (let ((var-type (TypeChoice
+                    (TypeNode "ConceptNode")
+                    (TypeNode "AndLink")
+                    (TypeNode "OrLink")
+                    (TypeNode "NotLink"))))
+    (gen-deduction-rule SubsetLink var-type)))
+
+;; Name the rules
+(define inheritance-deduction-rule-name
+  (DefinedSchemaNode "inheritance-deduction-rule"))
+(DefineLink inheritance-deduction-rule-name
+  inheritance-deduction-rule)
+
+(define implication-deduction-rule-name
+  (DefinedSchemaNode "implication-deduction-rule"))
+(DefineLink implication-deduction-rule-name
+  implication-deduction-rule)
+
+(define subset-deduction-rule-name
+  (DefinedSchemaNode "subset-deduction-rule"))
+(DefineLink subset-deduction-rule-name
+  subset-deduction-rule)
