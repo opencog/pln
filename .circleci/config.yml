@@ -3,7 +3,7 @@ version: 2.0
 jobs:
   pln:
     docker:
-      - image: opencog/opencog-deps
+      - image: $CIRCLE_PROJECT_USERNAME/opencog-deps
         user: root
         environment:
           CCACHE_DIR: /ws/ccache
@@ -87,7 +87,7 @@ jobs:
 
   package: #Place holder
     docker:
-      - image: opencog/opencog-deps
+      - image: $CIRCLE_PROJECT_USERNAME/opencog-deps
         user: root
     working_directory: /ws/pln
     steps:
