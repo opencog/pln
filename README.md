@@ -1,5 +1,9 @@
 # Probabilistic Logic Network
 
+opencog | singnet
+------- | -------
+[![CircleCI](https://circleci.com/gh/opencog/pln.svg?style=svg)](https://circleci.com/gh/opencog/pln) | [![CircleCI](https://circleci.com/gh/singnet/pln.svg?style=svg)](https://circleci.com/gh/singnet/pln)
+
 Probabilistic Logic Network, or PLN for short, is a logic invented by
 Ben Goertzel et al [1] for common sense reasoning. It is particularily
 well suited for uncertain reasoning, especially when knowledge is
