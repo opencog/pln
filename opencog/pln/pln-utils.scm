@@ -168,38 +168,38 @@
                     ((equal? rule-base 'standard)
                      (list
                       ;; Deduction
-                      "deduction-implication-rule"
-                      "deduction-subset-rule"
-                      "deduction-inheritance-rule"
+                      'deduction-implication
+                      'deduction-subset
+                      'deduction-inheritance
 
                       ;; Modus Ponens
-                      "modus-ponens-inheritance-rule"
-                      "modus-ponens-implication-rule"
-                      "modus-ponens-subset-rule"
+                      'modus-ponens-inheritance
+                      'modus-ponens-implication
+                      'modus-ponens-subset
 
                       ;; Contraposition
-                      "crisp-contraposition-implication-scope-rule"
-                      "contraposition-implication-rule"
-                      "contraposition-inheritance-rule"
+                      'crisp-contraposition-implication-scope
+                      'contraposition-implication
+                      'contraposition-inheritance
 
                       ;; Fuzzy Conjunction Introduction
-                      "fuzzy-conjunction-introduction-1ary-rule"
-                      "fuzzy-conjunction-introduction-2ary-rule"
-                      "fuzzy-conjunction-introduction-3ary-rule"
-                      "fuzzy-conjunction-introduction-4ary-rule"
-                      "fuzzy-conjunction-introduction-5ary-rule"
+                      'fuzzy-conjunction-introduction-1ary
+                      'fuzzy-conjunction-introduction-2ary
+                      'fuzzy-conjunction-introduction-3ary
+                      'fuzzy-conjunction-introduction-4ary
+                      'fuzzy-conjunction-introduction-5ary
 
                       ;; Fuzzy Disjunction Introduction
-                      "fuzzy-disjunction-introduction-1ary-rule"
-                      "fuzzy-disjunction-introduction-2ary-rule"
-                      "fuzzy-disjunction-introduction-3ary-rule"
-                      "fuzzy-disjunction-introduction-4ary-rule"
-                      "fuzzy-disjunction-introduction-5ary-rule"
+                      'fuzzy-disjunction-introduction-1ary
+                      'fuzzy-disjunction-introduction-2ary
+                      'fuzzy-disjunction-introduction-3ary
+                      'fuzzy-disjunction-introduction-4ary
+                      'fuzzy-disjunction-introduction-5ary
 
                       ;; Conditional Full Instantiation
-                      "conditional-full-instantiation-implication-scope-meta-rule"
-                      "conditional-full-instantiation-implication-meta-rule"
-                      "conditional-full-instantiation-inheritance-meta-rule")))))
+                      'conditional-full-instantiation-implication-scope-meta
+                      'conditional-full-instantiation-implication-meta
+                      'conditional-full-instantiation-inheritance-meta)))))
     (pln-add-rules rlst))
 
   ;; Avoid confusing the user with a return value
