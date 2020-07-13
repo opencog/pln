@@ -123,7 +123,7 @@
         2. 'standard
 
       The 'empty rule base contains no rule. In such case rules can be
-      added using pln-add-rule-by-name or pln-add-rules-by-names.
+      added using pln-add-rule or pln-add-rules.
 
       The 'standard rule base contains a few dozens of rules, such as
       deduction, modus ponens, contraposition, fuzzy conjunction and
@@ -133,8 +133,7 @@
         (pln-weighted-rules)
 
       Also, rules can be added or subtracted using the functions
-      pln-add-rule-by-name, pln-add-rules-by-names,
-      pln-rm-rule-by-name and pln-rm-rules-by-names.
+      pln-add-rule, pln-add-rules, pln-rm-rule and pln-rm-rules.
 "
   (define rule-base (if (< 0 (length rule-bases)) (car rule-bases) 'standard))
 
@@ -201,7 +200,7 @@
                       "conditional-full-instantiation-implication-scope-meta-rule"
                       "conditional-full-instantiation-implication-meta-rule"
                       "conditional-full-instantiation-inheritance-meta-rule")))))
-    (pln-add-rules-by-names rlst))
+    (pln-add-rules rlst))
 
   ;; Avoid confusing the user with a return value
   *unspecified*)
@@ -274,7 +273,7 @@
   for more info.
 "
   (define current-as (cog-set-atomspace! pln-atomspace))
-  (ure-add-rules (pln-mk-rb) rule-names)
+  (ure-add-rules (pln-mk-rb) rules)
   (cog-set-atomspace! current-as)
 
   *unspecified*)
