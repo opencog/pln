@@ -29,7 +29,7 @@ ENDIF ()
 
 ##################### PLN Types ##################
 
-CYTHON_ADD_MODULE_PYX(pln_types
+CYTHON_ADD_MODULE_PYX(pln
 	"pln_types.pyx"
 )
 
@@ -38,21 +38,21 @@ list(APPEND ADDITIONAL_MAKE_CLEAN_FILES "pln_types.cpp")
 # opencog.pln_types Python bindings
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 
-ADD_LIBRARY(pln_types_cython SHARED
-	pln_types.cpp
+ADD_LIBRARY(pln_cython SHARED
+	pln.cpp
 )
 
-ADD_DEPENDENCIES(pln_types_cython pln-types)
+ADD_DEPENDENCIES(pln_cython pln-types)
 
-TARGET_LINK_LIBRARIES(pln_types_cython
+TARGET_LINK_LIBRARIES(pln_cython
 	pln-types
 	${ATOMSPACE_LIBRARIES}
 	${PYTHON_LIBRARIES}
 )
 
-SET_TARGET_PROPERTIES(pln_types_cython PROPERTIES
+SET_TARGET_PROPERTIES(pln_cython PROPERTIES
 	PREFIX ""
-	OUTPUT_NAME pln_types)
+	OUTPUT_NAME pln)
 
-INSTALL (TARGETS pln_types_cython
+INSTALL (TARGETS pln_cython
 	DESTINATION "${PYTHON_DEST}")
