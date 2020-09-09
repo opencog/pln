@@ -67,11 +67,11 @@ ELSE (COGUTIL_FOUND)
 ENDIF (COGUTIL_FOUND)
 
 # add the 'cmake' directory from cogutil to search path
-list(APPEND CMAKE_MODULE_PATH  ${COGUTIL_DATA_DIR}/cmake)
-include(OpenCogGccOptions)
-include(OpenCogLibOptions)
-include(OpenCogInstallOptions)
-include(Summary)
+LIST(APPEND CMAKE_MODULE_PATH ${COGUTIL_DATA_DIR}/cmake)
+INCLUDE(OpenCogGccOptions)
+INCLUDE(OpenCogLibOptions)
+INCLUDE(OpenCogInstallOptions)
+INCLUDE(Summary)
 
 # ------------------------------------------------------------
 # The atomspace is required.
@@ -100,9 +100,6 @@ IF (URE_FOUND)
 ELSE (URE_FOUND)
 	MESSAGE(STATUS "URE missing: it is needed!")
 ENDIF (URE_FOUND)
-
-# add the 'cmake' directory from cogutil to search path
-list(APPEND CMAKE_MODULE_PATH  ${COGUTIL_DATA_DIR}/cmake)
 
 # ----------------------------------------------------------
 # Needed for unit tests
