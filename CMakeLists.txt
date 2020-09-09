@@ -67,11 +67,11 @@ ELSE (COGUTIL_FOUND)
 ENDIF (COGUTIL_FOUND)
 
 # add the 'cmake' directory from cogutil to search path
-list(APPEND CMAKE_MODULE_PATH  ${COGUTIL_DATA_DIR}/cmake)
-include(OpenCogGccOptions)
-include(OpenCogLibOptions)
-include(OpenCogInstallOptions)
-include(Summary)
+LIST(APPEND CMAKE_MODULE_PATH ${COGUTIL_DATA_DIR}/cmake)
+INCLUDE(OpenCogGccOptions)
+INCLUDE(OpenCogLibOptions)
+INCLUDE(OpenCogInstallOptions)
+INCLUDE(Summary)
 
 # ------------------------------------------------------------
 # The atomspace is required.
@@ -101,9 +101,6 @@ ELSE (URE_FOUND)
 	MESSAGE(STATUS "URE missing: it is needed!")
 ENDIF (URE_FOUND)
 
-# add the 'cmake' directory from cogutil to search path
-list(APPEND CMAKE_MODULE_PATH  ${COGUTIL_DATA_DIR}/cmake)
-
 # ----------------------------------------------------------
 # Needed for unit tests
 
@@ -111,6 +108,12 @@ FIND_PACKAGE(Cxxtest)
 IF (NOT CXXTEST_FOUND)
 	MESSAGE(STATUS "CxxTest missing: needed for unit tests.")
 ENDIF (NOT CXXTEST_FOUND)
+
+# ----------------------------------------------------------
+# This is required for Guile, Python and Cython
+
+include(OpenCogFindGuile)
+include(OpenCogFindPython)
 
 # ===================================================================
 # Include configuration.
@@ -124,9 +127,12 @@ IF (NOT DEFINED ATOMSPACE_DATA_DIR)
 	SET (ATOMSPACE_DATA_DIR "${COGUTIL_DATA_DIR}")
 ENDIF (NOT DEFINED ATOMSPACE_DATA_DIR)
 
-INCLUDE("${ATOMSPACE_DATA_DIR}/cmake/OpenCogMacros.cmake")
-INCLUDE("${ATOMSPACE_DATA_DIR}/cmake/OpenCogGuile.cmake")
-INCLUDE("${ATOMSPACE_DATA_DIR}/cmake/OpenCogCython.cmake")
+# Add the 'cmake' directory from atomspace to search path (should be
+# the same as cogutil, but we add it just in case)
+LIST(APPEND CMAKE_MODULE_PATH ${ATOMSPACE_DATA_DIR}/cmake)
+INCLUDE(OpenCogMacros)
+INCLUDE(OpenCogGuile)
+INCLUDE(OpenCogCython)
 
 # ==========================================================
 # Decide what to build, based on the packages found.
@@ -223,6 +229,7 @@ INCLUDE(CPack)
 # Show a summary of what we found, what we will do.
 
 SUMMARY_ADD("PLN" "Probabilistic Logic Network" HAVE_PLN)
+SUMMARY_ADD("Cython bindings" "Cython (python) bindings" HAVE_CYTHON)
 SUMMARY_ADD("Unit tests" "Unit tests" CXXTEST_FOUND)
 
 SUMMARY_SHOW()
