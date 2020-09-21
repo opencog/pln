@@ -27,7 +27,7 @@
 (define subset-attraction-introduction-rule
   (let* ((A (Variable "$A"))
          (B (Variable "$B"))
-         (CT (Type "ConceptNode")))
+         (CT (TypeInh "ConceptNode")))
     (BindLink
       (VariableSet
         (TypedVariable A CT)
