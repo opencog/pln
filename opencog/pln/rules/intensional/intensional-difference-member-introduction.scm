@@ -30,7 +30,7 @@
   (let* ((A (Variable "$A"))
          (B (Variable "$B"))
          (X (Variable "$X"))
-         (CT (Type "ConceptNode")))
+         (CT (TypeInh "ConceptNode")))
     (Bind
       (VariableSet
         (TypedVariable A CT)
