@@ -16,7 +16,7 @@
 (define subset-direct-introduction-rule
   (let* ((A (Variable "$A"))
          (B (Variable "$B"))
-         (CptT (Type 'Concept))
+         (CptT (TypeInh 'Concept))
          (AndT (Type 'And)))
     (Bind
       (VariableSet
