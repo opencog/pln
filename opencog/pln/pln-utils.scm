@@ -28,6 +28,24 @@
   ;; Avoid confusing the user with a return value
   *unspecified*)
 
+(define-public (pln-load-from-file FILENAME)
+"
+  pln-load-from-file FILENAME
+
+  Like primitive-load but load the content into pln-atomspace. Used to
+  load PLN rules that are not in the load path without polluting the current atomspace.
+"
+  ;; Switch to PLN atomspace
+  (define current-as (cog-set-atomspace! pln-atomspace))
+
+  (primitive-load FILENAME)
+
+  ;; Switch back to previous space
+  (cog-set-atomspace! current-as)
+
+  ;; Avoid confusing the user with a return value
+  *unspecified*)
+
 (define-public (pln-rule-type->filename RULE-TYPE)
 "
   pln-rule-type->filename RULE-TYPE
