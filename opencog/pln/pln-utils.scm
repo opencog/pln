@@ -240,6 +240,15 @@
 "
   (pln-prt-pln-atomspace))
 
+(define-public (pln-log-atomspace)
+"
+  Like pln-prt-atomspace but log at info level instead of print
+"
+  (cog-logger-info "~a" (cog-get-all-roots pln-atomspace))
+
+  ;; Avoid confusing the user with a return value
+  *unspecified*)
+
 (define-public (pln-rules)
 "
   List all rules in the PLN rule base.
