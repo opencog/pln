@@ -1,4 +1,5 @@
 (use-modules (srfi srfi-1))
+(use-modules (ice-9 regex))
 
 (use-modules (opencog))
 (use-modules (opencog exec))
@@ -68,6 +69,18 @@
 "
   (string-append "opencog/pln/meta-rules/" META-RULE-TYPE ".scm"))
 
+(define-public (pln-load-rule RULE-SYMBOL . TV)
+"
+  pln-load-rule RULE-SYMBOL [TV]
+
+  Given the symbol of a rule, such as 'subset-direct-introduction, load the rule
+  to the pln atomspace and add it to the pln rule base.
+"
+
+  (define filepath (pln-rule-name->filepath (rule-symbol->rule-name RULE-SYMBOL)))
+  (pln-load-from-path filepath)
+  (apply pln-add-rule (cons RULE-SYMBOL TV)))
+
 (define-public (pln-load-rules RULE-TYPE)
 "
   pln-load-rules RULE-TYPE
@@ -126,16 +139,14 @@
   (cog-set-atomspace! current-as)
   pln-atomspace-rb)
 
-(define-public (pln-load . rule-bases)
+(define*-public (pln-load #optional (rule-base 'standard))
 "
-  Load and configure PLN rules. All or most PLN rules will be loaded
-  in pln-atomspace, however depending on the choosen rule base only
-  some might be used.
+  Load and configure a PLN rule base.
 
   Usage: (pln-load rb)
 
-  rb: [optional, default='standard] Rule base to load, with 2 rule
-      bases supported so far
+  rb: [optional, default='standard] Rule base to load. 2 rule bases
+      are supported so far
 
         1. 'empty
         2. 'standard
@@ -152,33 +163,12 @@
 
       Also, rules can be added or subtracted using the functions
       pln-add-rule, pln-add-rules, pln-rm-rule and pln-rm-rules.
-"
-  (define rule-base (if (< 0 (length rule-bases)) (car rule-bases) 'standard))
 
+  Remark: this function is not cumulative, that is it will clear the
+  pln atomspace before loading rules.
+"
   ;; Clear PLN atomspace
   (pln-clear)
-
-  ;; Load rule files
-  (pln-load-rules "term/deduction")
-  (pln-load-rules "term/crisp-deduction")
-  (pln-load-rules "term/condition-negation")
-  (pln-load-rules "propositional/modus-ponens")
-  (pln-load-rules "propositional/contraposition")
-  (pln-load-rules "propositional/fuzzy-conjunction-introduction")
-  (pln-load-rules "propositional/fuzzy-disjunction-introduction")
-  (pln-load-rules "extensional/extensional-similarity-direct-introduction")
-  (pln-load-rules "extensional/subset-direct-introduction")
-  (pln-load-rules "extensional/conjunction-direct-introduction")
-  (pln-load-rules "extensional/concept-direct-evaluation")
-  (pln-load-rules "extensional/member-deduction")
-  (pln-load-rules "intensional/attraction-introduction")
-  (pln-load-rules "intensional/intensional-inheritance-direct-introduction")
-  (pln-load-rules "intensional/intensional-similarity-direct-introduction")
-  (pln-load-rules "intensional/intensional-difference-direct-introduction")
-
-  ;; Load meta rule files
-  (pln-load-meta-rules "predicate/conditional-full-instantiation")
-  (pln-load-meta-rules "predicate/conditional-partial-instantiation")
 
   ;; Attach rules to PLN rule-base
   (let ((rlst (cond ((equal? rule-base 'empty)
@@ -218,10 +208,62 @@
                       'conditional-full-instantiation-implication-scope-meta
                       'conditional-full-instantiation-implication-meta
                       'conditional-full-instantiation-inheritance-meta)))))
-    (pln-add-rules rlst))
+    (map pln-load-rule rlst))
 
   ;; Avoid confusing the user with a return value
   *unspecified*)
+
+(define-public (pln-rule-name->filepath rn)
+"
+  Given a rule name, such as \"deduction-subset-rule\", return the relative
+  filepath of that rule, so that it can be loaded with pln-load-from-path.
+"
+  (cond ;; Term
+        [(string-match "deduction-.+-rule" rn)
+	 "opencog/pln/rules/term/deduction.scm"]
+	[(string-match "present-deduction-.+-rule" rn)
+	 "opencog/pln/rules/term/crisp-deduction.scm"]
+	[(string-match ".*condition-negation-.+-rule" rn)
+	 "opencog/pln/rules/term/condition-negation.scm"]
+	;; Propositional
+	[(string-match "modus-ponens-.+-rule" rn)
+	 "opencog/pln/rules/propositional/modues-ponens.scm"]
+	[(string-match ".*contraposition-.+-rule" rn)
+	 "opencog/pln/rules/propositional/contraposition.scm"]
+	[(string-match "fuzzy-conjunction-introduction-.+-rule" rn)
+	 "opencog/pln/rules/propositional/fuzzy-conjunction-introduction.scm"]
+	[(string-match "fuzzy-disjunction-introduction-.+-rule" rn)
+	 "opencog/pln/rules/propositional/fuzzy-disjunction-introduction.scm"]
+	;; Extensional
+	[(string-match "extensional-similarity-direct-introduction-rule" rn)
+	 "opencog/pln/rules/extensional/extensional-similarity-direct-introduction.scm"]
+	[(string-match "subset-direct-introduction-rule" rn)
+	 "opencog/pln/rules/extensional/subset-direct-introduction.scm"]
+	[(string-match "conjunction-direct-introduction-rule" rn)
+	 "opencog/pln/rules/extensional/conjunction-direct-introduction.scm"]
+	[(string-match "concept-direct-introduction-rule" rn)
+	 "opencog/pln/rules/extensional/concept-direct-introduction.scm"]
+	[(string-match "member-deduction-rule" rn)
+	 "opencog/pln/rules/extensional/member-deduction.scm"]
+	;; Intensional
+	[(string-match ".*attraction-introduction-rule" rn)
+	 "opencog/pln/rules/intensional/attraction-introduction.scm"]
+	[(string-match "intensional-inheritance-direct-introduction-rule" rn)
+	 "opencog/pln/rules/intensional/intensional-inheritance-direct-introduction.scm"]
+	[(string-match "intensional-similarity-direct-introduction-rule" rn)
+	 "opencog/pln/rules/intensional/intensional-similarity-direct-introduction.scm"]
+	[(string-match "intensional-difference-direct-introduction-rule" rn)
+	 "opencog/pln/rules/intensional/intensional-difference-direct-introduction.scm"]
+	[(string-match "intensional-difference-member-direct-introduction-rule" rn)
+	 "opencog/pln/rules/intensional/intensional-difference-member-direct-introduction.scm"]
+	;; Temporal
+	[(string-match "predictive-implication-scope-direct-introduction-rule" rn)
+	 "opencog/pln/rules/temporal/predictive-implication-scope-direct-introduction.scm"]
+	;; Meta-rules
+	[(string-match "conditional-full-instantiation-.+-meta-rule" rn)
+	 "opencog/pln/meta-rules/predicate/conditional-full-instantiation.scm"]
+	[(string-match "conditional-partial-instantiation-.+-meta-rule" rn)
+	 "opencog/pln/meta-rules/predicate/conditional-full-instantiation.scm"]))
 
 (define-public (pln-prt-pln-atomspace)
 "
