@@ -13,5 +13,8 @@ ADD_SUBDIRECTORY(intensional)
 # Extensional reasoning rules
 ADD_SUBDIRECTORY(extensional)
 
+# Temporal reasoning rules
+ADD_SUBDIRECTORY(temporal)
+
 # Work in progress rules
 ADD_SUBDIRECTORY(wip)

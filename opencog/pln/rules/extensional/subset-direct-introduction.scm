@@ -2,13 +2,14 @@
 ;;
 ;; A
 ;; B
+;; TODO: add existential condition of member links
 ;; |-
 ;; Subset <TV>
 ;;   A
 ;;   B
 ;;
 ;; where TV is calculated using direct evidence obtained from member
-;; links (thus is extensional, nor mixed).
+;; links (thus is extensional, not mixed).
 
 (load "extensional-utils.scm")
 

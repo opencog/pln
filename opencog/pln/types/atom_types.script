@@ -12,7 +12,7 @@ INTENSIONAL_DIFFERENCE_LINK <- ORDERED_LINK,EVALUATABLE_LINK
 
 // For the definition of these links see
 // https://wiki.opencog.org/w/Category:Atom_Types
-PREDICTIVE_IMPLICATION_SCOPE_LINK <- SCOPE_LINK
+// PREDICTIVE_IMPLICATION_SCOPE_LINK <- SCOPE_LINK
 
 // These links are already declared in the spacetime repository, see
 //
@@ -22,3 +22,8 @@ PREDICTIVE_IMPLICATION_SCOPE_LINK <- SCOPE_LINK
 // TIME_INTERVAL_LINK <- ORDERED_LINK
 // TIME_NODE <- NODE
 // PREDICTIVE_IMPLICATION_LINK <- ORDERED_LINK
+
+// Natural. For instance 3 is represented by (S (S (S (Z))))
+NATURAL_LINK <- LINK
+S_LINK <- NATURAL_LINK
+Z_LINK <- NATURAL_LINK
