@@ -24,6 +24,7 @@
 ;;
 ;; P1
 ;; P2
+;; A
 ;; Q
 ;; There exists X and T such that
 ;;   Present
@@ -36,6 +37,10 @@
 ;;       Evaluation
 ;;         P2
 ;;         X
+;;       T
+;;     AtTime
+;;       Execution
+;;         A
 ;;       T
 ;;     AtTime
 ;;       Q
