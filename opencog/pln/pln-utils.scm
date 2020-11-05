@@ -244,7 +244,9 @@
 "
   Like pln-prt-atomspace but log at info level instead of print
 "
-  (cog-logger-info "~a" (cog-get-all-roots pln-atomspace))
+  (define current-as (cog-set-atomspace! pln-atomspace))
+  (cog-logger-info "~a" (cog-get-all-roots))
+  (cog-set-atomspace! current-as)
 
   ;; Avoid confusing the user with a return value
   *unspecified*)
