@@ -139,7 +139,7 @@
   (cog-set-atomspace! current-as)
   pln-atomspace-rb)
 
-(define*-public (pln-load #optional (rule-base 'standard))
+(define-public (pln-load . rule-bases)
 "
   Load and configure a PLN rule base.
 
@@ -167,6 +167,8 @@
   Remark: this function is not cumulative, that is it will clear the
   pln atomspace before loading rules.
 "
+  (define rule-base (if (< 0 (length rule-bases)) (car rule-bases) 'standard))
+
   ;; Clear PLN atomspace
   (pln-clear)
 
