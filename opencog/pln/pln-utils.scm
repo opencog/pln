@@ -229,7 +229,7 @@
 	 "opencog/pln/rules/term/condition-negation.scm"]
 	;; Propositional
 	[(string-match "modus-ponens-.+-rule" rn)
-	 "opencog/pln/rules/propositional/modues-ponens.scm"]
+	 "opencog/pln/rules/propositional/modus-ponens.scm"]
 	[(string-match ".*contraposition-.+-rule" rn)
 	 "opencog/pln/rules/propositional/contraposition.scm"]
 	[(string-match "fuzzy-conjunction-introduction-.+-rule" rn)
