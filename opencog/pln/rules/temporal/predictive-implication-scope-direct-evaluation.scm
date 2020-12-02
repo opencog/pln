@@ -76,26 +76,6 @@
 	(cog-outgoing-set P)
 	(list P))))
 
-(define (almost-max-strength X)
-"
-  Wrap X around
-
-  (GreaterThan (StrengthOf X) (Number 0.99))
-
-  meaning that it strength is almost one.
-"
-  (GreaterThan (StrengthOf X) (Number 0.99)))
-
-(define (almost-max-confidence X)
-"
-  Wrap X around
-
-  (GreaterThan (ConfidenceOf X) (Number 0.99))
-
-  meaning that it confidence is almost one.
-"
-  (GreaterThan (ConfidenceOf X) (Number 0.99)))
-
 (define (get-typed-vars vardecl)
 "
   Take a variable declaration and output its scheme list of typed variables
@@ -142,8 +122,8 @@
 	     (ante-timed-events (map (lambda (x) (AtTime x T)) ante-atime-events))
 	     (ante-body (And
 			  (Present ante-timed-events)
-			  (map almost-max-strength ante-timed-events)
-			  (map almost-max-confidence ante-timed-events)))
+			  (IsClosed ante-timed-events)
+			  (IsTrue ante-timed-events)))
 	     (ante-vardecl (vardecl-append (TypedVariable T TimeT)
 					   (get-vardecl PIS)))
 	     (ante-query (Get ante-vardecl ante-body))
