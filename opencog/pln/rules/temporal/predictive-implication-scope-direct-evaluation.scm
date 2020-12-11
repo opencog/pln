@@ -38,7 +38,8 @@
           PIS)))))
 
 ;; Helpers
-(define (get-antecedants PIS)
+;; TODO: move to util file
+(define (get-pis-antecedants PIS)
 "
   Return the antecedants of a predictive implication scope. For instance given
 
@@ -57,7 +58,8 @@
 	(cog-outgoing-set P)
 	(list P))))
 
-(define (get-succedents PIS)
+;; TODO: move to util file
+(define (get-pis-succedents PIS)
 "
   Return the succedent of a predictive implication scope. For instance given
 
@@ -76,6 +78,7 @@
 	(cog-outgoing-set P)
 	(list P))))
 
+;; TODO: move to util file
 (define (get-typed-vars vardecl)
 "
   Take a variable declaration and output its scheme list of typed variables
@@ -85,6 +88,7 @@
       (cog-outgoing-set vardecl)
       (list vardecl)))
 
+;; TODO: move to util file
 (define (vardecl-append vardecl1 vardecl2)
 "
   Take 2 variable declarations and append them. For now it is assumed
@@ -97,12 +101,30 @@
 	(VariableList lst)
 	(car lst))))
 
+;; TODO: move to util file
 (define (get-vardecl PIS)
 "
   Return the variable declaration of a PredicateImplicationScope
 "
   (cog-outgoing-atom PIS 0))
 
+;; TODO: move to util file
+(define (get-pis-lag PIS)
+"
+  Return the lag of a PredictiveImplicationLink.
+
+  That is given
+
+  PredictiveImplicationLink
+    <lag>
+    P
+    Q
+
+  returns <lag>
+"
+  (cog-outgoing-atom PIS 1))
+
+;; TODO: move to util file
 (define (temporal-plus T1 T2)
 "
   Calculate the addition of two time nodes (or here naturals for now).
@@ -113,12 +135,12 @@
 
 ;; Formula.  Assume crisps observations for now.
 (define (predictive-implication-scope-direct-evaluation conclusion . premises)
-  (ure-logger-info "(predictive-implication-scope-direct-evaluation conclusion=~a . premises=~a)" conclusion premises)
+  (ure-logger-fine "(predictive-implication-scope-direct-evaluation conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 0)
       (let* ((PIS conclusion)
 	     (T (Variable "$T"))
 	     (TimeT (TypeInh 'NaturalLink))
-	     (ante-atime-events (get-antecedants PIS))
+	     (ante-atime-events (get-pis-antecedants PIS))
 	     (ante-timed-events (map (lambda (x) (AtTime x T)) ante-atime-events))
 	     (ante-body (And
 			  (Present ante-timed-events)
@@ -132,10 +154,13 @@
 	     (ante-size (length ante-res-lst)))
 	(if (< 0 ante-size)
 	    (let* (;; For each evidence check if the succedent is true at T+LAG
-		   (lag (cog-outgoing-atom PIS 1))
-		   (get-time (lambda (p) (cog-outgoing-atom p 0)))
+		   (lag (get-pis-lag PIS))
+		   (only-time (= 1 (length (get-typed-vars ante-vardecl))))
+		   (get-time (lambda (p) (if only-time
+					     p
+					     (cog-outgoing-atom p 0))))
 		   (plus-lag (lambda (t) (temporal-plus lag t)))
-		   (succ-atime-events (get-succedents PIS))
+		   (succ-atime-events (get-pis-succedents PIS))
 		   (Q (car succ-atime-events)) ; TODO: only one succedent assumed
 		   (QT1 (lambda (p) (AtTime Q (plus-lag (get-time p)))))
 		   (true? (lambda (x) (and (not (null? x)) (tv->bool (cog-tv x)))))
