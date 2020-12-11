@@ -27,3 +27,7 @@ INTENSIONAL_DIFFERENCE_LINK <- ORDERED_LINK,EVALUATABLE_LINK
 NATURAL_LINK <- LINK
 S_LINK <- NATURAL_LINK
 Z_LINK <- NATURAL_LINK
+
+// Alternate SequentialAnd because the one defined in the atomspace
+// repo does not accept number, time or natural.
+ALT_SEQUENTIAL_AND_LINK <- ORDERED_LINK
