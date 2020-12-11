@@ -221,50 +221,54 @@
   filepath of that rule, so that it can be loaded with pln-load-from-path.
 "
   (cond ;; Term
-        [(string-match "deduction-.+-rule" rn)
+	[(string-match "^deduction-.+-rule$" rn)
 	 "opencog/pln/rules/term/deduction.scm"]
-	[(string-match "present-deduction-.+-rule" rn)
+	[(string-match "^present-deduction-.+-rule$" rn)
 	 "opencog/pln/rules/term/crisp-deduction.scm"]
-	[(string-match ".*condition-negation-.+-rule" rn)
+	[(string-match "^.*condition-negation-.+-rule$" rn)
 	 "opencog/pln/rules/term/condition-negation.scm"]
 	;; Propositional
-	[(string-match "modus-ponens-.+-rule" rn)
-	 "opencog/pln/rules/propositional/modues-ponens.scm"]
-	[(string-match ".*contraposition-.+-rule" rn)
+	[(string-match "^modus-ponens-.+-rule$" rn)
+	 "opencog/pln/rules/propositional/modus-ponens.scm"]
+	[(string-match "^.*contraposition-.+-rule$" rn)
 	 "opencog/pln/rules/propositional/contraposition.scm"]
-	[(string-match "fuzzy-conjunction-introduction-.+-rule" rn)
+	[(string-match "^fuzzy-conjunction-introduction-.+-rule$" rn)
 	 "opencog/pln/rules/propositional/fuzzy-conjunction-introduction.scm"]
-	[(string-match "fuzzy-disjunction-introduction-.+-rule" rn)
+	[(string-match "^fuzzy-disjunction-introduction-.+-rule$" rn)
 	 "opencog/pln/rules/propositional/fuzzy-disjunction-introduction.scm"]
 	;; Extensional
-	[(string-match "extensional-similarity-direct-introduction-rule" rn)
+	[(string-match "^extensional-similarity-direct-introduction-rule$" rn)
 	 "opencog/pln/rules/extensional/extensional-similarity-direct-introduction.scm"]
-	[(string-match "subset-direct-introduction-rule" rn)
+	[(string-match "^subset-direct-introduction-rule$" rn)
 	 "opencog/pln/rules/extensional/subset-direct-introduction.scm"]
-	[(string-match "conjunction-direct-introduction-rule" rn)
+	[(string-match "^conjunction-direct-introduction-rule$" rn)
 	 "opencog/pln/rules/extensional/conjunction-direct-introduction.scm"]
-	[(string-match "concept-direct-introduction-rule" rn)
+	[(string-match "^concept-direct-introduction-rule$" rn)
 	 "opencog/pln/rules/extensional/concept-direct-introduction.scm"]
-	[(string-match "member-deduction-rule" rn)
+	[(string-match "^member-deduction-rule$" rn)
 	 "opencog/pln/rules/extensional/member-deduction.scm"]
 	;; Intensional
-	[(string-match ".*attraction-introduction-rule" rn)
+	[(string-match "^.*attraction-introduction-rule$" rn)
 	 "opencog/pln/rules/intensional/attraction-introduction.scm"]
-	[(string-match "intensional-inheritance-direct-introduction-rule" rn)
+	[(string-match "^intensional-inheritance-direct-introduction-rule$" rn)
 	 "opencog/pln/rules/intensional/intensional-inheritance-direct-introduction.scm"]
-	[(string-match "intensional-similarity-direct-introduction-rule" rn)
+	[(string-match "^intensional-similarity-direct-introduction-rule$" rn)
 	 "opencog/pln/rules/intensional/intensional-similarity-direct-introduction.scm"]
-	[(string-match "intensional-difference-direct-introduction-rule" rn)
+	[(string-match "^intensional-difference-direct-introduction-rule$" rn)
 	 "opencog/pln/rules/intensional/intensional-difference-direct-introduction.scm"]
-	[(string-match "intensional-difference-member-direct-introduction-rule" rn)
+	[(string-match "^intensional-difference-member-direct-introduction-rule$" rn)
 	 "opencog/pln/rules/intensional/intensional-difference-member-direct-introduction.scm"]
 	;; Temporal
-	[(string-match "predictive-implication-scope-direct-introduction-rule" rn)
+	[(string-match "^predictive-implication-scope-direct-introduction-rule$" rn)
 	 "opencog/pln/rules/temporal/predictive-implication-scope-direct-introduction.scm"]
+	[(string-match "predictive-implication-direct-evaluation-rule" rn)
+	 "opencog/pln/rules/temporal/predictive-implication-direct-evaluation.scm"]
+	[(string-match "predictive-implication-scope-direct-evaluation-rule" rn)
+	 "opencog/pln/rules/temporal/predictive-implication-scope-direct-evaluation.scm"]
 	;; Meta-rules
-	[(string-match "conditional-full-instantiation-.+-meta-rule" rn)
+	[(string-match "^conditional-full-instantiation-.+-meta-rule$" rn)
 	 "opencog/pln/meta-rules/predicate/conditional-full-instantiation.scm"]
-	[(string-match "conditional-partial-instantiation-.+-meta-rule" rn)
+	[(string-match "^conditional-partial-instantiation-.+-meta-rule$" rn)
 	 "opencog/pln/meta-rules/predicate/conditional-full-instantiation.scm"]))
 
 (define-public (pln-prt-pln-atomspace)
