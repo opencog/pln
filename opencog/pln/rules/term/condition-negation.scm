@@ -12,6 +12,12 @@
 ;;
 ;;   TV.s = (BTV.s - STV.s * ATV.s) / (1 - ATV.s)
 ;;   TV.c = ATV.c
+;;
+;; which, for the strength, derives from
+;;
+;; P(B|¬A) = P(B∩¬A) / P(¬A)
+;;         = (P(B) - P(B∩A)) / (1 - P(A))
+;;         = (P(B) - P(B|A)*P(A)) / (1 - P(A))
 
 ;; Rule for Subset
 ;;
