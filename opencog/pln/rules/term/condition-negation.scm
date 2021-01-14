@@ -10,8 +10,27 @@
 ;;
 ;; where TV is defined as follows
 ;;
+;; Strength:
+;;
 ;;   TV.s = (BTV.s - STV.s * ATV.s) / (1 - ATV.s)
-;;   TV.c = ATV.c
+;;
+;; which derives from
+;;
+;; P(B|¬A) = P(B∩¬A) / P(¬A)
+;;         = (P(B) - P(B∩A)) / (1 - P(A))
+;;         = (P(B) - P(B|A)*P(A)) / (1 - P(A))
+;;
+;; Confidence:
+;;
+;;   TV.c = min(count->confidence(confidence->count(ATV.c) * (1 - ATV.s)), STV.c)
+;;
+;; which is a heuristic deriving from
+;;
+;; 1) Estimating the positive count of (Not A), which should be the
+;;    count of (Subset (Not A) B).
+;;
+;; 2) Combine with (via min) the count of (Subset A B) in case the
+;;    estimation of 1) is too high.
 
 ;; Rule for Subset
 ;;
@@ -44,13 +63,17 @@
              (A (cadr premises))
              (B (caddr premises))
              (Ss (cog-mean S))
+	     (Sc (cog-confidence S))
              (As (cog-mean A))
              (Ac (cog-confidence A))
              (Bs (cog-mean B))
+	     (NAs (- 1 As))
              (NSs (if (< As 1)
-                      (/ (- Bs (* Ss As)) (- 1 As))
+                      (/ (- Bs (* Ss As)) NAs)
                       1))
-             (NSc (if (< As 1) Ac 0))
+             (NSc (if (< As 1)
+                      (min (count->confidence (* (confidence->count Ac) NAs)) Sc)
+                      0))
              (NStv (stv NSs NSc)))
         (cog-merge-hi-conf-tv! NS NStv))))
 
