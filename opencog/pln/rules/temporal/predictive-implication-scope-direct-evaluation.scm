@@ -15,6 +15,7 @@
 ;; where TV is calculated using direct evidence obtained from
 ;; timestamped instances of P and Q (thus extensional, not mixed).
 
+(use-modules (srfi srfi-1))
 (use-modules (opencog))
 (use-modules (opencog exec))
 (use-modules (opencog spacetime))
@@ -38,45 +39,201 @@
           PIS)))))
 
 ;; Helpers
-;; TODO: move to util file
-(define (get-pis-antecedants PIS)
+(define (Z? X)
+  (equal? (cog-type X) 'ZLink))
+
+(define (S? X)
+  (equal? (cog-type X) 'SLink))
+
+(define (variable? X)
+  (equal? (cog-type X) 'VariableNode))
+
+(define (and? X)
+  (equal? (cog-type X) 'AndLink))
+
+(define (sequential-and? X)
+  (equal? (cog-type X) 'AltSequentialAndLink))
+
+(define (get-time X)
 "
-  Return the antecedants of a predictive implication scope. For instance given
+  Given a timed atom return the time.  That is if X is
+
+  (AtTime <A> <T>)
+
+  return <T>
+"
+  (cog-outgoing-atom X 1))
+
+(define (get-seq-lag SEQ)
+"
+  Return the lag of a SequentialAnd.
+
+  That is given
+
+  SequentialAnd
+    <lag>
+    <antecedent>
+    <succedent>
+
+  returns <lag>
+"
+  (cog-outgoing-atom SEQ 0))
+
+(define (get-seq-antecedent SEQ)
+"
+  Return the antecedent of a SequentialAnd.
+
+  That is given
+
+  SequentialAnd
+    <lag>
+    <antecedent>
+    <succedent>
+
+  returns <antecedent>
+"
+(cog-outgoing-atom SEQ 1))
+
+(define (get-seq-succedent SEQ)
+"
+  Return the succedent of a SequentialAnd.
+
+  That is given
+
+  SequentialAnd
+    <lag>
+    <antecedent>
+    <succedent>
+
+  returns <succedent>
+"
+(cog-outgoing-atom SEQ 2))
+
+;; TODO: move to util file
+(define (get-pis-antecedent PIS)
+"
+  Return the antecedent of a predictive implication scope. That is given
 
   PredictiveImplicationScope
     <vardecl>
-    <offset>
-    And
+    <lag>
+    <antecedent>
+    <succedent>
+
+  then return <antecedent>.
+"
+  (cog-outgoing-atom PIS 2))
+
+;; TODO: move to util file
+(define (get-pis-succedent PIS)
+"
+  Return the succedent of a predictive implication scope. That is given
+
+  PredictiveImplicationScope
+    <vardecl>
+    <lag>
+    <antecedent>
+    <succedent>
+
+  then return <succedent>.
+"
+  (cog-outgoing-atom PIS 3))
+
+(define (get-pis-antecedent-timed-clauses PIS T)
+"
+  Return the antecedent timed clauses of a predictive implication scope.
+
+  For instance given
+
+  PredictiveImplicationScope
+    <vardecl>
+    <lag-2>
+    SequentialAnd
+      <lag-1>
       <P1>
       <P2>
     <Q>
 
-  then return a scheme list with P1 and P2.
-"
-  (let* ((P (cog-outgoing-atom PIS 2)))
-    (if (equal? (cog-type P) 'AndLink)
-	(cog-outgoing-set P)
-	(list P))))
+  the return the following scheme list
 
-;; TODO: move to util file
-(define (get-pis-succedents PIS)
+  ((AtTime <P1> T) (AtTime <P2> (S T)))
+
+  assuming <lag-1> is (S (Z)).
 "
-  Return the succedent of a predictive implication scope. For instance given
+  (to-timed-clauses (get-pis-antecedent PIS) T))
+
+(define (get-max-time timed-clauses)
+"
+  Given a list of timed clauses, return the maximum lag w.r.t. T.
+"
+  (define head-time (get-time (car timed-clauses)))
+  (if (< 1 (length timed-clauses))
+      (lag-max head-time (get-max-time (cdr timed-clauses)))
+      head-time))
+
+(define (lag-max LAG1 LAG2)
+"
+  Return the max between two lags (including if they wrap variables).
+"
+  (cond [(or (Z? LAG1) (variable? LAG1)) LAG2]
+	[(or (Z? LAG2) (variable? LAG2)) LAG1]
+	[else (S (cog-outgoing-atom LAG1 0) (cog-outgoing-atom LAG2 0))]))
+
+(define (get-pis-succedent-timed-clauses PIS T)
+"
+  Return the succedent timed clauses of a predictive implication scope.
+
+  For instance given
 
   PredictiveImplicationScope
     <vardecl>
-    <offset>
-    And
+    <lag-2>
+    SequentialAnd
+      <lag-1>
       <P1>
       <P2>
     <Q>
 
-  then return a scheme list with Q.
+  the return the following scheme list
+
+  ((AtTime <Q> (S (S T))))
+
+  assuming <lag-1> and <lag-2> are both (S (Z)).
 "
-  (let* ((P (cog-outgoing-atom PIS 3)))
-    (if (equal? (cog-type P) 'AndLink)
-	(cog-outgoing-set P)
-	(list P))))
+  (let* ((pis-lag (get-pis-lag PIS))
+	 (max-time (get-max-time (get-pis-antecedent-timed-clauses PIS T)))
+	 (suc-time (lag-add pis-lag max-time)))
+    (to-timed-clauses (get-pis-succedent PIS) suc-time)))
+
+(define (to-timed-clauses LE T)
+"
+  Return a list of timed clauses given a structure of lagged events.
+
+  For instance given
+
+    SequentialAnd
+      <lag>
+      And
+        <P>
+        <Q>
+      <R>
+
+  return the following scheme list (assuming <lag> is 1)
+
+  ((AtTime <P> T) (AtTime <Q> T) (AtTime <R> (S T)))
+"
+  (define (wrap-T x) (AtTime x T))
+  (if (and? LE)
+      (append-map (lambda (x) (to-timed-clauses x T)) (cog-outgoing-set LE))
+      (if (sequential-and? LE)
+          (let* ((lag (get-seq-lag LE))
+                 (ante (get-seq-antecedent LE))
+                 (succ (get-seq-succedent LE))
+		 (timed-ante (to-timed-clauses ante T))
+		 (lagged-T (lag-add lag T))
+		 (timed-succ (to-timed-clauses succ lagged-T)))
+	    (append timed-ante timed-succ))
+          (list (wrap-T LE)))))
 
 ;; TODO: move to util file
 (define (get-typed-vars vardecl)
@@ -111,27 +268,33 @@
 ;; TODO: move to util file
 (define (get-pis-lag PIS)
 "
-  Return the lag of a PredictiveImplicationLink.
+  Return the lag of a PredictiveImplicationScopeLink.
 
   That is given
 
-  PredictiveImplicationLink
+  PredictiveImplicationScopeLink
+    <vardecl>
     <lag>
-    P
-    Q
+    <P>
+    <Q>
 
   returns <lag>
 "
   (cog-outgoing-atom PIS 1))
 
 ;; TODO: move to util file
-(define (temporal-plus T1 T2)
+(define (lag-add LAG T)
 "
-  Calculate the addition of two time nodes (or here naturals for now).
+  Add LAG to T. For example
+
+    LAG = (S (S Z))
+    T = (Variable \"$T\")
+
+  return (S (S (Variable \"$T\")))
 "
-  (if (equal? (cog-type T1) 'ZLink)
-      T2
-      (temporal-plus (cog-outgoing-atom T1 0) (S T2))))
+  (if (equal? (cog-type LAG) 'ZLink)
+      T
+      (lag-add (cog-outgoing-atom LAG 0) (S T))))
 
 ;; Formula.  Assume crisps observations for now.
 (define (predictive-implication-scope-direct-evaluation conclusion . premises)
@@ -140,12 +303,11 @@
       (let* ((PIS conclusion)
 	     (T (Variable "$T"))
 	     (TimeT (TypeInh 'NaturalLink))
-	     (ante-atime-events (get-pis-antecedants PIS))
-	     (ante-timed-events (map (lambda (x) (AtTime x T)) ante-atime-events))
+	     (ante-timed-clauses (get-pis-antecedent-timed-clauses PIS T))
 	     (ante-body (And
-			  (Present ante-timed-events)
-			  (IsClosed ante-timed-events)
-			  (IsTrue ante-timed-events)))
+			  (Present ante-timed-clauses)
+			  (IsClosed ante-timed-clauses)
+			  (IsTrue ante-timed-clauses)))
 	     (ante-vardecl (vardecl-append (TypedVariable T TimeT)
 					   (get-vardecl PIS)))
 	     (ante-query (Get ante-vardecl ante-body))
@@ -156,15 +318,18 @@
 	    (let* (;; For each evidence check if the succedent is true at T+LAG
 		   (lag (get-pis-lag PIS))
 		   (only-time (= 1 (length (get-typed-vars ante-vardecl))))
-		   (get-time (lambda (p) (if only-time
+		   (get-p-time (lambda (p) (if only-time
 					     p
 					     (cog-outgoing-atom p 0))))
-		   (plus-lag (lambda (t) (temporal-plus lag t)))
-		   (succ-atime-events (get-pis-succedents PIS))
-		   (Q (car succ-atime-events)) ; TODO: only one succedent assumed
-		   (QT1 (lambda (p) (AtTime Q (plus-lag (get-time p)))))
-		   (true? (lambda (x) (and (not (null? x)) (tv->bool (cog-tv x)))))
-		   (succ-true? (lambda (p) (true? (QT1 p))))
+		   (plus-lag (lambda (t) (lag-add lag t)))
+		   (succ-timed-clauses (get-pis-succedent-timed-clauses PIS T))
+		   ;; TODO: only one succedent assumed for now
+		   (succ-timed-clause (car succ-timed-clauses))
+		   (succ-instantiate (lambda (p)
+				       (cog-execute! (Put T succ-timed-clause p))))
+		   (true? (lambda (x)
+			    (and (not (null? x)) (tv->bool (cog-tv x)))))
+		   (succ-true? (lambda (p) (true? (succ-instantiate (get-p-time p)))))
 		   (succ-lst (filter succ-true? ante-res-lst))
 		   (succ-size (length succ-lst))
 		   ;; Calculate the TV of the predictive implication scope
