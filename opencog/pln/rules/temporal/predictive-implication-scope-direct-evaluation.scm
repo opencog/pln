@@ -15,6 +15,7 @@
 ;; where TV is calculated using direct evidence obtained from
 ;; timestamped instances of P and Q (thus extensional, not mixed).
 
+(use-modules (srfi srfi-1))
 (use-modules (opencog))
 (use-modules (opencog exec))
 (use-modules (opencog spacetime))
@@ -38,20 +39,20 @@
           PIS)))))
 
 ;; Helpers
-(define (Z? T)
+(define (Z? X)
   (equal? (cog-type X) 'ZLink))
 
-(define (S? T)
+(define (S? X)
   (equal? (cog-type X) 'SLink))
 
-(define (variable? T)
+(define (variable? X)
   (equal? (cog-type X) 'VariableNode))
 
 (define (and? X)
   (equal? (cog-type X) 'AndLink))
 
 (define (sequential-and? X)
-  (equal? (cog-type X) 'SequentialAndLink))
+  (equal? (cog-type X) 'AltSequentialAndLink))
 
 (define (get-time X)
 "
@@ -201,7 +202,7 @@
 "
   (let* ((pis-lag (get-pis-lag PIS))
 	 (max-time (get-max-time (get-pis-antecedent-timed-clauses PIS T)))
-	 (suc-time (lag-add pis-lag max-lag)))
+	 (suc-time (lag-add pis-lag max-time)))
     (to-timed-clauses (get-pis-succedent PIS) suc-time)))
 
 (define (to-timed-clauses LE T)
@@ -221,9 +222,9 @@
 
   ((AtTime <P> T) (AtTime <Q> T) (AtTime <R> (S T)))
 "
-  (define (wrap-T (lambda (x) (AtTime x T))))
+  (define (wrap-T x) (AtTime x T))
   (if (and? LE)
-      (map wrap-T (cog-outgoing-set LE))
+      (append-map (lambda (x) (to-timed-clauses x T)) (cog-outgoing-set LE))
       (if (sequential-and? LE)
           (let* ((lag (get-seq-lag LE))
                  (ante (get-seq-antecedent LE))
@@ -232,30 +233,7 @@
 		 (lagged-T (lag-add lag T))
 		 (timed-succ (to-timed-clauses succ lagged-T)))
 	    (append timed-ante timed-succ))
-          (list LE))))
-
-;; TODO: move to util file
-;;
-;; NEXT: split into get-pis-succedent and
-;; get-pis-succedent-timed-clauses
-(define (get-pis-succedents PIS)
-"
-  Return the succedent of a predictive implication scope. For instance given
-
-  PredictiveImplicationScope
-    <vardecl>
-    <offset>
-    And
-      <P1>
-      <P2>
-    <Q>
-
-  then return a scheme list with Q.
-"
-  (let* ((P (cog-outgoing-atom PIS 3)))
-    (if (and? P)
-	(cog-outgoing-set P)
-	(list P))))
+          (list (wrap-T LE)))))
 
 ;; TODO: move to util file
 (define (get-typed-vars vardecl)
@@ -326,12 +304,10 @@
 	     (T (Variable "$T"))
 	     (TimeT (TypeInh 'NaturalLink))
 	     (ante-timed-clauses (get-pis-antecedent-timed-clauses PIS T))
-	     (_ (ure-logger-fine "ante-timed-clauses = ~a" ante-timed-clauses))
 	     (ante-body (And
 			  (Present ante-timed-clauses)
 			  (IsClosed ante-timed-clauses)
 			  (IsTrue ante-timed-clauses)))
-	     (_ (ure-logger-fine "ante-body = ~a" ante-body))
 	     (ante-vardecl (vardecl-append (TypedVariable T TimeT)
 					   (get-vardecl PIS)))
 	     (ante-query (Get ante-vardecl ante-body))
@@ -348,10 +324,12 @@
 		   (plus-lag (lambda (t) (lag-add lag t)))
 		   (succ-timed-clauses (get-pis-succedent-timed-clauses PIS T))
 		   ;; TODO: only one succedent assumed for now
-		   (succ-timed-clause (car succ-atime-clauses))
-		   (succ-instantiate (lambda (p) (Put T succ-timed-clause p)))
-		   (true? (lambda (x) (and (not (null? x)) (tv->bool (cog-tv x)))))
-		   (succ-true? (lambda (p) (true? (succ-instantiate p))))
+		   (succ-timed-clause (car succ-timed-clauses))
+		   (succ-instantiate (lambda (p)
+				       (cog-execute! (Put T succ-timed-clause p))))
+		   (true? (lambda (x)
+			    (and (not (null? x)) (tv->bool (cog-tv x)))))
+		   (succ-true? (lambda (p) (true? (succ-instantiate (get-p-time p)))))
 		   (succ-lst (filter succ-true? ante-res-lst))
 		   (succ-size (length succ-lst))
 		   ;; Calculate the TV of the predictive implication scope
