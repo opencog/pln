@@ -58,7 +58,7 @@
 ;;   sB.sC + ((1-sB)(sC - sBsC))/(1-sB) = sB.sC + (sC - sB.sC) = sC
 ;;
 ;; If the preconditions are not met it returns sAC = 0, although
-;; honnestly the deduction rule should not have been applied in the
+;; honestly the deduction rule should not have been applied in the
 ;; first place.
 ;; -----------------------------------------------------------------------------
 
