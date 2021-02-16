@@ -25,6 +25,13 @@
 ;;
 ;; Written in a more compact form (ignoring the lags) it is
 ;;
+;; P↝ᵀ¹Q
+;; (Q∧A)↝ᵀ²R
+;; ⊢
+;; (P≺ᵀ¹A)↝ᵀ²R
+;;
+;; Or simply (ignoring the lags)
+;;
 ;; P↝Q
 ;; (Q∧A)↝R
 ;; ⊢
@@ -141,7 +148,13 @@
 	  QAR)))))
 
 ;; Formula
+;;
+;; The formula is calculated based on the assumption that such model
+;; (predictive implication) is time-homogeneous (see
+;; https://en.wikipedia.org/wiki/Markov_chain#Variations).
+;;
+;; According to 
 (define (predictive-implication-scope-deduction conclusion . premises)
   (ure-logger-fine "(predictive-implication-scope-deduction conclusion=~a . premises=~a)" conclusion premises)
-  ;; NEXT
+  ;; TODO
 )
