@@ -322,6 +322,43 @@ fleshed out yet.  We have the usual confidence decrease around the
 known time, as well as taking time scales into account, etc, but
 that's still unformal.  More research is needed in that regard.
 
+## Atomese Representation of ⋃ₓ {Xₜ ∈ S[Pₜ(x)]}
+
+In the formula for temporal deduction we need to calculate P(B) and
+P(C), which stand for
+
+```
+P(B) = P(⋃ₓ {Xₜ ∈ S[Qₜ(x)]})
+```
+
+which for a particular t should be well defined, however there is a
+problem in assuming that such probability is the same of all t,
+i.e. that such process is stationary.  Maybe the notion of time
+homogeneity is wrong to begin with...
+
+Let's take for instance the reward over time
+
+```
+AtTime
+  Evaluation
+    Predicate "Reward"
+    Number 1
+  t
+```
+
+is clearly not time homogeneous.  So then what would the probability
+of the reward over time, represented by
+
+```
+Evaluation <TV>
+  Predicate "Reward"
+  Number 1
+```
+
+mean?
+
+
+
 ## Distributional Lags
 
 We have assumed above that `T1` and `T2` are constants, in general
