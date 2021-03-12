@@ -3,7 +3,8 @@
 In this document we provide the foundation for doing Temporal
 Reasoning with PLN.  It builds upon Chapter 14 of the PLN book, using
 the same notations as well as explicitely defining a Probability Space
-for it, based upon https://en.wikipedia.org/wiki/Stochastic_process.
+for it, based upon https://en.wikipedia.org/wiki/Stochastic_process
+for the most part.
 
 ## Notations
 
@@ -163,11 +164,73 @@ homogeneity for time only:
 ∀t Pr(⋃ₓ {Xᵤ∈S[Qᵤ(x)]} | ⋃ₓ {Xₜ∈S[Pₜ(x)]}) = TV.s, with u=t+T
 ```
 
-Or, equivalently
+Or, equivalently (WRONG!!!!)
 
 ```
 ∀t Pr(Xᵤ ∈ ⋃ₓ S[Qᵤ(x)] | Xₜ ∈ ⋃ₓ S[Pₜ(x)]) = TV.s, with u=t+T
 ```
+
+HYPOTHESES: We want predictive implication to be consistent with
+implication if P and Q are constant over time.
+
+TODO: the above is wrong (both)!!!! Because it allows to consider
+paths such that Pₜ(a) holds for Xₜ and Qᵤ(b) holds for Xᵤ for a ≠ b.
+Rather what we want is to relax the forall without allowing these
+paths to contribute to the conditional probability of the predictive
+implication.  We suggest the following definition:
+
+```
+TV.s = Pr(̱⋃ₓ ({Xᵤ∈S[Qᵤ(x)]} ⋂ {Xₜ∈S[Pₜ(x)]})) / Pr(⋃ₓ {Xₜ∈S[Pₜ(x)]}), with u=t+T
+```
+
+Let XPₜ(x) be the set of paths such that Pₜ(x) holds for x at t.
+
+```
+XPₜ(x) = {X | Xₜ ∈ S[Pₜ(x)]}
+```
+
+Let's explore the naive definition
+
+```
+TV.s = Pr(⋃ₓ XQᵤ(x) | ⋃ₓ XPₜ(x)), with u=t+T
+```
+
+Let's assume the set of paths XPₜ(a), that is the set of paths where P
+holds at time t for some a, obvious such paths are in ⋃ₓ XPₜ(x).  Let
+us now assume a subset of XPₜ(a) such that Q holds at time u for some
+b such that a ≠ b, formally corresponding to XQᵤ(b) ⋂ XPₜ(a). It is
+clear such a set will positively contribute to the probability above.
+But that isn't what we want.  To remedy let's use such definition
+
+```
+TV.s = Pr(⋃ₓ (XQᵤ(x) ⋂ XPₜ(x)) | ⋃ₓ XPₜ(x)), with u=t+T
+```
+
+Indeed we can prove that the contribution XQᵤ(b) ⋂ XPₜ(a) is missing,
+as intended.
+
+Proof:
+
+We want to prove that the following does not generally hold
+
+XQᵤ(b) ⋂ XPₜ(a) ⊂ (⋃ₓ (XQᵤ(x) ⋂ XPₜ(x))) ⋂ (⋃ₓ XPₜ(x))
+
+for a ≠ b and (XPₜ(a) ⋃ XPₜ(b)) ≠ ∅ to make sure the condition is met.
+
+Indeed, let's first remove from the right term all subterms that do
+not relate to a and b, as it is obvious that such subset relationship
+will not generally hold, we're left with proving that
+
+XQᵤ(b) ⋂ XPₜ(a) ⊂ ((XQᵤ(a) ⋂ XPₜ(a)) ⋃ (XQᵤ(b) ⋂ XPₜ(b))) ⋂ (XPₜ(a) ⋃ XPₜ(b))
+
+does not generally hold.
+
+Let's assume that XPₜ(b) ⋂ XPₜ(a) are disjoin for a particular t, a
+and b, thus XPₜ(b) ⋂ XPₜ(a) = ∅, thus XQᵤ(b) ⋂ XPₜ(b) ⋂ XPₜ(a) = ∅,
+thus the only way for XQᵤ(b) ⋂ XPₜ(a) to be a subset of XQᵤ(b) ⋂
+XPₜ(b) ⋂ XPₜ(a)
+
+but since XPₜ(b) ⋂ XPₜ(a) is disjoin [ACTUALLY IT'S NOT!!!].
 
 ## Semantics of SequentialAnd
 
