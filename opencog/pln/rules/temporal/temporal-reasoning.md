@@ -1,10 +1,11 @@
 # Temporal Reasoning with PLN
 
-In this document we provide the foundation for doing Temporal
-Reasoning with PLN.  It builds upon Chapter 14 of the PLN book, using
-the same notations as well as explicitely defining a Probability Space
-for it, based upon https://en.wikipedia.org/wiki/Stochastic_process
-for the most part.
+Document serving as complement of the Chapter 14 of the PLN book to
+lay down the foundations of Temporal Reasoning with PLN.
+
+Still WIP especially the part defining a Probability Space based upon
+https://en.wikipedia.org/wiki/Stochastic_process where an atomspace is
+the state of the system.
 
 ## Notations
 
@@ -103,13 +104,13 @@ ForAll <s=1, c=1>
         Evaluation
           P
           x
-	  t
-	SatisfyingPaths
-	  AtTime
-	    Evaluation
-		  Q
-		  x
-	  t + T
+      t
+    SatisfyingPaths
+      AtTime
+        Evaluation
+          Q
+          x
+      t + T
 ```
 
 The `ForAll` coming from the time and parameter homogeneity may seem
@@ -213,7 +214,9 @@ Proof:
 
 We want to prove that the following does not generally hold
 
+```
 XQᵤ(b) ⋂ XPₜ(a) ⊂ (⋃ₓ (XQᵤ(x) ⋂ XPₜ(x))) ⋂ (⋃ₓ XPₜ(x))
+```
 
 for a ≠ b and (XPₜ(a) ⋃ XPₜ(b)) ≠ ∅ to make sure the condition is met.
 
@@ -221,20 +224,315 @@ Indeed, let's first remove from the right term all subterms that do
 not relate to a and b, as it is obvious that such subset relationship
 will not generally hold, we're left with proving that
 
+```
 XQᵤ(b) ⋂ XPₜ(a) ⊂ ((XQᵤ(a) ⋂ XPₜ(a)) ⋃ (XQᵤ(b) ⋂ XPₜ(b))) ⋂ (XPₜ(a) ⋃ XPₜ(b))
+```
 
 does not generally hold.
 
-Let's assume that XPₜ(b) ⋂ XPₜ(a) are disjoin for a particular t, a
-and b, thus XPₜ(b) ⋂ XPₜ(a) = ∅, thus XQᵤ(b) ⋂ XPₜ(b) ⋂ XPₜ(a) = ∅,
-thus the only way for XQᵤ(b) ⋂ XPₜ(a) to be a subset of XQᵤ(b) ⋂
-XPₜ(b) ⋂ XPₜ(a)
+We can rewrite the right term as a sum-of-products using
 
-but since XPₜ(b) ⋂ XPₜ(a) is disjoin [ACTUALLY IT'S NOT!!!].
+```
+(A ⋃ B) ⋂ (C ⋃ D) = (A ⋂ C) ⋃ (A ⋂ D) ⋃ (B ⋂ C) ⋃ (B ⋂ D)
+```
+
+i.e.
+
+```
+((XQᵤ(a) ⋂ XPₜ(a)) ⋃ (XQᵤ(b) ⋂ XPₜ(b))) ⋂ (XPₜ(a) ⋃ XPₜ(b))
+=
+(XQᵤ(a) ⋂ XPₜ(a) ⋂ XPₜ(a)) ⋃
+(XQᵤ(a) ⋂ XPₜ(a) ⋂ XPₜ(b)) ⋃
+(XQᵤ(b) ⋂ XPₜ(b) ⋂ XPₜ(a)) ⋃
+(XQᵤ(b) ⋂ XPₜ(b) ⋂ XPₜ(b))
+=
+(XQᵤ(a) ⋂ XPₜ(a)) ⋃
+(XQᵤ(a) ⋂ XPₜ(a) ⋂ XPₜ(b)) ⋃
+(XQᵤ(b) ⋂ XPₜ(b) ⋂ XPₜ(a)) ⋃
+(XQᵤ(b) ⋂ XPₜ(b))
+```
+
+Let's assume that `XPₜ(b) ⋂ XPₜ(a)` are disjoin for a particular t, a
+and b, thus `XPₜ(b) ⋂ XPₜ(a) = ∅`, in that case
+
+```
+(XQᵤ(a) ⋂ XPₜ(a) ⋂ XPₜ(b)) ⋃ (XQᵤ(b) ⋂ XPₜ(b) ⋂ XPₜ(a)) = ∅
+```
+
+thus the sum-of-product above can be simplified into
+
+```
+(XQᵤ(a) ⋂ XPₜ(a)) ⋃ (XQᵤ(b) ⋂ XPₜ(b))
+```
+
+Let's now assume that `XQᵤ(b) ⋂ XPₜ(a)` are not disjoin. Nothing
+prevents us from assuming the particular cases where `XQᵤ(a) ⋂ XPₜ(a)`
+and `XQᵤ(b) ⋂ XPₜ(b)` are disjoin, making
+
+```
+XQᵤ(b) ⋂ XPₜ(a) ⊂ (XQᵤ(a) ⋂ XPₜ(a)) ⋃ (XQᵤ(b) ⋂ XPₜ(b))
+```
+
+trivially not hold.
+
+Thus, we have proven that
+
+```
+XQᵤ(b) ⋂ XPₜ(a) ⊂ (⋃ₓ (XQᵤ(x) ⋂ XPₜ(x))) ⋂ (⋃ₓ XPₜ(x))
+```
+
+does not generally hold since we can find a case where it doesn't.
+
+In other words the following definition
+
+```
+TV.s = Pr(⋃ₓ (XQᵤ(x) ⋂ XPₜ(x)) | ⋃ₓ XPₜ(x)), with u=t+T
+```
+
+is consistent with what we want so far.
+
+On last checkmark is we want PredictiveImplication to be equivalent to
+Implication when P and Q are constant overtime.  In this case the
+formula becomes
+
+```
+TV.s = Pr(⋃ₓ (XQ(x) ⋂ XP(x)) | ⋃ₓ XP(x))
+```
+
+where the temporal indices have been removed for more clarity, which
+is...
+
+TODO WARNING! Actually the state space might be instead be predicate
+domains, that is the xs in P(x) and Q(x).  Thus {Xₜ} would become a
+family of xs indexed by time, or should be say the evaluation links
+would be indexed by time.  The solution seems to be adding an implicit
+temporal parameter in each predicate, like P(x, t) and Q(x, t).  We're
+back full circle.
 
 ## Semantics of SequentialAnd
 
-TODO
+### Existing Definition
+
+In Chapter 14 of the PLN book, SequentialAnd is defined as follows
+
+```
+SequantialAnd A B <s, T>
+```
+
+iff
+
+```
+And
+  And A B
+  Initiation(B) – Initiation(A) lies in interval T
+```
+
+But it's not totally clear what it means.  First it is unclear what
+`Initiation(A)` means, mostly it means a temporal predicate obtained
+from `A` representing the degree of initiation of `A` over time
+instead of its level of activity.  Then it's still unclear what
+
+```
+Initiation(B) – Initiation(A)
+```
+
+means.  Even if it is a predicate obtained from the higher level
+operation of subtracting predicates, it would contradict the notion of
+"lying in interval T", or least make it unclear.
+
+Then it's not totally clear what
+
+```
+And A B
+```
+
+means too.  The best interpretation I can find is that `A` and `B` are
+predicates (or concepts) incorporating a temporal variable, and thus
+`And A B` means the intersection of `A` and `B` accross parameters and
+time.  But that's not correct either because we are concerned about
+the intersection of `A` and `B` according to some lag `T`.  Other
+interpretations involving `A` and `B` being stripped of temporal
+dimension don't make much sense to me either.
+
+Let me thus offer an alternate definition that I believe will clarify
+all that.
+
+### Suggested Definition
+
+Let's assume that `A` and `B` are temporal predicates, involving a non
+temporal parameter denoted `p`, as well as a temporal parameter
+denoted `t`.  Thus could be defined
+
+```
+A
+:=
+Lambda
+  p, t
+  A(p, t)
+```
+
+Given that, I offer the following definition for `SequentialAnd`.
+There are two variations though, *lookback* or *lookahead*.  Let's
+start with the lookahead variation
+
+```
+SequentialAnd <TV>
+  T
+  A
+  B
+:=
+And <TV>
+  A
+  Lambda
+    p, t
+    B(p, t+T)
+```
+
+And then the lookback one
+
+```
+SequentialAnd <TV>
+  T
+  A
+  B
+:=
+And <TV>
+  Lambda
+    p, t
+    A(p, t-T)
+  B
+```
+
+The difference concerns the meaning of the temporal parameter of
+`SequentialAnd`.  In the lookahead variation, then for a particular
+`p` and `t` we need to look into the future of `t` to determine the
+truth of `SequentialAnd(T, A, B)(p, t)` since we need to evaluate
+`B(p, t+T)`.  With the lookback variation we need to look into the
+past of `t` to determine the truth of `SequentialAnd(T, A, B)(p, t)`
+since we need to evaluate `A(p, t-T)`.
+
+I think there are arguments both for the lookahead and lookback
+variations.  One may favor of the lookback variation because if `t`
+represents the current time, then lookback variations will be easier
+to evaluate since we are more likely to have a record of the past of
+their subcomponents than the future.  Whether we want to use lookahead
+or lookback as default is ultimately a convention, either can be used
+as long as temporal shifts are properly managed.  Will give an
+argument supporting lookahead down below as well.
+
+The other difference with the PLN book definition is there is no
+`Initiation` predicate transformer or such involved.  I think it's
+better to define sequential composition independently of those, it
+offers more transparency and expressiveness.  Instead if one wants to
+speak about initiation, termination or such, one would need to
+explicitely mention it in the `SequentialAnd`.  So for instance if one
+wants to express that `A` starts before `B` ends, one can write
+
+```
+SequentialAnd
+  T
+  Initiation(A)
+  Termination(B)
+```
+
+where `Initiation(A)` is a temporal predicate transformer that takes a
+temporal predicate `A` and returns a temporal predicate representing
+the initiation of `A` over time instead of its activity, etc.  We
+don't need to precisely define `Initiation` and such for now.  The
+user should be able to define as many variations as wanted.  All that
+said we'll probably want to converge to some standard/default
+definitions of such temporal transformers.  As for maximizing
+compactness we can always define shothands for recurring combinations
+of temporal transformers such as `InitiationTerminationSequentialAnd`,
+etc.
+
+Last remark, using a `Lag` temporal transformer, defined as
+
+```
+Lag(T, A)
+:=
+Lambda
+  p, t
+  A(p, t+T)
+```
+
+one can simplify the definition of `SequentialAnd`.  For instance the
+lookback variation of `SequentialAnd` would look like
+
+```
+SequentialAnd <TV>
+  T
+  A
+  B
+:=
+And <TV>
+  Lag(-T, A)
+  B
+```
+
+## Semantics of PredictiveImplication
+
+Now that the semantics of `SequentialAnd` is clearly defined, one can
+define the semantics of `PredictiveImplication`.  The lookback
+variation is
+
+```
+PredictiveImplication <TV>
+  T
+  A
+  B
+:=
+Implication <TV>
+  Lag(-T, A)
+  SequentialAnd(T, A, B)
+```
+
+where `SequentialAnd` is also its lookback variation.  While the
+lookahead variation is
+
+```
+PredictiveImplication <TV>
+  T
+  A
+  B
+:=
+Implication <TV>
+  A
+  SequentialAnd(T, A, B)
+```
+
+where `SequentialAnd` is also its lookahead variation.  That latter is
+more compact and looks identical to the definition of
+`PredictiveImplication` in Chapter 14 of the PLN book.  These are
+probably compelling reasons to prefer lookahead as default variation
+over lookback.  But for now I prefer not to make any commitment.  Once
+we get deeper into the implementation of temporal reasoning we'll have
+a better idea of which variation is more elegant and we can settle to
+a default accordingly.
+
+## Temporizing Predicates
+
+If the predicates involved are not explicitely temporal, i.e. do not
+have a temporal dimension in their input arguments, but do however
+evolve over time and have associated `AtTime` records, then we can
+temporize them as follows.  For instance if `A` is a predicate with
+argument `p` only, we can defined a temporized version
+```
+TA
+:=
+Lambda
+  p, t
+  AtTime
+    A(p)
+    t
+```
+
+where `TA` can be used instead of `A` as arguments of temporal
+constructs such as `SequentialAnd`.  Maybe we could get away with the
+notational abuse of using `A` directly, assuming it has implicitely
+been temporized.  But for now we will not make such commitment, not
+before further development has taken place regarding temporal
+reasoning and its practice.
 
 ## Temporal Deduction
 
@@ -420,11 +718,21 @@ Evaluation <TV>
 
 mean?
 
-
-
 ## Distributional Lags
 
-We have assumed above that `T1` and `T2` are constants, in general
-we'll want to support distributional lags, which shouldn't be
-conceptually harder, though likely more expensive as `T1+T2` then
-becomes the convolution product of `T1` and `T2`.
+We have assumed above that lags, `T`, `T1`, `T2`, etc, are constants.
+In general we'll want to support distributional lags, which shouldn't
+be conceptually harder, though likely more computationally expensive
+as the sum of two distributional lags `T1+T2` then becomes the
+convolution product of `T1` and `T2`.
+
+In practice we'll probably want to introduced a Temporal Truth Value,
+as hinted in the PLN book, that maps lags to TVs.  Maybe lags could
+also be null and negative which would then allow to represent
+simulatenous or retrospective implications with the same construct.
+This however remains to be explored and for starter it is probably
+fine to use constant lags.
+
+## Frame Problem
+
+See https://en.wikipedia.org/wiki/Frame_problem
