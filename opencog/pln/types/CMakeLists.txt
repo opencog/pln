@@ -12,7 +12,7 @@ ADD_CUSTOM_TARGET(pln_atom_types DEPENDS atom_types.h)
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 
 ADD_LIBRARY (pln-types SHARED
-	atom_types_init
+	atom_types_init.cc
 	PredictiveImplicationScopeLink
 )
 
@@ -20,21 +20,22 @@ ADD_LIBRARY (pln-types SHARED
 ADD_DEPENDENCIES(pln-types pln_atom_types)
 
 TARGET_LINK_LIBRARIES(pln-types
-	${ATOMSPACE_atomtypes_LIBRARY}
+	${ATOMSPACE_LIBRARIES}
 )
 
 INSTALL (TARGETS pln-types
 	LIBRARY DESTINATION "lib${LIB_DIR_SUFFIX}/opencog"
 )
 
-ADD_GUILE_EXTENSION(SCM_CONFIG pln-types "opencog-ext-path-pln")
-
 INSTALL (FILES
 	${CMAKE_CURRENT_BINARY_DIR}/atom_types.h
 	DESTINATION "include/opencog/pln/types"
 )
 
-INSTALL (FILES
+ADD_GUILE_EXTENSION(SCM_CONFIG pln-types "opencog-ext-path-pln")
+
+ADD_GUILE_MODULE (FILES
 	${CMAKE_CURRENT_BINARY_DIR}/pln_types.scm
-	DESTINATION "${GUILE_SITE_DIR}/opencog/pln/types"
+	MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog/pln/types"
+	DEPENDS pln_atom_types
 )
