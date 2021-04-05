@@ -25,7 +25,7 @@
 #define PLN_PREDICTIVEIMPLICATIONSCOPELINK_H
 
 #include <opencog/atoms/core/ScopeLink.h>
-#include <opencog/pln/atom-types/atom_types.h>
+#include <opencog/pln/types/atom_types.h>
 
 namespace opencog
 {

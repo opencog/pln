@@ -21,7 +21,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <opencog/pln/atom-types/atom_types.h>
+#include <opencog/pln/types/atom_types.h>
 #include "PredictiveImplicationScopeLink.h"
 
 using namespace opencog;

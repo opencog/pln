@@ -2,8 +2,8 @@
 #include <cmath>
 #include <cxxtest/TestSuite.h>
 #include <opencog/atoms/base/Node.h>
-#include <opencog/pln/atom-types/atom_types.h>
-#include <opencog/pln/atom-types/PredictiveImplicationScopeLink.h>
+#include <opencog/pln/types/atom_types.h>
+#include <opencog/pln/types/PredictiveImplicationScopeLink.h>
 
 using namespace std;
 using namespace opencog;
