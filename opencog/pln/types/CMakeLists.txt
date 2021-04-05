@@ -13,6 +13,7 @@ INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 
 ADD_LIBRARY (pln-types SHARED
 	atom_types_init
+	PredictiveImplicationScopeLink
 )
 
 # Without this, parallel make will race and crap up the generated files.
