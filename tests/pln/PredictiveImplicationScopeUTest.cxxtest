@@ -1,0 +1,33 @@
+//PredictiveImplicationScope.cpp
+#include <cmath>
+#include <cxxtest/TestSuite.h>
+#include <opencog/atoms/base/Node.h>
+#include <opencog/pln/atom-types/atom_types.h>
+#include <opencog/pln/atom-types/PredictiveImplicationScopeLink.h>
+
+using namespace std;
+using namespace opencog;
+
+class PredictiveImplicationScopeUTest : public CxxTest::TestSuite
+{
+public:
+	void testPredictiveImplicationScope(void)
+	{
+		Handle t_intvl = createLink(TIME_INTERVAL_LINK,
+		                            createNode(TIME_NODE, "1"),
+		                            createNode(TIME_NODE, "2"));
+		Handle pis = createLink(PREDICTIVE_IMPLICATION_SCOPE_LINK,
+		                        createNode(VARIABLE_NODE, "$X"),
+		                        t_intvl,
+		                        createLink(EVALUATION_LINK,
+		                                   createNode(PREDICATE_NODE, "P"),
+		                                   createNode(VARIABLE_NODE, "$X")),
+		                        createNode(PREDICATE_NODE, "Q"));
+		Variables exp = Variables(createNode(VARIABLE_NODE, "$X")),
+				result = PredictiveImplicationScopeLinkCast(pis)->get_variables();
+
+		std::cout << "exp : " << oc_to_string(exp, empty_string) << std::endl
+		          << "result : " << oc_to_string(result, empty_string);
+		TS_ASSERT_EQUALS(result, exp);
+	}
+};
