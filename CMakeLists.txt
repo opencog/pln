@@ -85,6 +85,8 @@ ELSE (ATOMSPACE_FOUND)
 	MESSAGE(FATAL_ERROR "AtomSpace missing: it is needed!")
 ENDIF (ATOMSPACE_FOUND)
 
+FIND_PACKAGE(SpaceTime 0.1.4 CONFIG REQUIRED)
+
 # ----------------------------------------------------------
 # Python, Guile
 
