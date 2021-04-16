@@ -37,7 +37,11 @@ void PredictiveImplicationScopeUTest::testPredictiveImplicationScope(void)
 	                   an(PREDICATE_NODE, "Q"));
 
 	printf("pis=%s\n", pis->to_string().c_str());
+
+	TSM_ASSERT("Expecting a ScopeLink",
+		nameserver().isA(PREDICTIVE_IMPLICATION_SCOPE_LINK, SCOPE_LINK));
 	ScopeLinkPtr scp = ScopeLinkCast(pis);
+
 
 	// This should not be null. But it is due to some bug, to be fixed.
 	printf("scope=%p\n", scp.operator->());
