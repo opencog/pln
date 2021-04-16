@@ -40,17 +40,19 @@ void PredictiveImplicationScopeUTest::testPredictiveImplicationScope(void)
 
 	TSM_ASSERT("Expecting a ScopeLink",
 		nameserver().isA(PREDICTIVE_IMPLICATION_SCOPE_LINK, SCOPE_LINK));
+
 	ScopeLinkPtr scp = ScopeLinkCast(pis);
-
-
-	// This should not be null. But it is due to some bug, to be fixed.
 	printf("scope=%p\n", scp.operator->());
-#if 0
+
 	Variables result = ScopeLinkCast(pis)->get_variables();
 	Variables exp = Variables(an(VARIABLE_NODE, "$X"));
 
-	std::cout << "exp : " << oc_to_string(exp, empty_string) << std::endl
-	          << "result : " << oc_to_string(result, empty_string);
+	std::cout << "exp : " << oc_to_string(exp, empty_string)
+	          << std::endl
+	          << std::endl
+	          << "result : " << oc_to_string(result, empty_string)
+	          << std::endl
+	          << std::endl;
+
 	TS_ASSERT_EQUALS(result, exp);
-#endif
 }
