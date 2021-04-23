@@ -12,16 +12,17 @@ INTENSIONAL_DIFFERENCE_LINK <- ORDERED_LINK,EVALUATABLE_LINK
 
 // For the definition of these links see
 // https://wiki.opencog.org/w/Category:Atom_Types
-// PREDICTIVE_IMPLICATION_SCOPE_LINK <- SCOPE_LINK
+PREDICTIVE_IMPLICATION_SCOPE_LINK <- SCOPE_LINK
+PREDICTIVE_IMPLICATION_LINK <- ORDERED_LINK
+
+TIME_INTERVAL_LINK <- ORDERED_LINK
 
 // These links are already declared in the spacetime repository, see
 //
 // spacetime/opencog/spacetime/atom-types/atom_types.script.
 //
 // AT_TIME_LINK <- ORDERED_LINK
-// TIME_INTERVAL_LINK <- ORDERED_LINK
 // TIME_NODE <- NODE
-// PREDICTIVE_IMPLICATION_LINK <- ORDERED_LINK
 
 // Natural. For instance 3 is represented by (S (S (S (Z))))
 NATURAL_LINK <- LINK
@@ -31,3 +32,11 @@ Z_LINK <- NATURAL_LINK
 // Alternate SequentialAnd because the one defined in the atomspace
 // repo does not accept number, time or natural.
 ALT_SEQUENTIAL_AND_LINK <- ORDERED_LINK
+
+// Other assorted link types.
+// Are these actually used? Are they needed?
+TAIL_PREDICTIVE_IMPLICATION_LINK <- ORDERED_LINK
+PREDICTIVE_ATTRACTION_LINK <- ORDERED_LINK
+EVENTUAL_PREDICTIVE_IMPLICATION_LINK <- ORDERED_LINK "EventualSequentialImplication"
+SIMULTANEOUS_AND_LINK <- ORDERED_LINK
+EVENTUAL_SEQUENTIAL_AND_LINK <- SEQUENTIAL_AND_LINK "EventualSequentialAND"

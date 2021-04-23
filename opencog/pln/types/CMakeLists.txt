@@ -30,6 +30,7 @@ ADD_GUILE_EXTENSION(SCM_CONFIG pln-types "opencog-ext-path-pln")
 
 INSTALL (FILES
 	${CMAKE_CURRENT_BINARY_DIR}/atom_types.h
+	${CMAKE_CURRENT_BINARY_DIR}/atom_names.h
 	DESTINATION "include/opencog/pln/types"
 )
 
