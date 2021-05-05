@@ -45,6 +45,7 @@ ADD_LIBRARY(pln_cython SHARED
 ADD_DEPENDENCIES(pln_cython pln-types)
 
 TARGET_LINK_LIBRARIES(pln_cython
+	${NO_AS_NEEDED}
 	pln-types
 	${ATOMSPACE_LIBRARIES}
 	${PYTHON_LIBRARIES}
