@@ -121,3 +121,5 @@ Makefile
 ### Linux ###
 *~
 *.autosave
+
+.vscode/
