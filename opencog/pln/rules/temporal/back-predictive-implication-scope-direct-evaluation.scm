@@ -1,12 +1,13 @@
-;; PredictiveImplicationScopeLink direct evaluation rule
+;; BackPredictiveImplicationScopeLink direct evaluation rule
+;; (lookback variant of PredictiveImplicationScopeLink)
 ;;
-;; PredictiveImplicationScope
+;; BackPredictiveImplicationScope
 ;;   V
 ;;   T
 ;;   P
 ;;   Q
 ;; |-
-;; PredictiveImplicationScope <TV>
+;; BackPredictiveImplicationScope <TV>
 ;;   V
 ;;   T
 ;;   P
@@ -26,19 +27,19 @@
 (load "utils.scm")
 
 ;; Rule
-(define predictive-implication-scope-direct-evaluation-rule
-  (let* ((PIS (Variable "$PIS"))
-	 (PISTy (Type 'PredictiveImplicationScopeLink)))
+(define back-predictive-implication-scope-direct-evaluation-rule
+  (let* ((BPIS (Variable "$BPIS"))
+	 (BPISTy (Type 'BackPredictiveImplicationScopeLink)))
     (Bind
-      (TypedVariable PIS PISTy)
+      (TypedVariable BPIS BPISTy)
       (And
-        (Present PIS)
-	(IsClosed PIS))
+        (Present BPIS)
+	(IsClosed BPIS))
       (ExecutionOutput
-        (GroundedSchema "scm: predictive-implication-scope-direct-evaluation")
+        (GroundedSchema "scm: back-predictive-implication-scope-direct-evaluation")
 	(List
           ;; Conclusion. No premises to avoid proof tree cycle.
-          PIS)))))
+          BPIS)))))
 
 ;; Helpers
 (define (Z? X)
@@ -53,7 +54,7 @@
 (define (and? X)
   (equal? (cog-type X) 'AndLink))
 
-(define (sequential-and? X)
+(define (back-sequential-and? X)
   (equal? (cog-type X) 'BackSequentialAndLink))
 
 (define (get-time X)
@@ -68,11 +69,11 @@
 
 (define (get-seq-lag SEQ)
 "
-  Return the lag of a SequentialAnd.
+  Return the lag of a BackSequentialAnd.
 
   That is given
 
-  SequentialAnd
+  BackSequentialAnd
     <lag>
     <antecedent>
     <succedent>
@@ -83,11 +84,11 @@
 
 (define (get-seq-antecedent SEQ)
 "
-  Return the antecedent of a SequentialAnd.
+  Return the antecedent of a BackSequentialAnd.
 
   That is given
 
-  SequentialAnd
+  BackSequentialAnd
     <lag>
     <antecedent>
     <succedent>
@@ -98,11 +99,11 @@
 
 (define (get-seq-succedent SEQ)
 "
-  Return the succedent of a SequentialAnd.
+  Return the succedent of a BackSequentialAnd.
 
   That is given
 
-  SequentialAnd
+  BackSequentialAnd
     <lag>
     <antecedent>
     <succedent>
@@ -111,9 +112,9 @@
 "
 (cog-outgoing-atom SEQ 2))
 
-(define (get-pis-antecedent-timed-clauses PIS T)
+(define (get-pis-antecedent-timed-clauses BPIS T)
 "
-  Return the antecedent timed clauses of a predictive implication scope.
+  Return the antecedent timed clauses of a back predictive implication scope.
 
   For instance given
 
@@ -132,7 +133,7 @@
 
   assuming <lag-1> is (S (Z)).
 "
-  (to-timed-clauses (get-pis-antecedent PIS) T))
+  (to-timed-clauses (get-pis-antecedent BPIS) T))
 
 (define (get-max-time timed-clauses)
 "
@@ -151,7 +152,7 @@
 	[(or (Z? LAG2) (variable? LAG2)) LAG1]
 	[else (S (cog-outgoing-atom LAG1 0) (cog-outgoing-atom LAG2 0))]))
 
-(define (get-pis-succedent-timed-clauses PIS T)
+(define (get-pis-succedent-timed-clauses BPIS T)
 "
   Return the succedent timed clauses of a predictive implication scope.
 
@@ -172,10 +173,10 @@
 
   assuming <lag-1> and <lag-2> are both (S (Z)).
 "
-  (let* ((pis-lag (get-pis-lag PIS))
-	 (max-time (get-max-time (get-pis-antecedent-timed-clauses PIS T)))
+  (let* ((pis-lag (get-pis-lag BPIS))
+	 (max-time (get-max-time (get-pis-antecedent-timed-clauses BPIS T)))
 	 (suc-time (lag-add pis-lag max-time)))
-    (to-timed-clauses (get-pis-succedent PIS) suc-time)))
+    (to-timed-clauses (get-pis-succedent BPIS) suc-time)))
 
 (define (to-timed-clauses LE T)
 "
@@ -197,7 +198,7 @@
   (define (wrap-T x) (AtTime x T))
   (if (and? LE)
       (append-map (lambda (x) (to-timed-clauses x T)) (cog-outgoing-set LE))
-      (if (sequential-and? LE)
+      (if (back-sequential-and? LE)
           (let* ((lag (get-seq-lag LE))
                  (ante (get-seq-antecedent LE))
                  (succ (get-seq-succedent LE))
@@ -208,32 +209,32 @@
           (list (wrap-T LE)))))
 
 ;; Formula.  Assume crisps observations for now.
-(define (predictive-implication-scope-direct-evaluation conclusion . premises)
-  (ure-logger-fine "(predictive-implication-scope-direct-evaluation conclusion=~a . premises=~a)" conclusion premises)
+(define (back-predictive-implication-scope-direct-evaluation conclusion . premises)
+  (ure-logger-fine "(back-predictive-implication-scope-direct-evaluation conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 0)
-      (let* ((PIS conclusion)
+      (let* ((BPIS conclusion)
 	     (T (Variable "$T"))
 	     (TimeT (TypeInh 'NaturalLink))
-	     (ante-timed-clauses (get-pis-antecedent-timed-clauses PIS T))
+	     (ante-timed-clauses (get-pis-antecedent-timed-clauses BPIS T))
 	     (ante-body (And
 			  (Present ante-timed-clauses)
 			  (IsClosed ante-timed-clauses)
 			  (IsTrue ante-timed-clauses)))
 	     (ante-vardecl (vardecl-append (TypedVariable T TimeT)
-					   (get-vardecl PIS)))
+					   (get-vardecl BPIS)))
 	     (ante-query (Get ante-vardecl ante-body))
 	     (ante-res (cog-execute! ante-query))
 	     (ante-res-lst (cog-outgoing-set ante-res))
 	     (ante-size (length ante-res-lst)))
 	(if (< 0 ante-size)
 	    (let* (;; For each evidence check if the succedent is true at T+LAG
-		   (lag (get-pis-lag PIS))
+		   (lag (get-pis-lag BPIS))
 		   (only-time (= 1 (length (get-typed-vars ante-vardecl))))
 		   (get-p-time (lambda (p) (if only-time
 					     p
 					     (cog-outgoing-atom p 0))))
 		   (plus-lag (lambda (t) (lag-add lag t)))
-		   (succ-timed-clauses (get-pis-succedent-timed-clauses PIS T))
+		   (succ-timed-clauses (get-pis-succedent-timed-clauses BPIS T))
 		   ;; TODO: only one succedent assumed for now
 		   (succ-timed-clause (car succ-timed-clauses))
 		   (succ-instantiate (lambda (p)
@@ -243,14 +244,14 @@
 		   (succ-true? (lambda (p) (true? (succ-instantiate (get-p-time p)))))
 		   (succ-lst (filter succ-true? ante-res-lst))
 		   (succ-size (length succ-lst))
-		   ;; Calculate the TV of the predictive implication scope
+		   ;; Calculate the TV of the back predictive implication scope
 		   (strength (exact->inexact (/ succ-size ante-size)))
 		   (confidence (count->confidence ante-size))
 		   (tv (stv strength confidence)))
 	      (cog-merge-hi-conf-tv! conclusion tv))))))
 
 ;; Declaration
-(define predictive-implication-scope-direct-evaluation-rule-name
-  (DefinedSchemaNode "predictive-implication-scope-direct-evaluation-rule"))
-(DefineLink predictive-implication-scope-direct-evaluation-rule-name
-  predictive-implication-scope-direct-evaluation-rule)
+(define back-predictive-implication-scope-direct-evaluation-rule-name
+  (DefinedSchemaNode "back-predictive-implication-scope-direct-evaluation-rule"))
+(DefineLink back-predictive-implication-scope-direct-evaluation-rule-name
+  back-predictive-implication-scope-direct-evaluation-rule)
