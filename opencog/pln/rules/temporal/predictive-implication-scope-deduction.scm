@@ -95,9 +95,16 @@
 ;; Other implicit premises are the probabilities of P and Q (like for
 ;; the regular deduction rule).
 
+(use-modules (opencog))
+(use-modules (opencog exec))
+(use-modules (opencog spacetime))
+(use-modules (opencog ure))
+(use-modules (opencog pln))
+(use-modules (opencog logger))
+
 ;; Rule
 (define predictive-implication-scope-deduction-rule
-  (let* ((V (Vardiable "$vardecl"))
+  (let* ((V (Variable "$vardecl"))
 	 (T1 (Variable "$lag-1"))
 	 (T2 (Variable "$lag-2"))
 	 (P (Variable "$P"))
@@ -107,8 +114,8 @@
 	 (ExecutionT (Type 'ExecutionLink))
 	 (NaturalT (Type 'NaturalLink))
 	 (VariableT (Type 'VariableNode))
-	 (VariableSetT (Type 'VariableSetLink))
-	 (VariableListT (Type 'VariableListLink))
+	 (VariableSetT (Type 'VariableSet))
+	 (VariableListT (Type 'VariableList))
 	 (TypedVariableT (Type 'TypedVariableLink))
 	 (VardeclT (TypeChoice
 		     VariableT
@@ -138,7 +145,7 @@
       (And
         present-clauses
 	precondition-clauses)
-      (OutputExecution
+      (ExecutionOutput
         (GroundedSchema "scm: predictive-implication-scope-deduction")
 	(List
 	  ;; Conclusion
@@ -147,14 +154,17 @@
 	  PQ
 	  QAR)))))
 
-;; Formula
-;;
-;; The formula is calculated based on the assumption that such model
-;; (predictive implication) is time-homogeneous (see
-;; https://en.wikipedia.org/wiki/Markov_chain#Variations).
-;;
-;; According to 
+;; The formula can be derived from the definition of
+;; PredictiveImplicationLink
+;; https://wiki.opencog.org/w/PredictiveImplicationLink#Semantics
 (define (predictive-implication-scope-deduction conclusion . premises)
   (ure-logger-fine "(predictive-implication-scope-deduction conclusion=~a . premises=~a)" conclusion premises)
-  ;; TODO
+  ;; TODO: replace mock formula below by correct one
+    (cog-merge-hi-conf-tv! conclusion (stv 0.123 0.0000123))
 )
+
+;; Declaration
+(define predictive-implication-scope-deduction-rule-name
+  (DefinedSchemaNode "predictive-implication-scope-deduction-rule"))
+(DefineLink predictive-implication-scope-deduction-rule-name
+  predictive-implication-scope-deduction-rule)

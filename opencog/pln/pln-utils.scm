@@ -265,6 +265,8 @@
 	 "opencog/pln/rules/temporal/predictive-implication-direct-evaluation.scm"]
 	[(string-match "predictive-implication-scope-direct-evaluation-rule" rn)
 	 "opencog/pln/rules/temporal/predictive-implication-scope-direct-evaluation.scm"]
+	[(string-match "predictive-implication-scope-deduction-rule" rn)
+	 "opencog/pln/rules/temporal/predictive-implication-scope-deduction.scm"]
 	;; Meta-rules
 	[(string-match "^conditional-full-instantiation-.+-meta-rule$" rn)
 	 "opencog/pln/meta-rules/predicate/conditional-full-instantiation.scm"]
