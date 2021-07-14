@@ -1,7 +1,7 @@
-(define-module (opencog pln))
-
-(use-modules (opencog))
-(use-modules (opencog pln-config))
+(define-module (opencog pln)
+  #:use-module (opencog)
+  #:use-module (opencog pln-config)
+)
 
 ; Load the C library that calls the classserver to load the types.
 (load-extension
