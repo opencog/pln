@@ -1,6 +1,6 @@
 ;; Load PLN (with only the rule that matters)
 (use-modules (opencog pln))
-(pln-load-rule 'present-deduction-inheritance)
+(pln-load-rule 'inheritance-present-deduction)
 
 ;; Load KB
 (load "kb.scm")
