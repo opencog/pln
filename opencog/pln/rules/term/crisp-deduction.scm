@@ -45,11 +45,15 @@
         (Not (Identical A C)))
       AC)))
 
-(define present-deduction-inheritance-rule
+;;;;;;;;;;;;;;;;
+;; New naming ;;
+;;;;;;;;;;;;;;;;
+
+(define inheritance-present-deduction-rule
   (gen-present-deduction-rule InheritanceLink (TypeNode "ConceptNode")))
 
 ;; Name the rules
-(define present-deduction-inheritance-rule-name
-  (DefinedSchemaNode "present-deduction-inheritance-rule"))
-(DefineLink present-deduction-inheritance-rule-name
-  present-deduction-inheritance-rule)
+(define inheritance-present-deduction-rule-name
+  (DefinedSchemaNode "inheritance-present-deduction-rule"))
+(DefineLink inheritance-present-deduction-rule-name
+  inheritance-present-deduction-rule)
