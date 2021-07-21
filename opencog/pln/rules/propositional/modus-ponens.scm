@@ -1,6 +1,6 @@
 ;; =============================================================================
 ;; ModusPonensRule
-;; 
+;;
 ;; <LinkType>
 ;;   A
 ;;   B
@@ -81,8 +81,8 @@
        (cnotAB 1))
     (cog-set-tv!
      B
-     (stv 
-      (precise-modus-ponens-strength-formula sA sAB snotAB) 
+     (stv
+      (precise-modus-ponens-strength-formula sA sAB snotAB)
       (min (min cAB cnotAB) cA)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

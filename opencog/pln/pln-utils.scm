@@ -71,10 +71,48 @@
 
 (define-public (pln-load-rule RULE-SYMBOL . TV)
 "
-  pln-load-rule RULE-SYMBOL [TV]
+  WARNING: this function actually loads the scheme file associated
+  with that rule, thus it is not recommanded to be called often, which
+  might result in crashing guile.  Rather, you should load all rules at
+  the start of your program then add or remove rules with pln-add-rule
+  or pln-rm-rule respectively.
 
-  Given the symbol of a rule, such as 'subset-direct-introduction, load the rule
-  to the pln atomspace and add it to the pln rule base.
+  (pln-load-rule RULE-SYMBOL [TV])
+
+  Given the symbol of a rule, such as 'subset-direct-introduction,
+  load the rule to the pln atomspace and add it to the pln rule base.
+
+  To a load a meta rule just append meta at the end of the symbol, for
+  instance
+
+  (pln-load-rule 'conditional-full-instantiation-implication-meta)
+
+  Finally, you can list of all supported rule symbols by calling
+
+  (pln-supported-rule)
+"
+
+  (define filepath (pln-rule-name->filepath (rule-symbol->rule-name RULE-SYMBOL)))
+  (pln-load-from-path filepath)
+  (apply pln-add-rule (cons RULE-SYMBOL TV)))
+
+(define-public (pln-load-meta-rule META-RULE-SYMBOL . TV)
+"
+  pln-load-rule META-RULE-SYMBOL [TV]
+
+  Given the symbol of a meta rule, such as
+  'conditional-full-instantiation-implication, load the rule to the pln
+  atomspace and add it to the pln rule base.
+
+  WARNING: this function actually loads the scheme file associated
+  with that rule, thus it is not recommanded to be called often, which
+  might result in crashing guile.  Rather, you should load all rules at
+  the start of your program then add or remove rules with pln-add-rule
+  or pln-rm-rule respectively.
+
+  Finally, you can list of all supported rule symbols by calling
+
+  (pln-supported-rule)
 "
 
   (define filepath (pln-rule-name->filepath (rule-symbol->rule-name RULE-SYMBOL)))
@@ -83,6 +121,8 @@
 
 (define-public (pln-load-rules RULE-TYPE)
 "
+  WARNING: likely deprecated, use pln-load-rule instead.
+
   pln-load-rules RULE-TYPE
 
   Loads the different variations of the rules known by RULE-TYPE in
@@ -101,6 +141,8 @@
 
 (define-public (pln-load-meta-rules META-RULE-TYPE)
 "
+  WARNING: likely deprecated, use pln-load-meta-rule instead.
+
   pln-load-meta-rules META-RULE-TYPE
 
   Loads the different variations of the meta rules known by
@@ -220,58 +262,106 @@
   Given a rule name, such as \"deduction-subset-rule\", return the relative
   filepath of that rule, so that it can be loaded with pln-load-from-path.
 "
+  ;; Make sure to order regex patterns from more specific to less
+  ;; specific to avoid having the more abstract patterns shadow the
+  ;; less abstract ones.
   (cond ;; Term
-	[(string-match "^deduction-.+-rule$" rn)
-	 "opencog/pln/rules/term/deduction.scm"]
-	[(string-match "^present-deduction-.+-rule$" rn)
-	 "opencog/pln/rules/term/crisp-deduction.scm"]
-	[(string-match "^.*condition-negation-.+-rule$" rn)
-	 "opencog/pln/rules/term/condition-negation.scm"]
-	;; Propositional
-	[(string-match "^modus-ponens-.+-rule$" rn)
-	 "opencog/pln/rules/propositional/modus-ponens.scm"]
-	[(string-match "^.*contraposition-.+-rule$" rn)
-	 "opencog/pln/rules/propositional/contraposition.scm"]
-	[(string-match "^fuzzy-conjunction-introduction-.+-rule$" rn)
-	 "opencog/pln/rules/propositional/fuzzy-conjunction-introduction.scm"]
-	[(string-match "^fuzzy-disjunction-introduction-.+-rule$" rn)
-	 "opencog/pln/rules/propositional/fuzzy-disjunction-introduction.scm"]
-	;; Extensional
-	[(string-match "^extensional-similarity-direct-introduction-rule$" rn)
-	 "opencog/pln/rules/extensional/extensional-similarity-direct-introduction.scm"]
-	[(string-match "^subset-direct-introduction-rule$" rn)
-	 "opencog/pln/rules/extensional/subset-direct-introduction.scm"]
-	[(string-match "^conjunction-direct-introduction-rule$" rn)
-	 "opencog/pln/rules/extensional/conjunction-direct-introduction.scm"]
-	[(string-match "^concept-direct-introduction-rule$" rn)
-	 "opencog/pln/rules/extensional/concept-direct-introduction.scm"]
-	[(string-match "^member-deduction-rule$" rn)
-	 "opencog/pln/rules/extensional/member-deduction.scm"]
-	;; Intensional
-	[(string-match "^.*attraction-introduction-rule$" rn)
-	 "opencog/pln/rules/intensional/attraction-introduction.scm"]
-	[(string-match "^intensional-inheritance-direct-introduction-rule$" rn)
-	 "opencog/pln/rules/intensional/intensional-inheritance-direct-introduction.scm"]
-	[(string-match "^intensional-similarity-direct-introduction-rule$" rn)
-	 "opencog/pln/rules/intensional/intensional-similarity-direct-introduction.scm"]
-	[(string-match "^intensional-difference-direct-introduction-rule$" rn)
-	 "opencog/pln/rules/intensional/intensional-difference-direct-introduction.scm"]
-	[(string-match "^intensional-difference-member-direct-introduction-rule$" rn)
-	 "opencog/pln/rules/intensional/intensional-difference-member-direct-introduction.scm"]
-	;; Temporal
-	[(string-match "^predictive-implication-scope-direct-introduction-rule$" rn)
-	 "opencog/pln/rules/temporal/predictive-implication-scope-direct-introduction.scm"]
-	[(string-match "predictive-implication-direct-evaluation-rule" rn)
-	 "opencog/pln/rules/temporal/predictive-implication-direct-evaluation.scm"]
-	[(string-match "predictive-implication-scope-direct-evaluation-rule" rn)
-	 "opencog/pln/rules/temporal/predictive-implication-scope-direct-evaluation.scm"]
-	[(string-match "predictive-implication-scope-deduction-rule" rn)
-	 "opencog/pln/rules/temporal/predictive-implication-scope-deduction.scm"]
-	;; Meta-rules
-	[(string-match "^conditional-full-instantiation-.+-meta-rule$" rn)
-	 "opencog/pln/meta-rules/predicate/conditional-full-instantiation.scm"]
-	[(string-match "^conditional-partial-instantiation-.+-meta-rule$" rn)
-	 "opencog/pln/meta-rules/predicate/conditional-full-instantiation.scm"]))
+        [(string-match "^.*-present-deduction-rule$" rn)
+         "opencog/pln/rules/term/crisp-deduction.scm"]
+        [(string-match "^.*-deduction-rule$" rn)
+         "opencog/pln/rules/term/deduction.scm"]
+        [(string-match "^.*condition-negation-.+-rule$" rn)
+         "opencog/pln/rules/term/condition-negation.scm"]
+        ;; Propositional
+        [(string-match "^.*-modus-ponens-rule$" rn)
+         "opencog/pln/rules/propositional/modus-ponens.scm"]
+        [(string-match "^.*contraposition-rule$" rn)
+         "opencog/pln/rules/propositional/contraposition.scm"]
+        [(string-match "^fuzzy-conjunction-introduction-.+-rule$" rn)
+         "opencog/pln/rules/propositional/fuzzy-conjunction-introduction.scm"]
+        [(string-match "^fuzzy-disjunction-introduction-.+-rule$" rn)
+         "opencog/pln/rules/propositional/fuzzy-disjunction-introduction.scm"]
+        ;; Extensional
+        [(string-match "^extensional-similarity-direct-introduction-rule$" rn)
+         "opencog/pln/rules/extensional/extensional-similarity-direct-introduction.scm"]
+        [(string-match "^subset-direct-introduction-rule$" rn)
+         "opencog/pln/rules/extensional/subset-direct-introduction.scm"]
+        [(string-match "^conjunction-direct-introduction-rule$" rn)
+         "opencog/pln/rules/extensional/conjunction-direct-introduction.scm"]
+        [(string-match "^concept-direct-evaluation-rule$" rn)
+         "opencog/pln/rules/extensional/concept-direct-introduction.scm"]
+        [(string-match "^member-deduction-rule$" rn)
+         "opencog/pln/rules/extensional/member-deduction.scm"]
+        ;; Intensional
+        [(string-match "^.*attraction-introduction-rule$" rn)
+         "opencog/pln/rules/intensional/attraction-introduction.scm"]
+        [(string-match "^intensional-inheritance-direct-introduction-rule$" rn)
+         "opencog/pln/rules/intensional/intensional-inheritance-direct-introduction.scm"]
+        [(string-match "^intensional-similarity-direct-introduction-rule$" rn)
+         "opencog/pln/rules/intensional/intensional-similarity-direct-introduction.scm"]
+        [(string-match "^intensional-difference-direct-introduction-rule$" rn)
+         "opencog/pln/rules/intensional/intensional-difference-direct-introduction.scm"]
+        [(string-match "^intensional-difference-member-direct-introduction-rule$" rn)
+         "opencog/pln/rules/intensional/intensional-difference-member-direct-introduction.scm"]
+        ;; Temporal
+        [(string-match "^predictive-implication-scope-direct-introduction-rule$" rn)
+         "opencog/pln/rules/temporal/predictive-implication-scope-direct-introduction.scm"]
+        [(string-match "predictive-implication-direct-evaluation-rule" rn)
+         "opencog/pln/rules/temporal/predictive-implication-direct-evaluation.scm"]
+        [(string-match "predictive-implication-scope-direct-evaluation-rule" rn)
+         "opencog/pln/rules/temporal/predictive-implication-scope-direct-evaluation.scm"]
+        [(string-match "predictive-implication-scope-deduction-rule" rn)
+         "opencog/pln/rules/temporal/predictive-implication-scope-deduction.scm"]
+        ;; Meta-rules
+        [(string-match "^conditional-full-instantiation-.+-meta-rule$" rn)
+         "opencog/pln/meta-rules/predicate/conditional-full-instantiation.scm"]
+        [(string-match "^conditional-partial-instantiation-.+-meta-rule$" rn)
+         "opencog/pln/meta-rules/predicate/conditional-partial-instantiation.scm"]))
+
+(define-public (pln-supported-rules)
+"
+  List all rule symbols that are support by pln-load-rule
+"
+  (list
+   'inheritance-deduction
+   'implication-deduction
+   'subset-deduction
+   'inheritance-present-deduction
+   'subset-condition-negation
+   'inheritance-modus-ponens
+   'implication-modus-ponens
+   'subset-modus-ponens
+   'crisp-contraposition-implication-scope
+   'contraposition-implication
+   'contraposition-inheritance
+   'fuzzy-conjunction-introduction-1ary
+   'fuzzy-conjunction-introduction-2ary
+   'fuzzy-conjunction-introduction-3ary
+   'fuzzy-conjunction-introduction-4ary
+   'fuzzy-conjunction-introduction-5ary
+   'fuzzy-disjunction-introduction-1ary
+   'fuzzy-disjunction-introduction-2ary
+   'fuzzy-disjunction-introduction-3ary
+   'fuzzy-disjunction-introduction-4ary
+   'fuzzy-disjunction-introduction-5ary
+   'extensional-similarity-direct-introduction
+   'subset-direct-introduction
+   'conjunction-direct-introduction
+   'concept-direct-evaluation
+   'member-deduction
+   'subset-attraction-introduction
+   'intensional-inheritance-direct-introduction
+   'intensional-similarity-direct-introduction
+   'intensional-difference-direct-introduction
+   'intensional-difference-member-introduction
+   'predictive-implication-scope-direct-introduction
+   'predictive-implication-direct-evaluation
+   'predictive-implication-scope-direct-evaluation
+   'predictive-implication-scope-deduction
+   'conditional-full-instantiation-implication-scope
+   'conditional-full-instantiation-implication
+   'conditional-full-instantiation-inheritance
+   'conditional-partial-instantiation))
 
 (define-public (pln-prt-pln-atomspace)
 "
@@ -286,7 +376,7 @@
 
 (define-public (pln-prt-atomspace)
 "
-  Like pln-prt-pln-atomspace.
+  Identical to pln-prt-pln-atomspace.
 "
   (pln-prt-pln-atomspace))
 

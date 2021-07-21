@@ -66,11 +66,18 @@ Then a PLN rule-base can be loaded with
 (pln-load)
 ```
 
-which loads the standard rule-base by default. One can use this
-function to load different rule-bases. It is recommanded to load the
-empty rule base `(pln-load 'empty)` and then only add the necessary
-rules for solving the problem at hand. See `(help pln-load)` for more
-details.
+which loads the standard rule-base by default.  One can use this
+function to load different rule-bases (though at the moment only two
+rule bases are supported, `'standard` and `'empty`.  Alternatively one
+can just use `pln-load-rule` to load a rule by providing the symbol of
+that rule.  For example
+
+```
+(pln-load-rule 'subset-direct-introduction)
+```
+
+See `(help pln-load-rule)` for more information as well as
+`(pln-supported-rules)` to get the symbols of all supported rules.
 
 The rules are loaded in an auxilary atomspace in order not to pollute
 the current atomspace.  That auxilary atomspace can be accessed via
@@ -109,6 +116,127 @@ For instance
 ```
 
 sets the weight of the deduction implication rule to `(stv 0.7 0.2)`.
+
+### Rule Naming Conventions
+
+Below are the conventions we have adopted so far.
+
+#### Evaluation
+
+Rules containing `evaluation` are here to calculate the TV of an atom
+without introducing it.  For instance
+
+```
+PredictiveImplicationLink
+  T
+  P
+  Q
+|-
+PredictiveImplicationLink <TV>
+  T
+  P
+  Q
+```
+
+is named `predictive-implication-direct-evaluation` because it only
+calculates the TV of a predictive implication link if it is already
+present.
+
+#### Introduction
+
+Rules containing `introduction` introduce a new atom given other
+atoms, typically its outgoings.  For instance
+
+```
+A
+B
+|-
+And <TV>
+  A
+  B
+```
+
+is named `conjunction-direct-introduction`.
+
+#### Elimination
+
+Rules that infer simpler atoms where a part has been removed contain
+`elimination`.  For instance
+
+```
+Implication
+  A
+  Or
+    B
+    C
+Implication
+  A
+  C
+|-
+Implication
+  A
+  B
+```
+
+is named `consequent-disjunction-elimination-implication`.
+
+#### Conversion
+
+Rules used to convert an equivalent form to another contain `to`.  For
+instance
+
+```
+ImplicationScopeLink
+   V
+   P
+   Q
+|-
+ImplicationLink
+   LambdaLink
+      V
+      P
+   LambdaLink
+      V
+      Q
+```
+
+is named `implication-scope-to-implication`.
+
+#### Evidence-Based
+
+Rules that use direct evidence to calculate the TV contain `direct`.
+For instance
+
+```
+A
+B
+|-
+And <TV>
+  A
+  B
+```
+
+is named `conjunction-direct-introduction` because the TV is
+calculated based on the elements of `A` and `B`.  Note that the
+presence or absence of these elements should ideally be represented as
+premises but for technical reasons that is not yet the case.
+
+#### Order
+
+The order in which words are placed in a rule name is currently
+somewhat arbitrary.  For instance in `inheritance-deduction`,
+`inheritance`, the atom type which the rule is specialized to, is
+placed before the rule type `deduction`, while in
+`contraposition-implication` it is the opposite.  Also, in
+`fuzzy-conjunction-introduction-1ary` the unary specialization is
+placed after as well.
+
+It's not clear what convention should be followed at this point, more
+reflection needs is required.  One convention could be to order words
+by significance.  For instance in a deduction rule specialized for
+inheritance link, `deduction`, the most informative concept, would
+appear first, to the left, followed by `inheritance`, which is less
+informative.  Such convention is however not currently followed.
 
 ### Call Chainers
 

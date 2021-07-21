@@ -1,6 +1,7 @@
 ;; Load PLN
 (use-modules (opencog pln))
-(pln-load)                              ; Use the standard rule-base
+(pln-load-rule 'fuzzy-conjunction-introduction-2ary)
+(pln-load-rule 'conditional-full-instantiation-implication-scope-meta)
 
 (use-modules (opencog logger))
 (use-modules (opencog ure))
@@ -18,40 +19,6 @@
                   marry-like-song-3
                   listener-like-song-from-same-author))
 (define target (Evaluation like (List marry what)))
-
-;; Remove irrelevant rules. Another option could be to load the empty
-;; rule-base with
-;;
-;; (pln-load 'empty)
-;;
-;; and add PLN rules, as done in the ancestors PLN example.
-(pln-rm-rules-by-names (list
-                        ;; Remove deduction rules
-                        "deduction-implication-rule"
-                        "deduction-subset-rule"
-                        "deduction-inheritance-rule"
-                        ;; Remove modus ponens rules
-                        "modus-ponens-inheritance-rule"
-                        "modus-ponens-implication-rule"
-                        "modus-ponens-subset-rule"
-                        ;; Remove contraposition rules
-                        "crisp-contraposition-implication-scope-rule"
-                        "contraposition-implication-rule"
-                        "contraposition-inheritance-rule"
-                        ;; Remove conjunction introduction rules but the binary one
-                        "fuzzy-conjunction-introduction-1ary-rule"
-                        "fuzzy-conjunction-introduction-3ary-rule"
-                        "fuzzy-conjunction-introduction-4ary-rule"
-                        "fuzzy-conjunction-introduction-5ary-rule"
-                        ;; Remove disjunction introduction rules
-                        "fuzzy-disjunction-introduction-1ary-rule"
-                        "fuzzy-disjunction-introduction-2ary-rule"
-                        "fuzzy-disjunction-introduction-3ary-rule"
-                        "fuzzy-disjunction-introduction-4ary-rule"
-                        "fuzzy-disjunction-introduction-5ary-rule"
-                        ;; Remove conditional instantiation but implication scope one
-                        "conditional-full-instantiation-implication-meta-rule"
-                        "conditional-full-instantiation-inheritance-meta-rule"))
 
 ;; Call forward chainer
 ;;
@@ -71,5 +38,5 @@
 ;;
 ;; The following does not work due to the lack of full support of
 ;; meta-rule in backward chainer.
-;; 
+;;
 ;; (pln-bc target #:vardecl vardecl #:maximum-iterations 1000)
