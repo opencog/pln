@@ -641,8 +641,8 @@ void PLNRulesUTest::test_closed_lambda_introduction()
 	// Rather than enumerating all possible constructions we just make
 	// sure the one that matters is in there.
 	HandleSet sss;
-	for (auto h : results->getOutgoingSet()) sss.insert(h);
-	TS_ASSERT(is_in(expected, sss));
+	for (const auto& h : results->getOutgoingSet()) sss.insert(h);
+	TS_ASSERT(contains(sss, expected));
 }
 
 /**
