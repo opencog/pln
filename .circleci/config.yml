@@ -70,15 +70,15 @@ jobs:
           name: Build tests
           command: cd build && make -j2 tests
       - run:
+          name: Install PLN
+          command: cd build && make -j2 install && ldconfig
+      - run:
           name: Run tests
           command: cd build && make -j2 test ARGS=-j2
       - run:
           name: Print test log
           command: cat build/tests/Testing/Temporary/LastTest.log
           when: always
-      - run:
-          name: Install PLN
-          command: cd build && make -j2 install && ldconfig
       - persist_to_workspace:
           root: /ws/
           paths:
