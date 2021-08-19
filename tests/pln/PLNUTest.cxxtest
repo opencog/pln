@@ -11,21 +11,20 @@
 #include <vector>
 #include <cmath>
 
-
 using namespace opencog;
 
 /*
  * Integration test for pln rules
  * Test that the rules can be used together with each other.
  */
-class PLNRulesIntegrationTest: public CxxTest::TestSuite
+class PLNUTest: public CxxTest::TestSuite
 {
 private:
 	AtomSpace as;
 	SchemeEval eval;
 
 public:
-	PLNRulesIntegrationTest() : eval(&as)
+	PLNUTest() : eval(&as)
 	{
 		logger().set_level(Logger::DEBUG);
 		logger().set_timestamp_flag(false);
@@ -46,15 +45,11 @@ public:
 		}
 
 		eval.eval("(use-modules (opencog))");
-		eval.eval("(use-modules (opencog attention-bank))");
-		eval.eval("(use-modules (opencog query))");
-		eval.eval("(use-modules (opencog exec))");
-		eval.eval("(use-modules (opencog logger))");
 		eval.eval("(use-modules (opencog ure))");
-		eval.eval("(use-modules (srfi srfi-1))");
+		eval.eval("(use-modules (opencog pln))");
 	}
 
-	~PLNRulesIntegrationTest()
+	~PLNUTest()
 	{
 		// Erase the log file if no assertions failed.
 		if (!CxxTest::TestTracker::tracker().suiteFailed())
@@ -68,48 +63,50 @@ public:
 	void test_modus_ponens();
 };
 
-void PLNRulesIntegrationTest::tearDown()
-{
-}
-
-void PLNRulesIntegrationTest::setUp()
+void PLNUTest::tearDown()
 {
 	as.clear();
 }
 
-void PLNRulesIntegrationTest::load_scm_files(std::vector<std::string> files)
+void PLNUTest::setUp()
+{
+}
+
+void PLNUTest::load_scm_files(std::vector<std::string> files)
 {
 	std::string hd("(load-from-path \"");
 	std::string tl("\")");
 	for (auto f: files) {
 		std::string result = eval.eval(hd + f + tl);
-		logger().debug() << "[PLNRulesIntegrationTest] Loaded \"" << f << "\":"
+		logger().debug() << "[PLNUTest] Loaded \"" << f << "\":"
 		                 << std::endl << result;
 	}
 }
 
-#define getarity(hand) hand->get_arity()
-
-static inline Handle bindlink(AtomSpace* as, const Handle& hlink)
+// Simple modus ponens backward chainer test, however it involves more
+// rules to make sure that PLN isn't confused when using multiple
+// rules.
+void PLNUTest::test_modus_ponens()
 {
-   return HandleCast(hlink->execute(as));
-}
-
-
-void PLNRulesIntegrationTest::test_modus_ponens(){
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
- 	load_scm_files({"opencog/pln/rules/propositional/contraposition.scm",
-                        "opencog/pln/rules/propositional/modus-ponens.scm",
-	                "tests/pln/rules/modus-ponens-contraposition.scm"});
-       
 
-	Handle rbs = eval.eval_h("rbs");
+	std::string rs;
+
+	// Load a number of rules
+	rs = eval.eval("(pln-load-rule 'inheritance-modus-ponens)");
+	rs = eval.eval("(pln-load-rule 'implication-modus-ponens)");
+	rs = eval.eval("(pln-load-rule 'subset-modus-ponens)");
+	rs = eval.eval("(pln-load-rule 'contraposition-implication)");
+	rs = eval.eval("(pln-load-rule 'contraposition-inheritance)");
+
+	// Load KB
+	load_scm_files({"tests/pln/modus-ponens-contraposition.scm"});
+
 	Handle target = eval.eval_h("target");
- 	BackwardChainer bc(as, rbs, target);
-	bc.do_chain();
+	Handle result = eval.eval_h("(pln-bc target)");
 
 	// Check the result
-	Handle result = bc.get_results()->getOutgoingAtom(0);
-	TS_ASSERT_EQUALS(result, target);
-        TS_ASSERT(abs(0.68 - result->getTruthValue()->get_mean()) < 0.0001);
+	Handle front = result->getOutgoingAtom(0);
+	TS_ASSERT_EQUALS(front, target);
+	TS_ASSERT_DELTA(front->getTruthValue()->get_mean(), 0.68, 1e-3);
 }

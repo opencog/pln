@@ -43,7 +43,7 @@
                          (GroundedPredicate "scm: gt-zero-confidence")
                          AB))
          (rewrite (ExecutionOutput
-                    (GroundedSchema "scm: contraposition-formula")
+                    (GroundedSchema "scm: contraposition")
                     (List
                       NBNA
                       AB
@@ -86,7 +86,7 @@
                          (GroundedPredicate "scm: crisp-contraposition-scope-precondition")
                          PQ))
          (rewrite (ExecutionOutput
-                    (GroundedSchema "scm: crisp-contraposition-scope-formula")
+                    (GroundedSchema "scm: crisp-contraposition-scope")
                     (List
                       NQNP
                       PQ))))
@@ -114,7 +114,7 @@
 ;;
 ;; sNBNA = (1 - sA - sB + sA) / (1 - sB)
 ;;       = 1
-(define (contraposition-formula conclusion . premises)
+(define (contraposition conclusion . premises)
   (if (= (length premises) 3)
     (let*
         ((NBNA conclusion)
@@ -134,7 +134,7 @@
                      (cNBNA (min cAB cA cB)))
                 (cog-merge-hi-conf-tv! NBNA (stv sNBNA cNBNA))))))))
 
-(define (crisp-contraposition-scope-formula conclusion . premises)
+(define (crisp-contraposition-scope conclusion . premises)
   (if (= (length premises) 1)
     (let*
         ((NQNP conclusion)
