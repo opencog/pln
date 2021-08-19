@@ -17,14 +17,14 @@ using namespace opencog;
  * Integration test for pln rules
  * Test that the rules can be used together with each other.
  */
-class PLNRulesIntegrationTest: public CxxTest::TestSuite
+class PLNUTest: public CxxTest::TestSuite
 {
 private:
 	AtomSpace as;
 	SchemeEval eval;
 
 public:
-	PLNRulesIntegrationTest() : eval(&as)
+	PLNUTest() : eval(&as)
 	{
 		logger().set_level(Logger::DEBUG);
 		logger().set_timestamp_flag(false);
@@ -53,7 +53,7 @@ public:
 		eval.eval("(use-modules (srfi srfi-1))");
 	}
 
-	~PLNRulesIntegrationTest()
+	~PLNUTest()
 	{
 		// Erase the log file if no assertions failed.
 		if (!CxxTest::TestTracker::tracker().suiteFailed())
@@ -67,22 +67,22 @@ public:
 	void test_modus_ponens();
 };
 
-void PLNRulesIntegrationTest::tearDown()
+void PLNUTest::tearDown()
 {
 }
 
-void PLNRulesIntegrationTest::setUp()
+void PLNUTest::setUp()
 {
 	as.clear();
 }
 
-void PLNRulesIntegrationTest::load_scm_files(std::vector<std::string> files)
+void PLNUTest::load_scm_files(std::vector<std::string> files)
 {
 	std::string hd("(load-from-path \"");
 	std::string tl("\")");
 	for (auto f: files) {
 		std::string result = eval.eval(hd + f + tl);
-		logger().debug() << "[PLNRulesIntegrationTest] Loaded \"" << f << "\":"
+		logger().debug() << "[PLNUTest] Loaded \"" << f << "\":"
 		                 << std::endl << result;
 	}
 }
@@ -94,8 +94,7 @@ static inline Handle bindlink(AtomSpace* as, const Handle& hlink)
    return HandleCast(hlink->execute(as));
 }
 
-
-void PLNRulesIntegrationTest::test_modus_ponens(){
+void PLNUTest::test_modus_ponens(){
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
 	load_scm_files({"opencog/pln/rules/propositional/contraposition.scm",
 	                "opencog/pln/rules/propositional/modus-ponens.scm",
