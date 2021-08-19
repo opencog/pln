@@ -11,7 +11,6 @@
 #include <vector>
 #include <cmath>
 
-
 using namespace opencog;
 
 /*
@@ -98,10 +97,9 @@ static inline Handle bindlink(AtomSpace* as, const Handle& hlink)
 
 void PLNRulesIntegrationTest::test_modus_ponens(){
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
- 	load_scm_files({"opencog/pln/rules/propositional/contraposition.scm",
-                        "opencog/pln/rules/propositional/modus-ponens.scm",
-	                "tests/pln/rules/modus-ponens-contraposition.scm"});
-       
+	load_scm_files({"opencog/pln/rules/propositional/contraposition.scm",
+	                "opencog/pln/rules/propositional/modus-ponens.scm",
+	                "tests/pln/modus-ponens-contraposition.scm"});
 
 	Handle rbs = eval.eval_h("rbs");
 	Handle target = eval.eval_h("target");
