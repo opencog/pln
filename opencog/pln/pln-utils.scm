@@ -275,7 +275,7 @@
         ;; Propositional
         [(string-match "^.*-modus-ponens-rule$" rn)
          "opencog/pln/rules/propositional/modus-ponens.scm"]
-        [(string-match "^.*contraposition-rule$" rn)
+        [(string-match "^.*contraposition-.*rule$" rn)
          "opencog/pln/rules/propositional/contraposition.scm"]
         [(string-match "^fuzzy-conjunction-introduction-.+-rule$" rn)
          "opencog/pln/rules/propositional/fuzzy-conjunction-introduction.scm"]
