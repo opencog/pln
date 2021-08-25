@@ -33,7 +33,7 @@
 ;; Helper definition ;;
 ;;;;;;;;;;;;;;;;;;;;;;;
 
-(define forall-full-instantiation-variables
+(define forall-total-instantiation-variables
   (VariableList
      (TypedVariableLink
         (VariableNode "$TyVs")
@@ -48,25 +48,25 @@
      (UnquoteLink (VariableNode "$B")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Forall full instantiation rule ;;
+;; Forall total instantiation rule ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define forall-full-instantiation-rewrite
+(define forall-total-instantiation-rewrite
   (ExecutionOutputLink
-     (GroundedSchemaNode "scm: forall-full-instantiation-formula")
+     (GroundedSchemaNode "scm: forall-total-instantiation-formula")
      (ListLink
         (VariableNode "$TyVs")
         (VariableNode "$B"))))
 
 ;; Only try to match a ForAllLink with a type restricted variable in
 ;; the ForAllLink variable definition. The choice of the substitution
-;; term is done randomly in forall-full-instantiation-formula. All
+;; term is done randomly in forall-total-instantiation-formula. All
 ;; scoped variables are instantiated.
-(define forall-full-instantiation-rule
+(define forall-total-instantiation-rule
   (BindLink
-     forall-full-instantiation-variables
+     forall-total-instantiation-variables
      forall-instantiation-body
-     forall-full-instantiation-rewrite))
+     forall-total-instantiation-rewrite))
 
 ;; This function
 ;;
@@ -76,7 +76,7 @@
 ;; 2. performs the substitution,
 ;;
 ;; 3. calculates its TV (TODO: just <1 1> for now).
-(define (forall-full-instantiation-formula SV B)
+(define (forall-total-instantiation-formula SV B)
   (cog-set-tv!
    (let* (
           (SV-type (cog-type SV))
@@ -101,10 +101,10 @@
    (stv 1 1)))
 
 ;; Name the rule
-(define forall-full-instantiation-rule-name
-  (DefinedSchemaNode "forall-full-instantiation-rule"))
-(DefineLink forall-full-instantiation-rule-name
-  forall-full-instantiation-rule)
+(define forall-total-instantiation-rule-name
+  (DefinedSchemaNode "forall-total-instantiation-rule"))
+(DefineLink forall-total-instantiation-rule-name
+  forall-total-instantiation-rule)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Forall partial instantiation rule ;;
@@ -124,7 +124,7 @@
         (VariableNode "$TyVs")
         (VariableNode "$B"))))
 
-;; Like forall-full-instantiation-rule but only instantiate one
+;; Like forall-total-instantiation-rule but only instantiate one
 ;; variable amonst a variable list (if there is just one variable in
 ;; the forall scope, then this rule will not be invoked).
 (define forall-partial-instantiation-rule

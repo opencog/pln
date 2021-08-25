@@ -29,7 +29,7 @@
 ;; Helper definition ;;
 ;;;;;;;;;;;;;;;;;;;;;;;
 
-(define implication-full-instantiation-variables
+(define implication-total-instantiation-variables
   (VariableList
      (TypedVariableLink
         (VariableNode "$TyVs")
@@ -46,25 +46,25 @@
      (UnquoteLink (VariableNode "$Q")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Implication full instantiation rule ;;
+;; Implication total instantiation rule ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define implication-full-instantiation-rewrite
+(define implication-total-instantiation-rewrite
   (ExecutionOutputLink
-     (GroundedSchemaNode "scm: implication-full-instantiation-formula")
+     (GroundedSchemaNode "scm: implication-total-instantiation-formula")
      (ListLink
         implication-instantiation-body)))
 
 ;; Only try to match an ImplicationScopeLink with a type restricted
 ;; variable in the ImplicationScopeLink variable definition. The choice of
 ;; the substitution term is done randomly in
-;; implication-full-instantiation-formula. All scoped variables are
+;; implication-total-instantiation-formula. All scoped variables are
 ;; instantiated.
-(define implication-full-instantiation-rule
+(define implication-total-instantiation-rule
   (BindLink
-     implication-full-instantiation-variables
+     implication-total-instantiation-variables
      implication-instantiation-body
-     implication-full-instantiation-rewrite))
+     implication-total-instantiation-rewrite))
 
 ;; This function
 ;;
@@ -163,7 +163,7 @@
 ;;       and use that over known models (implications, whatever) to
 ;;       estimate P(D'|D)
 ;;
-(define (implication-full-instantiation-formula Impl)
+(define (implication-total-instantiation-formula Impl)
   (let* ((Impl-outgoings (cog-outgoing-set Impl))
          (Impl-s (cog-mean Impl))
          (Impl-c (cog-confidence Impl))
@@ -202,10 +202,10 @@
               (cog-merge-hi-conf-tv! Qinst (stv Qinst-s Qinst-c)))))))
 
 ;; Name the rule
-(define implication-full-instantiation-rule-name
-  (DefinedSchemaNode "implication-full-instantiation-rule"))
-(DefineLink implication-full-instantiation-rule-name
-  implication-full-instantiation-rule)
+(define implication-total-instantiation-rule-name
+  (DefinedSchemaNode "implication-total-instantiation-rule"))
+(DefineLink implication-total-instantiation-rule-name
+  implication-total-instantiation-rule)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Implication partial instantiation rule ;;
@@ -225,7 +225,7 @@
      (ListLink
         implication-instantiation-body)))
 
-;; Like implication-full-instantiation-rule but only instantiate one
+;; Like implication-total-instantiation-rule but only instantiate one
 ;; variable amonst a variable list (if there is just one variable in
 ;; the implication scope, then this rule will not be invoked).
 (define implication-partial-instantiation-rule

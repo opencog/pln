@@ -41,7 +41,7 @@
   (list "rules/propositional/modus-ponens.scm"
         "rules/propositional/contraposition.scm"
         "rules/term/deduction.scm"
-        "meta-rules/predicate/conditional-full-instantiation.scm"
+        "meta-rules/predicate/conditional-total-instantiation.scm"
         )
   )
 (for-each load-from-path rule-filenames)
@@ -63,9 +63,9 @@
         deduction-inheritance-rule-name
         deduction-implication-rule-name
         deduction-subset-rule-name
-        conditional-full-instantiation-implication-scope-meta-rule-name
-        conditional-full-instantiation-implication-meta-rule-name
-        conditional-full-instantiation-inheritance-meta-rule-name
+        conditional-total-instantiation-implication-scope-meta-rule-name
+        conditional-total-instantiation-implication-meta-rule-name
+        conditional-total-instantiation-inheritance-meta-rule-name
         )
   )
 

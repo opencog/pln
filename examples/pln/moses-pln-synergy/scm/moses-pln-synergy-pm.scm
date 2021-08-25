@@ -44,7 +44,7 @@
 (cog-execute! deduction-implication-rule)
 
 ;; (10)
-(cog-execute! implication-full-instantiation-rule)
+(cog-execute! implication-total-instantiation-rule)
 
 ;; (11)
 (cog-execute! equivalence-to-implication-rule)

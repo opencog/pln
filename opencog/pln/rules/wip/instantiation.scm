@@ -1,5 +1,5 @@
-;; Helpers for instantiation rules like forall full and partial
-;; instantiation rules and implication full and partial instantiation
+;; Helpers for instantiation rules like forall total and partial
+;; instantiation rules and implication total and partial instantiation
 ;; rules.
 
 (use-modules (srfi srfi-1))

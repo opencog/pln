@@ -5,7 +5,7 @@ inheritance links.
 
 ## Usage
 
-```scheme
+```bash
 guile -l ancestors.scm
 ```
 

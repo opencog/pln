@@ -232,8 +232,8 @@ placed before the rule type `deduction`, while in
 placed after as well.
 
 It's not clear what convention should be followed at this point, more
-reflection needs is required.  One convention could be to order words
-by significance.  For instance in a deduction rule specialized for
+reflection is required.  One convention could be to order words by
+significance.  For instance in a deduction rule specialized for
 inheritance link, `deduction`, the most informative concept, would
 appear first, to the left, followed by `inheritance`, which is less
 informative.  Such convention is however not currently followed.
