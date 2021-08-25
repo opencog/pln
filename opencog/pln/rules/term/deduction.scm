@@ -1,27 +1,29 @@
 ;; =============================================================================
-;; DeductionRule
+;; Deduction Rule
+;;
+;; This deduction rule makes the assumptions
+;;
+;; P(C|B,A) = P(C|B)
+;; P(C|¬B,A) = P(C|¬B)
+;;
+;; For the full deduction rule that does not make such assumption see
+;; the full-deduction.scm file.
 ;;
 ;; A <TV1>
 ;; B <TV2>
 ;; C <TV3>
-;; <LinkType> <TV4>
+;; <implication> <TV4>
 ;;   A
 ;;   B
-;; <LinkType> <TV5>
+;; <implication> <TV5>
 ;;   B
 ;;   C
 ;; |-
-;; <LinkType> <TV>
+;; <implication> <TV>
 ;;   A
 ;;   C
 ;;
-;; Due to type system limitations, the rule has been divided into 3:
-;;       deduction-inheritance-rule
-;;       deduction-implication-rule
-;;       deduction-subset-rule
-;;
-;; This deduction rule makes assumptions to avoid having too many
-;; premises. Another more precise rule should be created as well.
+;; where <implication> can be an ImplicationLink, SubsetLink or such.
 ;;
 ;; -----------------------------------------------------------------------------
 
