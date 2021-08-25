@@ -557,10 +557,10 @@ scheme@(guile-user)> (cog-execute! deduction-implication-rule)
 ...
 ```
 
-##### (10) - Fully instantiate that if a predicate is in the injury-recovery-speed-predicates class, then is-well-hydrated implies it
+##### (10) - Totaly instantiate that if a predicate is in the injury-recovery-speed-predicates class, then is-well-hydrated implies it
 
 ```scheme
-scheme@(guile-user)> (cog-execute! implication-full-instantiation-rule)
+scheme@(guile-user)> (cog-execute! implication-total-instantiation-rule)
 ...
    (ImplicationLink (stv 0.69999999 0.52499998)
       (PredicateNode "is-well-hydrated")

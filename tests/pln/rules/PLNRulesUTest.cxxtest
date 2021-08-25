@@ -87,11 +87,11 @@ public:
 	void test_and_introduction();
 	void test_or_introduction();
 	void test_not_introduction();
-	void test_forall_full_instantiation();
+	void test_forall_total_instantiation();
 	void test_forall_partial_instantiation();
 	void test_forall_implication_to_higher_order();
-	void test_implication_full_instantiation();
-	void test_implication_full_instantiation_extra_variables();
+	void test_implication_total_instantiation();
+	void test_implication_total_instantiation_extra_variables();
 	void test_implication_partial_instantiation();
 	void test_implication_scope_to_implication();
 	void test_and_lambda_distribution();
@@ -104,7 +104,7 @@ public:
 	// antecedant-conjunction-introduction-rule
 	void test_implication_implicant_conjunction();
 	void test_implication_direct_evaluation();
-	void test_conditional_full_instantiation_meta_rule();
+	void test_conditional_total_instantiation_meta_rule();
 	void test_consequent_disjunction_elimination();
 	void test_contraposition();
 };
@@ -224,7 +224,7 @@ void PLNRulesUTest::test_not_introduction()
  * Test the pln-forall-instantiation-rule defined in:
  * opencog/pln/rules/wip/forall-instantiation.scm
  */
-void PLNRulesUTest::test_forall_full_instantiation()
+void PLNRulesUTest::test_forall_total_instantiation()
 {
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
 
@@ -232,7 +232,7 @@ void PLNRulesUTest::test_forall_full_instantiation()
 	                "opencog/pln/rules/wip/forall-instantiation.scm"});
 
 	// Apply the rule
-	Handle rule = eval.eval_h("forall-full-instantiation-rule");
+	Handle rule = eval.eval_h("forall-total-instantiation-rule");
 	Handle results = bindlink(&as, rule);
 
 	/**
@@ -327,10 +327,10 @@ void PLNRulesUTest::test_forall_implication_to_higher_order()
 }
 
 /**
- * Test implication-full-instantiation-rule defined in:
+ * Test implication-total-instantiation-rule defined in:
  * opencog/pln/rules/wip/implication-instantiation.scm
  */
-void PLNRulesUTest::test_implication_full_instantiation()
+void PLNRulesUTest::test_implication_total_instantiation()
 {
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
 
@@ -338,7 +338,7 @@ void PLNRulesUTest::test_implication_full_instantiation()
 	                "opencog/pln/rules/wip/implication-instantiation.scm"});
 
 	// Apply the rule
-	Handle rule = eval.eval_h("implication-full-instantiation-rule");
+	Handle rule = eval.eval_h("implication-total-instantiation-rule");
 	Handle results = bindlink(&as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
@@ -358,10 +358,10 @@ void PLNRulesUTest::test_implication_full_instantiation()
 }
 
 /**
- * Test implication-full-instantiation-rule defined in:
+ * Test implication-total-instantiation-rule defined in:
  * opencog/pln/rules/wip/implication-instantiation.scm
  */
-void PLNRulesUTest::test_implication_full_instantiation_extra_variables()
+void PLNRulesUTest::test_implication_total_instantiation_extra_variables()
 {
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
 
@@ -369,7 +369,7 @@ void PLNRulesUTest::test_implication_full_instantiation_extra_variables()
 	                "opencog/pln/rules/wip/implication-instantiation.scm"});
 
 	// Apply the rule
-	Handle rule = eval.eval_h("implication-full-instantiation-rule");
+	Handle rule = eval.eval_h("implication-total-instantiation-rule");
 	Handle results = bindlink(&as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
@@ -791,17 +791,17 @@ void PLNRulesUTest::test_implication_direct_evaluation()
 
 /**
  * test implication-direct-evaluation-rule defined in:
- * opencog/pln/meta-rules/predicate/conditional-full-instantiation.scm
+ * opencog/pln/meta-rules/predicate/conditional-total-instantiation.scm
  */
-void PLNRulesUTest::test_conditional_full_instantiation_meta_rule()
+void PLNRulesUTest::test_conditional_total_instantiation_meta_rule()
 {
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
 
 	load_scm_files({"tests/pln/rules/simple-implication-scope.scm",
-	                "opencog/pln/meta-rules/predicate/conditional-full-instantiation.scm"});
+	                "opencog/pln/meta-rules/predicate/conditional-total-instantiation.scm"});
 
 	// Apply the rule
-	Handle rule = eval.eval_h("conditional-full-instantiation-implication-scope-meta-rule");
+	Handle rule = eval.eval_h("conditional-total-instantiation-implication-scope-meta-rule");
 	Handle results = bindlink(&as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
@@ -824,7 +824,7 @@ void PLNRulesUTest::test_conditional_full_instantiation_meta_rule()
 		 "      )"
 		 "    )"
 		 "    (ExecutionOutputLink"
-		 "      (GroundedSchemaNode \"scm: conditional-full-instantiation-scope-formula\")"
+		 "      (GroundedSchemaNode \"scm: conditional-total-instantiation-scope-formula\")"
 		 "      (ListLink"
 		 "        (EvaluationLink"
 		 "          (PredicateNode \"Q\")"

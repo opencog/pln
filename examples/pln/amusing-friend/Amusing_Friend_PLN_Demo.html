@@ -475,7 +475,7 @@ The probablity of turning acquaintance into friendship between humans: .01<br />
 <br />
 Infer that Bob is honest.<br />
 <br />
-Apply the implication-full-instantiation-rule on the implication in the knowledge base that people telling the truth are honest.<br />
+Apply the implication-total-instantiation-rule on the implication in the knowledge base that people telling the truth are honest.<br />
 <br />
 People who told the truth about something are honest.<br />
 Bob told Jill the truth about the party.<br />
@@ -493,7 +493,7 @@ Bob is honest.<br />
 			<th>Atomese</th>
 		</tr>
 		<tr>
-			<td style="vertical-align: top">implication-full-instantiation-rule:<br />
+			<td style="vertical-align: top">implication-total-instantiation-rule:<br />
 			<br />
 			&nbsp;ImplicationScopeLink<br />
 			&nbsp;&nbsp;&nbsp;&nbsp; V<br />
@@ -541,7 +541,7 @@ Bob is honest.<br />
 			<br />
 			Conclusion (1):<br />
 			<br />
-			(cog-execute! implication-full-instantiation-rule)<br />
+			(cog-execute! implication-total-instantiation-rule)<br />
 			;; Bob is honest<br />
 			&nbsp;&nbsp; (EvaluationLink (stv 0.94999999 0.89999098)<br />
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (PredicateNode &quot;is-honest&quot; (stv 0.80000001 0.89999998))<br />
@@ -1474,7 +1474,7 @@ Apply deduction-implication-rule on (7) and (8).
 <p>&nbsp;</p>
 Infer that Bob may become a friend.<br />
 <br />
-Apply the implication-full-instantiation-rule on (9).<br />
+Apply the implication-total-instantiation-rule on (9).<br />
 <br />
 Humans who are honest and acquainted tend to become friends.<br />
 Bob is human. I am human.<br />
@@ -1495,7 +1495,7 @@ Bob and I will become friends.
 			<th>Atomese</th>
 		</tr>
 		<tr>
-			<td style="vertical-align: top">implication-full-instantiation-rule:<br />
+			<td style="vertical-align: top">implication-total-instantiation-rule:<br />
 			<br />
 			&nbsp;ImplicationScopeLink<br />
 			&nbsp;&nbsp;&nbsp;&nbsp; V<br />
@@ -1535,7 +1535,7 @@ Bob and I will become friends.
 <p>&nbsp;</p>
 Infer that Bob is funny.<br />
 <br />
-Apply the implication-full-instantiation-rule on the implication stating that people telling jokes are funny in the kb.<br />
+Apply the implication-total-instantiation-rule on the implication stating that people telling jokes are funny in the kb.<br />
 <br />
 People who tell jokes are funny.<br />
 Bob told Jim a joke at the party.<br />
@@ -1554,7 +1554,7 @@ Bob is funny.
 			<th>Atomese</th>
 		</tr>
 		<tr>
-			<td style="vertical-align: top">implication-full-instantiation-rule:<br />
+			<td style="vertical-align: top">implication-total-instantiation-rule:<br />
 			<br />
 			&nbsp;ImplicationScopeLink<br />
 			&nbsp;&nbsp;&nbsp;&nbsp; V<br />
@@ -1786,7 +1786,7 @@ If X is funny, then X is amusing.</p>
 
 <p>Infer that Bob is amusing.</p>
 
-<p>Apply implication-full-instantiation on the result of (13).</p>
+<p>Apply implication-total-instantiation on the result of (13).</p>
 
 <p>(13) If X is funny, then X is amusing.<br />
 (11) Bob is funny.<br />
@@ -1807,7 +1807,7 @@ If X is funny, then X is amusing.</p>
 		</tr>
 		<tr>
 			<td style="vertical-align: top">
-			<p>implication-full-instantiation-rule:<br />
+			<p>implication-total-instantiation-rule:<br />
 			<br />
 			&nbsp;ImplicationScopeLink<br />
 			&nbsp;&nbsp;&nbsp;&nbsp; V<br />

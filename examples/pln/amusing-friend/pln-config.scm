@@ -68,7 +68,7 @@
 ; List the rules
 (define rules
   (list implication-scope-to-implication-rule-name
-        implication-full-instantiation-rule-name
+        implication-total-instantiation-rule-name
         equivalence-to-implication-rule-name
         predicate-lambda-evaluation-rule-name
         inversion-implication-rule-name

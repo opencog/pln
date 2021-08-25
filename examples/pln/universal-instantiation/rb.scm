@@ -37,7 +37,7 @@
 (add-to-load-path "../../../opencog/pln/meta-rules/")
 
 (define rule-filenames
-  (list "predicate/universal-full-instantiation.scm"))
+  (list "predicate/universal-total-instantiation.scm"))
 (for-each load-from-path rule-filenames)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47,7 +47,7 @@
 ; List the rules
 (define rules
   (list
-    universal-full-instantiation-forall-1ary-meta-rule-name))
+    universal-total-instantiation-forall-1ary-meta-rule-name))
 
 ;; Associate rules to PLN
 (ure-add-rules pln-rbs rules)
