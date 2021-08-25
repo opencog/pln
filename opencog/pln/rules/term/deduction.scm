@@ -1,24 +1,29 @@
 ;; =============================================================================
-;; DeductionRule
+;; Deduction Rule
 ;;
-;; <LinkType>
+;; This deduction rule makes the assumptions
+;;
+;; P(C|B,A) = P(C|B)
+;; P(C|¬B,A) = P(C|¬B)
+;;
+;; For the full deduction rule that does not make such assumption see
+;; the full-deduction.scm file.
+;;
+;; A <TV1>
+;; B <TV2>
+;; C <TV3>
+;; <implication> <TV4>
 ;;   A
 ;;   B
-;; <LinkType>
+;; <implication> <TV5>
 ;;   B
 ;;   C
 ;; |-
-;; <LinkType>
+;; <implication> <TV>
 ;;   A
 ;;   C
 ;;
-;; Due to type system limitations, the rule has been divided into 3:
-;;       deduction-inheritance-rule
-;;       deduction-implication-rule
-;;       deduction-subset-rule
-;;
-;; This deduction rule makes assumptions to avoid having too many
-;; premises. Another more precise rule should be created as well.
+;; where <implication> can be an ImplicationLink, SubsetLink or such.
 ;;
 ;; -----------------------------------------------------------------------------
 
@@ -51,25 +56,28 @@
           ;; Conclusion
           AC
           ;; Premises
-          ;;
-          ;; TODO: perhaps A, B, C should be added as premises as
-          ;; they are used in the formula.
+          A
+          B
+          C
           AB
           BC)))))
 
 ;; Deduction formula
 (define (deduction conclusion . premises)
-  (if (= (length premises) 2)
+  (if (= (length premises) 5)
     (let*
         ((AC conclusion)
-         (AB (list-ref premises 0))
-         (BC (list-ref premises 1))
-         (sA (cog-mean (gar AB)))
-         (cA (cog-confidence (gar AB)))
-         (sB (cog-mean (gar BC)))
-         (cB (cog-confidence (gar BC)))
-         (sC (cog-mean (gdr BC)))
-         (cC (cog-confidence (gdr BC)))
+         (A (list-ref premises 0))
+         (B (list-ref premises 1))
+         (C (list-ref premises 2))
+         (AB (list-ref premises 3))
+         (BC (list-ref premises 4))
+         (sA (cog-mean A))
+         (cA (cog-confidence A))
+         (sB (cog-mean B))
+         (cB (cog-confidence B))
+         (sC (cog-mean C))
+         (cC (cog-confidence C))
          (sAB (cog-mean AB))
          (cAB (cog-confidence AB))
          (sBC (cog-mean BC))
@@ -133,6 +141,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Deprecated naming, for backward compatibility only ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO: should these names really deprecated?  It's nice the most
+;; important part of the name appears first...
 
 (define deduction-inheritance-rule
   (let ((var-type (TypeChoice

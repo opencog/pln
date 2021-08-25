@@ -25,7 +25,7 @@
 ;;       (Concept "Bob")
 
 ;; (1) Infer that Bob is honest. Apply the
-;; implication-full-instantiation-rule on the implication stating that
+;; implication-total-instantiation-rule on the implication stating that
 ;; people telling the truth are honest in the kb.
 ;;
 ;; Result should be:
@@ -33,7 +33,7 @@
 ;; (Evaluation (stv 0.94999999 0.89999098)
 ;;   (Predicate "is-honest")
 ;;   (Concept "Bob"))
-(cog-execute! implication-full-instantiation-rule)
+(cog-execute! implication-total-instantiation-rule)
 
 ;; (2) Distribute the scope of the implication that friends tend to be
 ;; honest in the kb, applying implication-scope-to-implication-rule.
@@ -496,7 +496,7 @@
 (cog-execute! implication-to-implication-scope-rule)
 
 ;; (11) Infer that Bob may become a friend. Apply the
-;; implication-full-instantiation-rule on (10).
+;; implication-total-instantiation-rule on (10).
 ;;
 ;; Result should be:
 ;;
@@ -510,10 +510,10 @@
 ;;
 ;; Due to some indeterminism we repeat 10 times to be almost surely
 ;; inferred.
-(for-each (lambda (i) (cog-execute! implication-full-instantiation-rule)) (iota 10))
+(for-each (lambda (i) (cog-execute! implication-total-instantiation-rule)) (iota 10))
 
 ;; (12) Infer that Bob is funny. Apply the
-;; implication-full-instantiation-rule on the implication stating that
+;; implication-total-instantiation-rule on the implication stating that
 ;; people telling jokes are funny in the kb.
 ;;
 ;; Result should be:
@@ -523,7 +523,7 @@
 ;;   (Concept "Bob"))
 ;;
 ;; Actually, no need as it was inferred in (1)
-;; (cog-execute! implication-full-instantiation-rule)
+;; (cog-execute! implication-total-instantiation-rule)
 
 ;; (13) Distribute the scope of the amusing funny equivalence from the
 ;; kb. Apply equivalence-scope-distribution-rule.
@@ -593,7 +593,7 @@
 ;; )
 (cog-execute! implication-to-implication-scope-rule)
 
-;; (16) Infer that Bob is amusing. Apply implication-full-instantiation
+;; (16) Infer that Bob is amusing. Apply implication-total-instantiation
 ;; on the result of (15).
 ;;
 ;; Result should be:
@@ -601,7 +601,7 @@
 ;; (Evaluation (stv 0.65882355 0.80999994)
 ;;   (Predicate "is-amusing")
 ;;   (Concept "Bob"))
-(cog-execute! implication-full-instantiation-rule)
+(cog-execute! implication-total-instantiation-rule)
 
 ;; (17) Infer that Bob will be an amusing and honest friend. Apply the
 ;; and-introduction-rule over the results of (11), (12) and (16)

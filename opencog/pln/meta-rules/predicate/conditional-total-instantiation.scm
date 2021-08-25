@@ -1,5 +1,5 @@
 ;; =======================================================================
-;; Conditional Full Instantiation Meta Rule
+;; Conditional Total Instantiation Meta Rule
 ;;
 ;; Two forms are implemented
 ;;
@@ -36,9 +36,9 @@
 ;;
 ;; Defined rules are:
 ;;
-;; conditional-full-instantiation-implication-scope-meta-rule
-;; conditional-full-instantiation-implication-meta-rule
-;; conditional-full-instantiation-inheritance-meta-rule
+;; conditional-total-instantiation-implication-scope-meta-rule
+;; conditional-total-instantiation-implication-meta-rule
+;; conditional-total-instantiation-inheritance-meta-rule
 ;; -----------------------------------------------------------------------
 
 (use-modules (srfi srfi-1))
@@ -138,7 +138,7 @@
 ;;       the strength of P before instantiation.
 
 ;; Given various TVs calculate the TV of Q(a)
-(define (conditional-full-instantiation-tv-formula Pinst-tv Impl-tv P-tv)
+(define (conditional-total-instantiation-tv-formula Pinst-tv Impl-tv P-tv)
   (let* ((Impl-s (cog-tv-mean Impl-tv))
          (Impl-c (cog-tv-confidence Impl-tv))
          (P-s (cog-tv-mean P-tv))
@@ -156,12 +156,12 @@
     (stv Qinst-s Qinst-c)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Conditional full instantiation rules for scope links ;;
+;; Conditional total instantiation rules for scope links ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO turn that into a generator
 
-(define conditional-full-instantiation-implication-scope-meta-rule
+(define conditional-total-instantiation-implication-scope-meta-rule
   (let* ((V (Variable "$V"))
          (VariableT (Type "VariableNode"))
          (VariableListT (Type "VariableList"))
@@ -200,7 +200,7 @@
          ;; Produced rule rewrite. Apply formula to calculate the TV
          ;; over Q.
          (produced-rewrite (ExecutionOutput
-                            (GroundedSchema "scm: conditional-full-instantiation-scope-formula")
+                            (GroundedSchema "scm: conditional-total-instantiation-scope-formula")
                             (Unquote
                               (List
                                 ;; Conclusion
@@ -224,24 +224,24 @@
       meta-pattern
       meta-rewrite)))
 
-(define (conditional-full-instantiation-scope-formula Qinst Pinst Impl)
+(define (conditional-total-instantiation-scope-formula Qinst Pinst Impl)
   (let* ((Impl-outgoings (cog-outgoing-set Impl))
          (P (cadr Impl-outgoings))
          (Pinst-tv (cog-tv Pinst))
          (Impl-tv (cog-tv Impl))
          (P-tv (cog-tv P))
-         (Qinst-tv (conditional-full-instantiation-tv-formula Pinst-tv Impl-tv P-tv)))
+         (Qinst-tv (conditional-total-instantiation-tv-formula Pinst-tv Impl-tv P-tv)))
     (if (< 0 (cog-tv-confidence Qinst-tv)) ; avoid creating informationless knowledge
         (cog-merge-hi-conf-tv! Qinst Qinst-tv))))
 
 ;; Name the implication scope meta rule
-(define conditional-full-instantiation-implication-scope-meta-rule-name
-  (DefinedSchemaNode "conditional-full-instantiation-implication-scope-meta-rule"))
-(DefineLink conditional-full-instantiation-implication-scope-meta-rule-name
-  conditional-full-instantiation-implication-scope-meta-rule)
+(define conditional-total-instantiation-implication-scope-meta-rule-name
+  (DefinedSchemaNode "conditional-total-instantiation-implication-scope-meta-rule"))
+(DefineLink conditional-total-instantiation-implication-scope-meta-rule-name
+  conditional-total-instantiation-implication-scope-meta-rule)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Conditional full instantiation rules for non-scope links ;;
+;; Conditional total instantiation rules for non-scope links ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Determine the eval/member type given impl-type
@@ -270,7 +270,7 @@
 ;; Rule generator given the non-scope implication link type like
 ;; ImplicationLink, InheritanceLink, etc. The eval/member link (and
 ;; its argument order) will be automatically detected given impl-type.
-(define (gen-conditional-full-instantiation-meta-rule impl-type)
+(define (gen-conditional-total-instantiation-meta-rule impl-type)
   (let* ((impl-arg-type-atom (impl-to-var-type impl-type))
          (eval-type (impl-to-eval-type impl-type))
          (swapped (eval-type-to-swap eval-type))
@@ -316,7 +316,7 @@
          ;; Produced rule rewrite. Apply formula to calculate the TV
          ;; over B(X).
          (produced-rewrite (ExecutionOutput
-                             (GroundedSchema "scm: conditional-full-instantiation-formula")
+                             (GroundedSchema "scm: conditional-total-instantiation-formula")
                              (List
                                ;; Conclusion
                                UB_X
@@ -337,32 +337,32 @@
       meta-pattern
       meta-rewrite)))
 
-;; Like conditional-full-instantiation-formula but assumes a non scope
+;; Like conditional-total-instantiation-formula but assumes a non scope
 ;; link.
-(define (conditional-full-instantiation-formula Qinst Pinst Impl)
+(define (conditional-total-instantiation-formula Qinst Pinst Impl)
   (let* ((Impl-outgoings (cog-outgoing-set Impl))
          (P (car Impl-outgoings))
          (Pinst-tv (cog-tv Pinst))
          (Impl-tv (cog-tv Impl))
          (P-tv (cog-tv P))
-         (Qinst-tv (conditional-full-instantiation-tv-formula Pinst-tv Impl-tv P-tv)))
+         (Qinst-tv (conditional-total-instantiation-tv-formula Pinst-tv Impl-tv P-tv)))
     (if (< 0 (cog-tv-confidence Qinst-tv)) ; avoid creating informationless knowledge
         (cog-merge-hi-conf-tv! Qinst Qinst-tv))))
 
 ;; Generate and name
-;; conditional-full-instantiation-implication-meta-rule
-(define conditional-full-instantiation-implication-meta-rule
-  (gen-conditional-full-instantiation-meta-rule 'ImplicationLink))
-(define conditional-full-instantiation-implication-meta-rule-name
-  (DefinedSchemaNode "conditional-full-instantiation-implication-meta-rule"))
-(DefineLink conditional-full-instantiation-implication-meta-rule-name
-  conditional-full-instantiation-implication-meta-rule)
+;; conditional-total-instantiation-implication-meta-rule
+(define conditional-total-instantiation-implication-meta-rule
+  (gen-conditional-total-instantiation-meta-rule 'ImplicationLink))
+(define conditional-total-instantiation-implication-meta-rule-name
+  (DefinedSchemaNode "conditional-total-instantiation-implication-meta-rule"))
+(DefineLink conditional-total-instantiation-implication-meta-rule-name
+  conditional-total-instantiation-implication-meta-rule)
 
 ;; Generate and name
-;; conditional-full-instantiation-inheritance-meta-rule
-(define conditional-full-instantiation-inheritance-meta-rule
-  (gen-conditional-full-instantiation-meta-rule 'InheritanceLink))
-(define conditional-full-instantiation-inheritance-meta-rule-name
-  (DefinedSchemaNode "conditional-full-instantiation-inheritance-meta-rule"))
-(DefineLink conditional-full-instantiation-inheritance-meta-rule-name
-  conditional-full-instantiation-inheritance-meta-rule)
+;; conditional-total-instantiation-inheritance-meta-rule
+(define conditional-total-instantiation-inheritance-meta-rule
+  (gen-conditional-total-instantiation-meta-rule 'InheritanceLink))
+(define conditional-total-instantiation-inheritance-meta-rule-name
+  (DefinedSchemaNode "conditional-total-instantiation-inheritance-meta-rule"))
+(DefineLink conditional-total-instantiation-inheritance-meta-rule-name
+  conditional-total-instantiation-inheritance-meta-rule)

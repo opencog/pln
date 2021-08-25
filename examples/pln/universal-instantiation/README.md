@@ -21,7 +21,7 @@ Let's call meta-bind to apply universal instantiation over the entire
 atomspace.
 
 ```scheme
-(meta-bind universal-full-instantiation-forall-1ary-meta-rule)
+(meta-bind universal-total-instantiation-forall-1ary-meta-rule)
 ```
 
 You should get the following results.

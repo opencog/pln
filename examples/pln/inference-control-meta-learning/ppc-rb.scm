@@ -26,7 +26,7 @@
 (add-to-load-path "../../../opencog/pln/")
 
 (define rule-filenames
-  (list "meta-rules/predicate/conditional-full-instantiation.scm"
+  (list "meta-rules/predicate/conditional-total-instantiation.scm"
         "rules/propositional/fuzzy-conjunction-introduction.scm"
         )
   )
@@ -39,7 +39,7 @@
 ;; List the rules
 (define rules
   (list
-     conditional-full-instantiation-implication-scope-meta-rule-name
+     conditional-total-instantiation-implication-scope-meta-rule-name
      fuzzy-conjunction-introduction-2ary-rule-name
   )
 )

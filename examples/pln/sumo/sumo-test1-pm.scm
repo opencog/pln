@@ -35,7 +35,7 @@
 ;; (MemberLink (stv 1 0.99)
 ;;   (ConceptNode "Org1-1")
 ;;   (ConceptNode "Group"))
-(meta-bind conditional-full-instantiation-inheritance-meta-rule)
+(meta-bind conditional-total-instantiation-inheritance-meta-rule)
 
 ;; 2. Apply conditional instantiation using the MemberLink in 1. and
 ;; inheritance KB-16125, to obtain
@@ -43,7 +43,7 @@
 ;; (MemberLink (stv 1 0.99)
 ;;   (ConceptNode "Org1-1")
 ;;   (ConceptNode "Collection"))
-(meta-bind conditional-full-instantiation-inheritance-meta-rule)
+(meta-bind conditional-total-instantiation-inheritance-meta-rule)
 
 ;; 3. Apply conditional instantiation using 2. and KB-16709 to produce
 ;; the target
@@ -62,4 +62,4 @@
 ;;     (ConceptNode "Org1-1" (stv 0.010000 1.000000))
 ;;   )
 ;; )
-(meta-bind conditional-full-instantiation-implication-scope-meta-rule)
+(meta-bind conditional-total-instantiation-implication-scope-meta-rule)

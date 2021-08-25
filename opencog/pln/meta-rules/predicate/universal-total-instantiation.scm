@@ -1,5 +1,5 @@
 ;; =======================================================================
-;; Universal Full Instantiation Meta Rule
+;; Universal Total Instantiation Meta Rule
 ;;
 ;; Two forms are implemented
 ;;
@@ -39,12 +39,12 @@
 (use-modules (opencog logger))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Conditional full instantiation rules for scope links ;;
+;; Conditional total instantiation rules for scope links ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO turn that into a generator
 
-(define universal-full-instantiation-forall-1ary-meta-rule
+(define universal-total-instantiation-forall-1ary-meta-rule
   (let* ((X (Variable "$X"))
          (XType (Variable "$XType"))
          (VariableT (Type "VariableNode"))
@@ -82,7 +82,7 @@
          ;; Produced rule rewrite. Apply formula to calculate the TV
          ;; over P[V->T].
          (produced-rewrite (ExecutionOutput
-                            (GroundedSchema "scm: universal-full-instantiation-forall-formula")
+                            (GroundedSchema "scm: universal-total-instantiation-forall-formula")
                             (Unquote
                               (List
                                 ;; Conclusion
@@ -103,19 +103,19 @@
       meta-pattern
       meta-rewrite)))
 
-(define (universal-full-instantiation-forall-formula Pinst Forall)
+(define (universal-total-instantiation-forall-formula Pinst Forall)
   (let* ((Forall-tv (cog-tv Forall)))
     (if (< 0 (cog-tv-confidence Forall-tv)) ; avoid creating informationless knowledge
         (cog-merge-hi-conf-tv! Pinst Forall-tv))))
 
 ;; Name the forall scope meta rule
-(define universal-full-instantiation-forall-1ary-meta-rule-name
-  (DefinedSchemaNode "universal-full-instantiation-forall-1ary-meta-rule"))
-(DefineLink universal-full-instantiation-forall-1ary-meta-rule-name
-  universal-full-instantiation-forall-1ary-meta-rule)
+(define universal-total-instantiation-forall-1ary-meta-rule-name
+  (DefinedSchemaNode "universal-total-instantiation-forall-1ary-meta-rule"))
+(DefineLink universal-total-instantiation-forall-1ary-meta-rule-name
+  universal-total-instantiation-forall-1ary-meta-rule)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Universal full instantiation rules for non-scope atoms ;;
+;; Universal total instantiation rules for non-scope atoms ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO
