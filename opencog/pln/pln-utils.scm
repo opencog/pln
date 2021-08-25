@@ -268,6 +268,8 @@
   (cond ;; Term
         [(string-match "^.*-present-deduction-rule$" rn)
          "opencog/pln/rules/term/present-deduction.scm"]
+        [(string-match "^full-deduction-.*rule$" rn)
+         "opencog/pln/rules/term/full-deduction.scm"]
         [(string-match "^.*-deduction-rule$" rn)
          "opencog/pln/rules/term/deduction.scm"]
         [(string-match "^.*condition-negation-.+-rule$" rn)
@@ -326,6 +328,9 @@
    'inheritance-deduction
    'implication-deduction
    'subset-deduction
+   'full-deduction-inheritance
+   'full-deduction-implication
+   'full-deduction-subset
    'inheritance-present-deduction
    'subset-condition-negation
    'inheritance-modus-ponens
