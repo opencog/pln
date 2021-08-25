@@ -72,7 +72,7 @@
         implication-implicant-distribution-rule-name
         implication-and-lambda-factorization-rule-name
         deduction-implication-rule-name
-        implication-full-instantiation-rule-name
+        implication-total-instantiation-rule-name
         equivalence-to-implication-rule-name
         implication-implicant-disjunction-rule-name
         )

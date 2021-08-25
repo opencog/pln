@@ -60,7 +60,7 @@
 ;; Load useful PLN rules
 (add-to-load-path "../../../opencog/pln/")
 (define rule-filenames
-  (list "meta-rules/predicate/conditional-full-instantiation.scm"
+  (list "meta-rules/predicate/conditional-total-instantiation.scm"
         "rules/propositional/fuzzy-conjunction-introduction.scm"
         )
   )
@@ -68,7 +68,7 @@
 
 ;; Turn preproof-expander-is-preproof into a rule
 (define and-bit-prior-rule
-  (car (apply-rule conditional-full-instantiation-implication-scope-meta-rule
+  (car (apply-rule conditional-total-instantiation-implication-scope-meta-rule
                    and-bit-prior)))
 (define and-bit-prior-rule-name (DefinedSchemaNode "and-bit-prior-rule"))
 (Define and-bit-prior-rule-name and-bit-prior-rule)

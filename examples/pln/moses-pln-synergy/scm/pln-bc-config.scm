@@ -56,7 +56,7 @@
         "term/deduction.scm"
         "wip/equivalence-to-implication.scm"
         "wip/implication-implicant-disjunction.scm"
-        "predicate/conditional-full-instantiation.scm"
+        "predicate/conditional-total-instantiation.scm"
         )
   )
 (for-each load-from-path rule-filenames)
@@ -76,8 +76,8 @@
         implication-implicant-distribution-rule-name
         implication-and-lambda-factorization-rule-name
         deduction-implication-rule-name
-        conditional-full-instantiation-meta-rule-name
-        ;; implication-full-instantiation-rule-name
+        conditional-total-instantiation-meta-rule-name
+        ;; implication-total-instantiation-rule-name
         equivalence-to-implication-rule-name
         ;; implication-implicant-disjunction-rule-name
         )

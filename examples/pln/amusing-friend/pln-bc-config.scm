@@ -48,7 +48,7 @@
 (add-to-load-path "../../../opencog/pln/meta-rules/")
 
 (define rule-filenames
-  (list "predicate/conditional-full-instantiation.scm"
+  (list "predicate/conditional-total-instantiation.scm"
         "wip/implication-scope-to-implication.scm"
         ;; "wip/equivalence-to-implication.scm"
         "wip/predicate-lambda-evaluation.scm"
@@ -70,7 +70,7 @@
 ; List the rules
 (define rules
   (list implication-scope-to-implication-rule-name
-        conditional-full-instantiation-meta-rule-name
+        conditional-total-instantiation-meta-rule-name
         ;; equivalence-to-implication-rule-name
         predicate-lambda-evaluation-rule-name
         inversion-implication-rule-name

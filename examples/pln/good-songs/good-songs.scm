@@ -1,7 +1,7 @@
 ;; Load PLN
 (use-modules (opencog pln))
 (pln-load-rule 'fuzzy-conjunction-introduction-2ary)
-(pln-load-rule 'conditional-full-instantiation-implication-scope-meta)
+(pln-load-rule 'conditional-total-instantiation-implication-scope-meta)
 
 (use-modules (opencog logger))
 (use-modules (opencog ure))

@@ -85,7 +85,7 @@
   To a load a meta rule just append meta at the end of the symbol, for
   instance
 
-  (pln-load-rule 'conditional-full-instantiation-implication-meta)
+  (pln-load-rule 'conditional-total-instantiation-implication-meta)
 
   Finally, you can list of all supported rule symbols by calling
 
@@ -101,7 +101,7 @@
   pln-load-rule META-RULE-SYMBOL [TV]
 
   Given the symbol of a meta rule, such as
-  'conditional-full-instantiation-implication, load the rule to the pln
+  'conditional-total-instantiation-implication, load the rule to the pln
   atomspace and add it to the pln rule base.
 
   WARNING: this function actually loads the scheme file associated
@@ -148,7 +148,7 @@
   Loads the different variations of the meta rules known by
   META-RULE-TYPE in pln-atomspace. A META-RULE-TYPE may include the
   categorization of the rule. For example,
-  'predicate/conditional-full-instantiation' implies that the rule to be
+  'predicate/conditional-total-instantiation' implies that the rule to be
   loaded is the predicate-logic conditional instantiation rule.
 
   Note:
@@ -248,10 +248,10 @@
                       'fuzzy-disjunction-introduction-4ary
                       'fuzzy-disjunction-introduction-5ary
 
-                      ;; Conditional Full Instantiation
-                      'conditional-full-instantiation-implication-scope-meta
-                      'conditional-full-instantiation-implication-meta
-                      'conditional-full-instantiation-inheritance-meta)))))
+                      ;; Conditional Total Instantiation
+                      'conditional-total-instantiation-implication-scope-meta
+                      'conditional-total-instantiation-implication-meta
+                      'conditional-total-instantiation-inheritance-meta)))))
     (map pln-load-rule rlst))
 
   ;; Avoid confusing the user with a return value
@@ -267,7 +267,9 @@
   ;; less abstract ones.
   (cond ;; Term
         [(string-match "^.*-present-deduction-rule$" rn)
-         "opencog/pln/rules/term/crisp-deduction.scm"]
+         "opencog/pln/rules/term/present-deduction.scm"]
+        [(string-match "^full-deduction-.*rule$" rn)
+         "opencog/pln/rules/term/full-deduction.scm"]
         [(string-match "^.*-deduction-rule$" rn)
          "opencog/pln/rules/term/deduction.scm"]
         [(string-match "^.*condition-negation-.+-rule$" rn)
@@ -313,8 +315,8 @@
         [(string-match "predictive-implication-scope-deduction-rule" rn)
          "opencog/pln/rules/temporal/predictive-implication-scope-deduction.scm"]
         ;; Meta-rules
-        [(string-match "^conditional-full-instantiation-.+-meta-rule$" rn)
-         "opencog/pln/meta-rules/predicate/conditional-full-instantiation.scm"]
+        [(string-match "^conditional-total-instantiation-.+-meta-rule$" rn)
+         "opencog/pln/meta-rules/predicate/conditional-total-instantiation.scm"]
         [(string-match "^conditional-partial-instantiation-.+-meta-rule$" rn)
          "opencog/pln/meta-rules/predicate/conditional-partial-instantiation.scm"]))
 
@@ -326,6 +328,9 @@
    'inheritance-deduction
    'implication-deduction
    'subset-deduction
+   'full-deduction-inheritance
+   'full-deduction-implication
+   'full-deduction-subset
    'inheritance-present-deduction
    'subset-condition-negation
    'inheritance-modus-ponens
@@ -358,9 +363,9 @@
    'predictive-implication-direct-evaluation
    'predictive-implication-scope-direct-evaluation
    'predictive-implication-scope-deduction
-   'conditional-full-instantiation-implication-scope
-   'conditional-full-instantiation-implication
-   'conditional-full-instantiation-inheritance
+   'conditional-total-instantiation-implication-scope
+   'conditional-total-instantiation-implication
+   'conditional-total-instantiation-inheritance
    'conditional-partial-instantiation))
 
 (define-public (pln-prt-pln-atomspace)

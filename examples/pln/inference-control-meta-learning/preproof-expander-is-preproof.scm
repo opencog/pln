@@ -77,7 +77,7 @@
 ;; Load useful PLN rules
 (add-to-load-path "../../../opencog/pln/")
 (define rule-filenames
-  (list "meta-rules/predicate/conditional-full-instantiation.scm"
+  (list "meta-rules/predicate/conditional-total-instantiation.scm"
         "rules/propositional/fuzzy-conjunction-introduction.scm"
         )
   )
@@ -85,7 +85,7 @@
 
 ;; Turn preproof-expander-is-preproof into a rule
 (define preproof-expander-is-preproof-rule
-  (car (apply-rule conditional-full-instantiation-implication-scope-meta-rule
+  (car (apply-rule conditional-total-instantiation-implication-scope-meta-rule
                    preproof-expander-is-preproof)))
 (define preproof-expander-is-preproof-rule-name
   (DefinedSchemaNode "preproof-expander-is-preproof-rule"))
@@ -124,11 +124,11 @@
 ;;  [12683283867560939830][14] [12823859965981897975][14]
 ;;  =======fuzzy-conjunction-introduction-formula========
 ;;               [16933538436290672077][14] [10726136630260592600][3]
-;;               ----conditional-full-instantiation-scope-formula----
+;;               ----conditional-total-instantiation-scope-formula----
 ;; [16373111896861386537][14] [17721967112989671184][14]
 ;; =======fuzzy-conjunction-introduction-formula========
 ;;              [14468762034246325305][14] [10726136630260592600][3]
-;;              ----conditional-full-instantiation-scope-formula----
+;;              ----conditional-total-instantiation-scope-formula----
 ;;                           [10889719491974701818][3]
 ;;
 ;; here i=4, the correct premise to expand is either
@@ -202,7 +202,7 @@
     )
   )
   (ExecutionOutputLink
-    (GroundedSchemaNode "scm: conditional-full-instantiation-scope-formula")
+    (GroundedSchemaNode "scm: conditional-total-instantiation-scope-formula")
     (ListLink
       (preproof-of
         (ListLink

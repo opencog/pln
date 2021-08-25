@@ -45,7 +45,7 @@
 
 (define rule-filenames
   (list ;; "term/deduction.scm"
-        "predicate/conditional-full-instantiation.scm"
+        "predicate/conditional-total-instantiation.scm"
         "propositional/fuzzy-conjunction-introduction.scm"
         "propositional/contraposition.scm"
   )
@@ -59,9 +59,9 @@
 ; List the rules
 (define rules
   (list ;; deduction-inheritance-rule-name
-        conditional-full-instantiation-implication-scope-meta-rule-name
-        conditional-full-instantiation-implication-meta-rule-name
-        conditional-full-instantiation-inheritance-meta-rule-name
+        conditional-total-instantiation-implication-scope-meta-rule-name
+        conditional-total-instantiation-implication-meta-rule-name
+        conditional-total-instantiation-inheritance-meta-rule-name
         fuzzy-conjunction-introduction-3ary-rule-name
         crisp-contraposition-implication-scope-rule-name
   )
