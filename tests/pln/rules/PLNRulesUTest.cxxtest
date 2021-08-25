@@ -84,6 +84,7 @@ public:
 	void load_scm_files(std::vector<std::string>);
 
 	void test_deduction();
+	void test_full_deduction();
 	void test_and_introduction();
 	void test_or_introduction();
 	void test_not_introduction();
@@ -145,7 +146,7 @@ void PLNRulesUTest::test_deduction()
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
 
 	load_scm_files({"tests/pln/rules/simple-assertions.scm",
-				    "opencog/pln/rules/term/deduction.scm"});
+	                "opencog/pln/rules/term/deduction.scm"});
 
 	Handle results;
 
@@ -164,6 +165,45 @@ void PLNRulesUTest::test_deduction()
 
 	// 4 in total, man, Peirce, Einstein, Socrates
 	TS_ASSERT_EQUALS(4, getarity(results));
+}
+
+/**
+ * tests the full deduction rule (full-deduction-rule) defined in:
+ * opencog/pln/rules/term/full-deduction.scm
+ */
+void PLNRulesUTest::test_full_deduction()
+{
+	logger().debug("BEGIN TEST: %s", __FUNCTION__);
+
+	load_scm_files({"tests/pln/rules/full-deduction-kb.scm",
+	                "opencog/pln/rules/term/full-deduction.scm"});
+
+	// Get TVs the premises to calculate expected TV of the
+	// conclusion
+	Handle PQ = eval.eval_h("PQ");
+	Handle PQR = eval.eval_h("PQR");
+	Handle PNQR = eval.eval_h("PNQR");
+	strength_t PQs = PQ->getTruthValue()->get_mean();
+	strength_t PQRs = PQR->getTruthValue()->get_mean();
+	strength_t PNQRs = PNQR->getTruthValue()->get_mean();
+	confidence_t PQc = PQ->getTruthValue()->get_confidence();
+	confidence_t PQRc = PQR->getTruthValue()->get_confidence();
+	confidence_t PNQRc = PNQR->getTruthValue()->get_confidence();
+
+	// Apply the rule
+	Handle results = eval.eval_h("(cog-execute! full-deduction-implication-rule)");
+	Handle conclusion = eval.eval_h("conclusion");
+	logger().debug() << "results = " << results->to_string();
+	logger().debug() << "conclusion = " << conclusion->to_string();
+
+	// Check that the strength and confidence follow the full deduction
+	// formula
+	strength_t conclusion_s = conclusion->getTruthValue()->get_mean();
+	confidence_t conclusion_c = conclusion->getTruthValue()->get_confidence();
+	strength_t expected_s = PQs * PQRs + (1 - PQs) * PNQRs;
+	confidence_t expected_c = 0.9 * std::min({PQc, PQRc, PNQRc});
+	TS_ASSERT_DELTA(conclusion_s, expected_s, 1e-3);
+	TS_ASSERT_DELTA(conclusion_c, expected_c, 1e-3);
 }
 
 /**
