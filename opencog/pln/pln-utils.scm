@@ -267,7 +267,7 @@
   ;; less abstract ones.
   (cond ;; Term
         [(string-match "^.*-present-deduction-rule$" rn)
-         "opencog/pln/rules/term/crisp-deduction.scm"]
+         "opencog/pln/rules/term/present-deduction.scm"]
         [(string-match "^.*-deduction-rule$" rn)
          "opencog/pln/rules/term/deduction.scm"]
         [(string-match "^.*condition-negation-.+-rule$" rn)
