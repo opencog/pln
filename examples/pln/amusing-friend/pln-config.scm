@@ -32,7 +32,7 @@
 
 (define pln-rbs (ConceptNode "PLN"))
 
-;; Define pln-fc and pln-bc for convenience 
+;; Define pln-fc and pln-bc for convenience
 (define (pln-fc source) (cog-fc pln-rbs source))
 (define (pln-bc target) (cog-bc pln-rbs target))
 
