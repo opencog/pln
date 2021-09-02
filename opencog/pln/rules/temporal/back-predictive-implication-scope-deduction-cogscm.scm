@@ -151,6 +151,9 @@
 	  ;; Conclusion
 	  PAR
 	  ;; Premises
+	  ;; Not closed premises are risky because inference tree would have free
+	  ;; variables which will result to ambiguty.
+	  ;; TODO: Use Lambda and Create a closed premise for P, Q and R.
 	  P
 	  Q
 	  R	  
