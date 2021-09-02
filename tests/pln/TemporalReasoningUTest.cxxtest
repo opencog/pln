@@ -1,0 +1,171 @@
+/*
+ * tests/pln/rules/TemporalReasoningUTest.cxxtest
+ *
+ * Copyright (C) 2014 Cosmo Harrigan
+ * Copyright (C) 2015 OpenCog Foundation
+ * All Rights Reserved
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+#include <opencog/guile/SchemeEval.h>
+#include <opencog/guile/SchemeSmob.h>
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/atomspace/AtomSpace.h>
+#include <opencog/ure/Rule.h>
+#include <opencog/ure/backwardchainer/BackwardChainer.h>
+#include <opencog/util/Logger.h>
+#include <opencog/util/algorithm.h>
+#include <cxxtest/TestSuite.h>
+#include <string>
+#include <vector>
+#include <cmath>
+
+using namespace opencog;
+using namespace std;
+
+/*
+ * Integration test for pln rules
+ * Test that the rules can be used together with each other.
+ */
+class TemporalReasoningUTest: public CxxTest::TestSuite
+{
+private:
+	AtomSpace as;
+	SchemeEval eval;
+
+public:
+	TemporalReasoningUTest() : eval(&as)
+	{
+		logger().set_level(Logger::DEBUG);
+		logger().set_timestamp_flag(false);
+		logger().set_print_to_stdout_flag(true);
+
+		ure_logger().set_level(Logger::DEBUG);
+		ure_logger().set_timestamp_flag(false);
+		ure_logger().set_print_to_stdout_flag(true);
+
+		std::string cur_ppp_dir = std::string(PROJECT_SOURCE_DIR),
+			cur_dir = cur_ppp_dir + "/tests/pln/rules",
+			src_rule_dir = cur_ppp_dir + "/opencog/pln/rules";
+		std::vector<std::string> load_paths = {cur_ppp_dir, cur_dir, src_rule_dir};
+		for (std::string& p : load_paths)
+		{
+			std::string eval_str = std::string("(add-to-load-path \"") + p + std::string("\")");
+			eval.eval(eval_str);
+		}
+
+		eval.eval("(use-modules (opencog))");
+		eval.eval("(use-modules (opencog spacetime))");
+		eval.eval("(use-modules (opencog ure))");
+		eval.eval("(use-modules (opencog pln))");
+	}
+
+	~TemporalReasoningUTest()
+	{
+		// Erase the log file if no assertions failed.
+		if (!CxxTest::TestTracker::tracker().suiteFailed())
+			std::remove(logger().get_filename().c_str());
+	}
+
+	void setUp();
+	void tearDown();
+	void load_scm_files(std::vector<std::string>);
+	void test_cogscm_temporal_deduction();
+};
+
+void TemporalReasoningUTest::tearDown()
+{
+	as.clear();
+}
+
+void TemporalReasoningUTest::setUp()
+{
+}
+
+void TemporalReasoningUTest::load_scm_files(std::vector<std::string> files)
+{
+	std::string hd("(load-from-path \"");
+	std::string tl("\")");
+	for (auto f: files) {
+		std::string result = eval.eval(hd + f + tl);
+		logger().debug() << "[TemporalReasoningUTest] Loaded \"" << f << "\":"
+		                 << std::endl << result;
+	}
+}
+
+/**
+ * Test cogscm temporal-deduction-rule defined in:
+ * opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm
+ */
+void TemporalReasoningUTest::test_cogscm_temporal_deduction()
+{
+	logger().debug("BEGIN TEST: %s", __FUNCTION__);
+
+	// load KB
+	load_scm_files({"tests/pln/rules/temporal-deduction.scm"});
+
+	// Load rule
+	std::string rs = eval.eval("(pln-load-rule 'back-predictive-implication-scope-deduction-cogscm)");
+
+	Handle target = eval.eval_h("target");
+	Handle results = eval.eval_h("(pln-bc target)");
+
+	Handle expected = eval.eval_h
+		("(SetLink"
+		 "(BackPredictiveImplicationScopeLink"
+		 "	(VariableNode \"$X\")"
+		 "	(SLink"
+		 "		(SLink"
+		 "			(ZLink)))"
+		 "	(BackSequentialAndLink"
+		 "		(SLink"
+		 "			(ZLink))"
+		 "		(EvaluationLink"
+		 "			(PredicateNode \"P\")"
+		 "			(VariableNode \"$X\"))"
+		 "		(ExecutionLink"
+         "			(SchemaNode \"A2\")))"
+    	 "	(EvaluationLink"
+      	 "		(PredicateNode \"R\")"
+      	 "		(VariableNode \"$X\")))"
+		 "(BackPredictiveImplicationScopeLink"
+		 "	(VariableNode \"$X\")"
+		 "	(SLink" 
+		 "		(SLink"
+		 "			(ZLink)))"
+		 "	(BackSequentialAndLink"
+		 "		(SLink"
+		 "			(ZLink))"
+		 "  	(AndLink"
+		 "			(EvaluationLink"
+		 "				(PredicateNode \"C\")"
+		 "				(VariableNode \"$X\"))"
+		 "			(ExecutionLink"
+		 "				(SchemaNode \"A1\")))"
+		 "		(ExecutionLink"
+         "			(SchemaNode \"A2\")))"
+    	 "	(EvaluationLink"
+      	 "		(PredicateNode \"R\")"
+      	 "		(VariableNode \"$X\"))))");
+		   
+	std::cout << "results = " << results->to_string();
+	std::cout << "expected = " << expected->to_string();
+
+	HandleSet sss;
+	for (const auto& h : expected->getOutgoingSet()) 
+		TS_ASSERT(contains(results->getOutgoingSet(), h));
+}
