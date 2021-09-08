@@ -131,10 +131,10 @@ void TemporalReasoningRulesUTest::test_cogscm_temporal_deduction()
 		 "			(PredicateNode \"P\")"
 		 "			(VariableNode \"$X\"))"
 		 "		(ExecutionLink"
-         "			(SchemaNode \"A2\")))"
-    	 "	(EvaluationLink"
-      	 "		(PredicateNode \"R\")"
-      	 "		(VariableNode \"$X\")))"
+		 "			(SchemaNode \"A2\")))"
+		 "	(EvaluationLink"
+		 "		(PredicateNode \"R\")"
+		 "		(VariableNode \"$X\")))"
 		 "(BackPredictiveImplicationScopeLink"
 		 "	(VariableNode \"$X\")"
 		 "	(SLink (SLink"
@@ -149,11 +149,11 @@ void TemporalReasoningRulesUTest::test_cogscm_temporal_deduction()
 		 "				(PredicateNode \"C\")"
 		 "				(VariableNode \"$X\")))"
 		 "		(ExecutionLink"
-         "			(SchemaNode \"A2\")))"
-    	 "	(EvaluationLink"
-      	 "		(PredicateNode \"R\")"
-      	 "		(VariableNode \"$X\"))))");
-		   
+		 "			(SchemaNode \"A2\")))"
+		 "	(EvaluationLink"
+		 "		(PredicateNode \"R\")"
+		 "		(VariableNode \"$X\"))))");
+
 	std::cout << "results = " << results->to_string();
 	std::cout << "expected = " << expected->to_string();
 

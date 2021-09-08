@@ -138,10 +138,10 @@ void TemporalReasoningUTest::test_cogscm_temporal_deduction()
 		 "			(PredicateNode \"P\")"
 		 "			(VariableNode \"$X\"))"
 		 "		(ExecutionLink"
-         "			(SchemaNode \"A2\")))"
-    	 "	(EvaluationLink"
-      	 "		(PredicateNode \"R\")"
-      	 "		(VariableNode \"$X\")))"
+		 "			(SchemaNode \"A2\")))"
+		 "	(EvaluationLink"
+		 "		(PredicateNode \"R\")"
+		 "		(VariableNode \"$X\")))"
 		 "(BackPredictiveImplicationScopeLink"
 		 "	(VariableNode \"$X\")"
 		 "	(SLink" 
@@ -150,22 +150,21 @@ void TemporalReasoningUTest::test_cogscm_temporal_deduction()
 		 "	(BackSequentialAndLink"
 		 "		(SLink"
 		 "			(ZLink))"
-		 "  	(AndLink"
+		 "		(AndLink"
 		 "			(EvaluationLink"
 		 "				(PredicateNode \"C\")"
 		 "				(VariableNode \"$X\"))"
 		 "			(ExecutionLink"
 		 "				(SchemaNode \"A1\")))"
 		 "		(ExecutionLink"
-         "			(SchemaNode \"A2\")))"
-    	 "	(EvaluationLink"
-      	 "		(PredicateNode \"R\")"
-      	 "		(VariableNode \"$X\"))))");
-		   
+		 "			(SchemaNode \"A2\")))"
+		 "	(EvaluationLink"
+		 "		(PredicateNode \"R\")"
+		 "		(VariableNode \"$X\"))))");
+
 	std::cout << "results = " << results->to_string();
 	std::cout << "expected = " << expected->to_string();
 
-	HandleSet sss;
 	for (const auto& h : expected->getOutgoingSet()) 
 		TS_ASSERT(contains(results->getOutgoingSet(), h));
 }

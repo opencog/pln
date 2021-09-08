@@ -36,9 +36,12 @@ Z_LINK <- NATURAL_LINK
 // repo does not accept number, time or natural.
 BACK_SEQUENTIAL_AND_LINK <- ORDERED_LINK
 
-// Introduce LaggedLink, a predicate transformer that takes a temporal predicate
+// Introduce LagLink, a predicate transformer that takes a temporal predicate
 // and shifts it in the past, or possibly in the future if the lag is negative.
-LAGGED_LINK <- ORDERED_LINK
+LAG_LINK <- ORDERED_LINK
+
+// Introduce LeadLink, to represesent the opposite of a lag.
+LEAD_LINK <- ORDERED_LINK
 
 // Other assorted link types.
 // Are these actually used? Are they needed?

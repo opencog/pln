@@ -212,8 +212,8 @@
 				(conditional-probability-consistency sB sC sBC)))
 			(let* 
 				((sPAR (simple-deduction-strength-formula sA sB sC sAB sBC))
-        		(cPAR (min cAB cBC)))
-			(cog-merge-hi-conf-tv! PAR (stv sPAR cPAR)))))))
+				(cPAR (min cAB cBC)))
+				(cog-merge-hi-conf-tv! PAR (stv sPAR cPAR)))))))
 
 ;; Limit an number to be within a certain range
 (define (limit x l u)
