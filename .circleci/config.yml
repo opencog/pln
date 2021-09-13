@@ -42,6 +42,13 @@ jobs:
             mkdir -p /ws/atomspace/build
             cd /ws/atomspace/build && cmake .. && make -j2 && make -j2 install
             ldconfig
+      - run:
+          name: Install SpaceTime
+          command: |
+            git clone --depth 1 https://github.com/$CIRCLE_PROJECT_USERNAME/spacetime /ws/spacetime
+            mkdir -p /ws/spacetime/build
+            cd /ws/spacetime/build && cmake .. && make -j2 && make -j2 install
+            ldconfig
       - save_cache:
           name: Save GHC Cache
           key: ghc-{{checksum "/ws/atomspace/opencog/haskell/stack.yaml"}}-{{ arch }}
