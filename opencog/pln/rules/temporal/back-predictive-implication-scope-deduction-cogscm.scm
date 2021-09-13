@@ -105,60 +105,60 @@
 ;; Rule
 (define back-predictive-implication-scope-deduction-cogscm-rule
   (let* ((V (Variable "$vardecl"))
-	 (T1 (Variable "$lag-1"))
-	 (T2 (Variable "$lag-2"))
-	 (P (Variable "$P"))
-	 (Q (Variable "$Q"))
-	 (R (Variable "$R"))
-	 (A (Variable "$A"))
-	 (ExecutionT (Type 'ExecutionLink))
-	 (NaturalT (TypeInh 'NaturalLink))
-	 (VariableT (TypeInh 'VariableNode))
-	 (VariableSetT (Type 'VariableSet))
-	 (VariableListT (Type 'VariableList))
-	 (TypedVariableT (Type 'TypedVariableLink))
-	 (VardeclT (TypeChoice
-		     VariableT
-		     VariableSetT
-		     VariableListT
-		     TypedVariableT))
-	 ;; Rule vardecl
-	 (vardecl (VariableSet
-		    (TypedVariable V VardeclT)
-		    (TypedVariable T1 NaturalT)
-		    (TypedVariable T2 NaturalT)
-		    (TypedVariable A ExecutionT)
-		    P
-		    Q
-		    R))
-	 ;; Rule clauses
-	 (PQ (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T1) (Unquote P) (Unquote Q))))
-	 (QA (And Q A))
-	 (QAR (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T2) (Unquote QA) (Unquote R))))
-	 (present-clauses (Present PQ QAR))
-	 (precondition-clauses (IsClosed PQ QAR))
-	 ;; Rule rewriting term
-	 (PA (BackSequentialAnd T1 P A))
-	 (PAR (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T2) (Unquote PA) (Unquote R)))))
+     (T1 (Variable "$lag-1"))
+     (T2 (Variable "$lag-2"))
+     (P (Variable "$P"))
+     (Q (Variable "$Q"))
+     (R (Variable "$R"))
+     (A (Variable "$A"))
+     (ExecutionT (Type 'ExecutionLink))
+     (NaturalT (TypeInh 'NaturalLink))
+     (VariableT (TypeInh 'VariableNode))
+     (VariableSetT (Type 'VariableSet))
+     (VariableListT (Type 'VariableList))
+     (TypedVariableT (Type 'TypedVariableLink))
+     (VardeclT (TypeChoice
+             VariableT
+             VariableSetT
+             VariableListT
+             TypedVariableT))
+     ;; Rule vardecl
+     (vardecl (VariableSet
+            (TypedVariable V VardeclT)
+            (TypedVariable T1 NaturalT)
+            (TypedVariable T2 NaturalT)
+            (TypedVariable A ExecutionT)
+            P
+            Q
+            R))
+     ;; Rule clauses
+     (PQ (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T1) (Unquote P) (Unquote Q))))
+     (QA (And Q A))
+     (QAR (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T2) (Unquote QA) (Unquote R))))
+     (present-clauses (Present PQ QAR))
+     (precondition-clauses (IsClosed PQ QAR))
+     ;; Rule rewriting term
+     (PA (BackSequentialAnd T1 P A))
+     (PAR (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T2) (Unquote PA) (Unquote R)))))
     (Bind
       vardecl
       (And
         present-clauses
-	precondition-clauses)
+        precondition-clauses)
       (ExecutionOutput
         (GroundedSchema "scm: predictive-implication-scope-deduction-cogscm")
-	(List
-	  ;; Conclusion
-	  PAR
-	  ;; Premises
-	  ;; Not closed premises are risky because inference tree would have free
-	  ;; variables which will result to ambiguty.
-	  ;; TODO: Use Lambda and Create a closed premise for P, Q and R.
-	  P
-	  Q
-	  R	  
-	  PQ
-	  QAR)))))
+        (List
+            ;; Conclusion
+            PAR
+            ;; Premises
+            ;; Not closed premises are risky because inference tree would have free
+            ;; variables which will result to ambiguty.
+            ;; TODO: Use Lambda and Create a closed premise for P, Q and R.
+            P
+            Q
+            R      
+            PQ
+            QAR)))))
 
 ;; The formula can be derived from the definition of
 ;; PredictiveImplicationLink
@@ -167,53 +167,53 @@
   (ure-logger-fine "(predictive-implication-scope-deduction conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 5)
      (let* ((PAR conclusion)
-	        (P (list-ref premises 0))
+            (P (list-ref premises 0))
             (Q (list-ref premises 1))
-	 	    (R (list-ref premises 2))
-	 	    (PQ (list-ref premises 3))
-	 	    (QAR (list-ref premises 4))
-			;; From A lookback variant definition of PredictiveImplicationLink, 
-			;; the ImplicationLink equivalence for PQ, QAR and PAR is as follows:
-			;; PQ <=>
-			;; (Implication 
-			;;    (Lagged (Lambda (V T) (AtTime P T)) T1) 
-			;;    (Lambda (V T) (AtTime Q T))
-			;; QAR <=>
-			;; (Implication 
-			;;    (Lagged (Lambda (V T) (AtTime (And Q A) T)) T2)
-			;;    (Lambda (V T) (AtTime R T))
-			;;
-			;; use simple-deduction-strength-formula to get TV for the conclusion, PAR.
-			;; Hence, based on deduction rule:
-			;; A->B
-			;; B->C
-			;; A = (Lagged (Lambda (V T) (AtTime P T)) T1)
-			;; A <TV> is similar to P <TV>
-			(sA (cog-mean P))
-			(cA (cog-confidence P))
-			;; B = (Lagged (Lambda (V T) (AtTime (And Q A) T)) T2)
-			;; B <TV> is similar to Q <TV>
-			(sB (cog-mean Q))
-			(cB (cog-confidence Q))
-			;; C = (Lambda (V T) (AtTime R T))
-			;; C <TV> is similar to R <TV>
-			(sC (cog-mean R))
-			(cC (cog-confidence R))
-			;; A->B <=> PQ
-			(sAB (cog-mean PQ))
-			(cAB (cog-confidence PQ))
-			;; B->C <=> QAR
-			(sBC (cog-mean QAR))
-			(cBC (cog-confidence QAR)))
-		(if (and
-			(or (= 0 cA) (= 0 cB) (= 0 cAB)
-				(conditional-probability-consistency sA sB sAB))
-			(or (= 0 cB) (= 0 cC) (= 0 cBC)
-				(conditional-probability-consistency sB sC sBC)))
-			(let* 
-				((sPAR (simple-deduction-strength-formula sA sB sC sAB sBC))
-				(cPAR (min cAB cBC)))
-				(cog-merge-hi-conf-tv! PAR (stv sPAR cPAR)))))))
+            (R (list-ref premises 2))
+            (PQ (list-ref premises 3))
+            (QAR (list-ref premises 4))
+            ;; From A lookback variant definition of PredictiveImplicationLink, 
+            ;; the ImplicationLink equivalence for PQ, QAR and PAR is as follows:
+            ;; PQ <=>
+            ;; (Implication 
+            ;;    (Lagged (Lambda (V T) (AtTime P T)) T1) 
+            ;;    (Lambda (V T) (AtTime Q T))
+            ;; QAR <=>
+            ;; (Implication 
+            ;;    (Lagged (Lambda (V T) (AtTime (And Q A) T)) T2)
+            ;;    (Lambda (V T) (AtTime R T))
+            ;;
+            ;; use simple-deduction-strength-formula to get TV for the conclusion, PAR.
+            ;; Hence, based on deduction rule:
+            ;; A->B
+            ;; B->C
+            ;; A = (Lagged (Lambda (V T) (AtTime P T)) T1)
+            ;; A <TV> is similar to P <TV>
+            (sA (cog-mean P))
+            (cA (cog-confidence P))
+            ;; B = (Lagged (Lambda (V T) (AtTime (And Q A) T)) T2)
+            ;; B <TV> is similar to Q <TV>
+            (sB (cog-mean Q))
+            (cB (cog-confidence Q))
+            ;; C = (Lambda (V T) (AtTime R T))
+            ;; C <TV> is similar to R <TV>
+            (sC (cog-mean R))
+            (cC (cog-confidence R))
+            ;; A->B <=> PQ
+            (sAB (cog-mean PQ))
+            (cAB (cog-confidence PQ))
+            ;; B->C <=> QAR
+            (sBC (cog-mean QAR))
+            (cBC (cog-confidence QAR)))
+        (if (and
+            (or (= 0 cA) (= 0 cB) (= 0 cAB)
+                (conditional-probability-consistency sA sB sAB))
+            (or (= 0 cB) (= 0 cC) (= 0 cBC)
+                (conditional-probability-consistency sB sC sBC)))
+            (let* 
+                ((sPAR (simple-deduction-strength-formula sA sB sC sAB sBC))
+                (cPAR (min cAB cBC)))
+                (cog-merge-hi-conf-tv! PAR (stv sPAR cPAR)))))))
 
 ;; Limit an number to be within a certain range
 (define (limit x l u)

@@ -29,15 +29,15 @@
 ;; Rule
 (define back-predictive-implication-scope-direct-evaluation-rule
   (let* ((BPIS (Variable "$BPIS"))
-	 (BPISTy (Type 'BackPredictiveImplicationScopeLink)))
+         (BPISTy (Type 'BackPredictiveImplicationScopeLink)))
     (Bind
       (TypedVariable BPIS BPISTy)
       (And
         (Present BPIS)
-	(IsClosed BPIS))
+        (IsClosed BPIS))
       (ExecutionOutput
         (GroundedSchema "scm: back-predictive-implication-scope-direct-evaluation")
-	(List
+        (List
           ;; Conclusion. No premises to avoid proof tree cycle.
           BPIS)))))
 
@@ -149,8 +149,8 @@
   Return the max between two lags (including if they wrap variables).
 "
   (cond [(or (Z? LAG1) (variable? LAG1)) LAG2]
-	[(or (Z? LAG2) (variable? LAG2)) LAG1]
-	[else (S (cog-outgoing-atom LAG1 0) (cog-outgoing-atom LAG2 0))]))
+    [(or (Z? LAG2) (variable? LAG2)) LAG1]
+    [else (S (cog-outgoing-atom LAG1 0) (cog-outgoing-atom LAG2 0))]))
 
 (define (get-pis-succedent-timed-clauses BPIS T)
 "
@@ -174,8 +174,8 @@
   assuming <lag-1> and <lag-2> are both (S (Z)).
 "
   (let* ((pis-lag (get-pis-lag BPIS))
-	 (max-time (get-max-time (get-pis-antecedent-timed-clauses BPIS T)))
-	 (suc-time (lag-add pis-lag max-time)))
+     (max-time (get-max-time (get-pis-antecedent-timed-clauses BPIS T)))
+     (suc-time (lag-add pis-lag max-time)))
     (to-timed-clauses (get-pis-succedent BPIS) suc-time)))
 
 (define (to-timed-clauses LE T)
@@ -202,10 +202,10 @@
           (let* ((lag (get-seq-lag LE))
                  (ante (get-seq-antecedent LE))
                  (succ (get-seq-succedent LE))
-		 (timed-ante (to-timed-clauses ante T))
-		 (lagged-T (lag-add lag T))
-		 (timed-succ (to-timed-clauses succ lagged-T)))
-	    (append timed-ante timed-succ))
+         (timed-ante (to-timed-clauses ante T))
+         (lagged-T (lag-add lag T))
+         (timed-succ (to-timed-clauses succ lagged-T)))
+        (append timed-ante timed-succ))
           (list (wrap-T LE)))))
 
 ;; Formula.  Assume crisps observations for now.
@@ -213,42 +213,42 @@
   (ure-logger-fine "(back-predictive-implication-scope-direct-evaluation conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 0)
       (let* ((BPIS conclusion)
-	     (T (Variable "$T"))
-	     (TimeT (TypeInh 'NaturalLink))
-	     (ante-timed-clauses (get-pis-antecedent-timed-clauses BPIS T))
-	     (ante-body (And
-			  (Present ante-timed-clauses)
-			  (IsClosed ante-timed-clauses)
-			  (IsTrue ante-timed-clauses)))
-	     (ante-vardecl (vardecl-append (TypedVariable T TimeT)
-					   (get-vardecl BPIS)))
-	     (ante-query (Get ante-vardecl ante-body))
-	     (ante-res (cog-execute! ante-query))
-	     (ante-res-lst (cog-outgoing-set ante-res))
-	     (ante-size (length ante-res-lst)))
-	(if (< 0 ante-size)
-	    (let* (;; For each evidence check if the succedent is true at T+LAG
-		   (lag (get-pis-lag BPIS))
-		   (only-time (= 1 (length (get-typed-vars ante-vardecl))))
-		   (get-p-time (lambda (p) (if only-time
-					     p
-					     (cog-outgoing-atom p 0))))
-		   (plus-lag (lambda (t) (lag-add lag t)))
-		   (succ-timed-clauses (get-pis-succedent-timed-clauses BPIS T))
-		   ;; TODO: only one succedent assumed for now
-		   (succ-timed-clause (car succ-timed-clauses))
-		   (succ-instantiate (lambda (p)
-				       (cog-execute! (Put T succ-timed-clause p))))
-		   (true? (lambda (x)
-			    (and (not (null? x)) (tv->bool (cog-tv x)))))
-		   (succ-true? (lambda (p) (true? (succ-instantiate (get-p-time p)))))
-		   (succ-lst (filter succ-true? ante-res-lst))
-		   (succ-size (length succ-lst))
-		   ;; Calculate the TV of the back predictive implication scope
-		   (strength (exact->inexact (/ succ-size ante-size)))
-		   (confidence (count->confidence ante-size))
-		   (tv (stv strength confidence)))
-	      (cog-merge-hi-conf-tv! conclusion tv))))))
+         (T (Variable "$T"))
+         (TimeT (TypeInh 'NaturalLink))
+         (ante-timed-clauses (get-pis-antecedent-timed-clauses BPIS T))
+         (ante-body (And
+              (Present ante-timed-clauses)
+              (IsClosed ante-timed-clauses)
+              (IsTrue ante-timed-clauses)))
+         (ante-vardecl (vardecl-append (TypedVariable T TimeT)
+                       (get-vardecl BPIS)))
+         (ante-query (Get ante-vardecl ante-body))
+         (ante-res (cog-execute! ante-query))
+         (ante-res-lst (cog-outgoing-set ante-res))
+         (ante-size (length ante-res-lst)))
+    (if (< 0 ante-size)
+        (let* (;; For each evidence check if the succedent is true at T+LAG
+           (lag (get-pis-lag BPIS))
+           (only-time (= 1 (length (get-typed-vars ante-vardecl))))
+           (get-p-time (lambda (p) (if only-time
+                         p
+                         (cog-outgoing-atom p 0))))
+           (plus-lag (lambda (t) (lag-add lag t)))
+           (succ-timed-clauses (get-pis-succedent-timed-clauses BPIS T))
+           ;; TODO: only one succedent assumed for now
+           (succ-timed-clause (car succ-timed-clauses))
+           (succ-instantiate (lambda (p)
+                       (cog-execute! (Put T succ-timed-clause p))))
+           (true? (lambda (x)
+                (and (not (null? x)) (tv->bool (cog-tv x)))))
+           (succ-true? (lambda (p) (true? (succ-instantiate (get-p-time p)))))
+           (succ-lst (filter succ-true? ante-res-lst))
+           (succ-size (length succ-lst))
+           ;; Calculate the TV of the back predictive implication scope
+           (strength (exact->inexact (/ succ-size ante-size)))
+           (confidence (count->confidence ante-size))
+           (tv (stv strength confidence)))
+          (cog-merge-hi-conf-tv! conclusion tv))))))
 
 ;; Declaration
 (define back-predictive-implication-scope-direct-evaluation-rule-name
