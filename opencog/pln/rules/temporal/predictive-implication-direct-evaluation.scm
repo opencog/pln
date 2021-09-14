@@ -44,6 +44,8 @@
 (use-modules (opencog pln))
 (use-modules (opencog logger))
 
+(load "utils.scm")
+
 ;; Rule
 (define predictive-implication-direct-evaluation-rule
   (let* ((PI (Variable "$PI"))
@@ -58,70 +60,6 @@
 	(List
           ;; Conclusion. No premises to avoid proof tree cycle.
           PI)))))
-
-;; Helpers
-;; TODO: move to util file
-(define (get-pi-antecedants PI)
-"
-  Return the antecedants of a predictive implication. For instance given
-
-  PredictiveImplicationLink
-    <offset>
-    And
-      <P1>
-      <P2>
-    <Q>
-
-  then return a scheme list with P1 and P2.
-"
-  (let* ((P (cog-outgoing-atom PI 1)))
-    (if (equal? (cog-type P) 'AndLink)
-	(cog-outgoing-set P)
-	(list P))))
-
-;; TODO: move to util file
-(define (get-pi-succedents PI)
-"
-  Return the succedent of a predictive implication scope. For instance given
-
-  PredictiveImplicationLink
-    <offset>
-    And
-      <P1>
-      <P2>
-    <Q>
-
-  then return a scheme list with Q.
-"
-  (let* ((P (cog-outgoing-atom PI 2)))
-    (if (equal? (cog-type P) 'AndLink)
-	(cog-outgoing-set P)
-	(list P))))
-
-;; TODO: move to util file
-(define (get-pi-lag PI)
-"
-  Return the lag of a PredictiveImplicationLink.
-
-  That is given
-
-  PredictiveImplicationLink
-    <lag>
-    P
-    Q
-
-  returns <lag>
-"
-  (cog-outgoing-atom PI 0))
-
-;; TODO: move to util file
-(define (temporal-plus T1 T2)
-"
-  Calculate the addition of two time nodes (or here naturals for now).
-"
-  (if (equal? (cog-type T1) 'ZLink)
-      T2
-      (temporal-plus (cog-outgoing-atom T1 0) (S T2))))
 
 ;; Formula.  Assume crisps observations for now.
 (define (predictive-implication-direct-evaluation conclusion . premises)

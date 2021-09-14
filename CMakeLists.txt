@@ -85,6 +85,18 @@ ELSE (ATOMSPACE_FOUND)
 	MESSAGE(FATAL_ERROR "AtomSpace missing: it is needed!")
 ENDIF (ATOMSPACE_FOUND)
 
+# ------------------------------------------------------------
+# SpaceTime is required for temporal reasoning.
+
+FIND_PACKAGE(SpaceTime 0.1.4 CONFIG REQUIRED)
+IF (SPACETIME_FOUND)
+	MESSAGE(STATUS "SpaceTime found.")
+	ADD_DEFINITIONS(-DHAVE_SPACETIME)
+	SET(HAVE_SPACETIME 1)
+ELSE (SPACETIME_FOUND)
+	MESSAGE(FATAL_ERROR "SpaceTime missing: it is needed!")
+ENDIF (SPACETIME_FOUND)
+
 # ----------------------------------------------------------
 # Python, Guile
 
