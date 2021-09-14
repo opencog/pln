@@ -5,5 +5,4 @@
                  (ConceptNode "apple")
                  (ConceptNode "fruit"))
 
-(define rbs (ConceptNode "pln"))
 (define target (ConceptNode "fruit"))

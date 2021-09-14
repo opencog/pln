@@ -23,6 +23,8 @@
 (use-modules (opencog pln))
 (use-modules (opencog logger))
 
+(load "utils.scm")
+
 ;; Rule
 (define predictive-implication-scope-direct-evaluation-rule
   (let* ((PIS (Variable "$PIS"))
@@ -52,7 +54,7 @@
   (equal? (cog-type X) 'AndLink))
 
 (define (sequential-and? X)
-  (equal? (cog-type X) 'AltSequentialAndLink))
+  (equal? (cog-type X) 'BackSequentialAndLink))
 
 (define (get-time X)
 "
@@ -108,36 +110,6 @@
   returns <succedent>
 "
 (cog-outgoing-atom SEQ 2))
-
-;; TODO: move to util file
-(define (get-pis-antecedent PIS)
-"
-  Return the antecedent of a predictive implication scope. That is given
-
-  PredictiveImplicationScope
-    <vardecl>
-    <lag>
-    <antecedent>
-    <succedent>
-
-  then return <antecedent>.
-"
-  (cog-outgoing-atom PIS 2))
-
-;; TODO: move to util file
-(define (get-pis-succedent PIS)
-"
-  Return the succedent of a predictive implication scope. That is given
-
-  PredictiveImplicationScope
-    <vardecl>
-    <lag>
-    <antecedent>
-    <succedent>
-
-  then return <succedent>.
-"
-  (cog-outgoing-atom PIS 3))
 
 (define (get-pis-antecedent-timed-clauses PIS T)
 "
@@ -234,67 +206,6 @@
 		 (timed-succ (to-timed-clauses succ lagged-T)))
 	    (append timed-ante timed-succ))
           (list (wrap-T LE)))))
-
-;; TODO: move to util file
-(define (get-typed-vars vardecl)
-"
-  Take a variable declaration and output its scheme list of typed variables
-"
-  (if (or (equal? (cog-type vardecl) 'VariableSet)
-	  (equal? (cog-type vardecl) 'VariableList))
-      (cog-outgoing-set vardecl)
-      (list vardecl)))
-
-;; TODO: move to util file
-(define (vardecl-append vardecl1 vardecl2)
-"
-  Take 2 variable declarations and append them. For now it is assumed
-  that they do not have any variable in common. Also the resulting
-  variable declaration will always be a list, regardless of whether the
-  input variable declarations are sets.
-"
-  (let* ((lst (append (get-typed-vars vardecl1) (get-typed-vars vardecl2))))
-    (if (< 1 (length lst))
-	(VariableList lst)
-	(car lst))))
-
-;; TODO: move to util file
-(define (get-vardecl PIS)
-"
-  Return the variable declaration of a PredicateImplicationScope
-"
-  (cog-outgoing-atom PIS 0))
-
-;; TODO: move to util file
-(define (get-pis-lag PIS)
-"
-  Return the lag of a PredictiveImplicationScopeLink.
-
-  That is given
-
-  PredictiveImplicationScopeLink
-    <vardecl>
-    <lag>
-    <P>
-    <Q>
-
-  returns <lag>
-"
-  (cog-outgoing-atom PIS 1))
-
-;; TODO: move to util file
-(define (lag-add LAG T)
-"
-  Add LAG to T. For example
-
-    LAG = (S (S Z))
-    T = (Variable \"$T\")
-
-  return (S (S (Variable \"$T\")))
-"
-  (if (equal? (cog-type LAG) 'ZLink)
-      T
-      (lag-add (cog-outgoing-atom LAG 0) (S T))))
 
 ;; Formula.  Assume crisps observations for now.
 (define (predictive-implication-scope-direct-evaluation conclusion . premises)

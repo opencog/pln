@@ -14,6 +14,9 @@ INTENSIONAL_DIFFERENCE_LINK <- ORDERED_LINK,EVALUATABLE_LINK
 // https://wiki.opencog.org/w/Category:Atom_Types
 PREDICTIVE_IMPLICATION_SCOPE_LINK <- SCOPE_LINK
 PREDICTIVE_IMPLICATION_LINK <- ORDERED_LINK
+// Lookback variant 
+BACK_PREDICTIVE_IMPLICATION_SCOPE_LINK <- SCOPE_LINK
+BACK_PREDICTIVE_IMPLICATION_LINK <- ORDERED_LINK
 
 TIME_INTERVAL_LINK <- ORDERED_LINK
 
@@ -29,9 +32,16 @@ NATURAL_LINK <- LINK
 S_LINK <- NATURAL_LINK
 Z_LINK <- NATURAL_LINK
 
-// Alternate SequentialAnd because the one defined in the atomspace
+// Alternate SequentialAnd (a lookback variant) because the one defined in the atomspace
 // repo does not accept number, time or natural.
-ALT_SEQUENTIAL_AND_LINK <- ORDERED_LINK
+BACK_SEQUENTIAL_AND_LINK <- ORDERED_LINK
+
+// Introduce LagLink, a predicate transformer that takes a temporal predicate
+// and shifts it in the past, or possibly in the future if the lag is negative.
+LAG_LINK <- ORDERED_LINK
+
+// Introduce LeadLink, to represesent the opposite of a lag.
+LEAD_LINK <- ORDERED_LINK
 
 // Other assorted link types.
 // Are these actually used? Are they needed?
