@@ -1,5 +1,58 @@
-// Custom atom types used by PLN
+//
+// Assorted PLN link types.  These are specific to the theory of PLN
+// and the rules it defines for knowledge representation and reasoning.
+// See the book on PLN by Goertzel etal. to understand what these are
+// all about.
+//
+// The concepts of extension and intension are needed, whenever one
+// has more truth values than simply true and false. These correspond
+// to the sigma and pi types of the Borel hierarchy of set theory.
+// More precisely, they are the left and right adjunctions to the
+// pullback functor of sets over an object -- that is, the pullback
+// functor on the slice category, where the slice is given by a
+// PredicateNode.
+//
+// SUBSET_LINK is semantically equivalent to EXTENSIONAL_INHERITANCE_LINK.
+// Therefore the later has been removed.
+// INHERITANCE_LINK <- ORDERED_LINK, DIRECTLY_EVALUATABLE_LINK
+// INTENSIONAL_INHERITANCE_LINK <- INHERITANCE_LINK
 
+EXTENSIONAL_SIMILARITY_LINK <- SIMILARITY_LINK
+INTENSIONAL_SIMILARITY_LINK <- SIMILARITY_LINK
+
+// Concept constructor
+SATISFYING_SET_SCOPE_LINK <- SCOPE_LINK
+
+// Convert predicate into concept
+SATISFYING_SET_LINK <- LINK
+
+// Standard, non sugar form of implication and equivalence links.
+// IMPLICATION_LINK <- ORDERED_LINK
+INTENSIONAL_IMPLICATION_LINK <- IMPLICATION_LINK
+EXTENSIONAL_IMPLICATION_LINK <- IMPLICATION_LINK
+
+// EQUIVALENCE_LINK <- UNORDERED_LINK
+INTENSIONAL_EQUIVALENCE_LINK <- EQUIVALENCE_LINK
+EXTENSIONAL_EQUIVALENCE_LINK <- EQUIVALENCE_LINK
+
+// Sugar forms of implication and equivalence links. See
+// http://wiki.opencog.org/wikihome/index.php/ImplicationLink
+// for more information
+// IMPLICATION_SCOPE_LINK <- SCOPE_LINK
+INTENSIONAL_IMPLICATION_SCOPE_LINK <- IMPLICATION_SCOPE_LINK
+EXTENSIONAL_IMPLICATION_SCOPE_LINK <- IMPLICATION_SCOPE_LINK
+
+EQUIVALENCE_SCOPE_LINK <- SCOPE_LINK
+INTENSIONAL_EQUIVALENCE_SCOPE_LINK <- EQUIVALENCE_SCOPE_LINK
+EXTENSIONAL_EQUIVALENCE_SCOPE_LINK <- EQUIVALENCE_SCOPE_LINK
+
+// Undocumented mystery link used by PLN
+// ATTRACTION_LINK <- ORDERED_LINK
+
+// ===============================================================
+//
+// Experimental link types.
+//
 // Add IntensionalDifferenceLink. Introduced as an experiment for
 // relating reasoning and word2vec vector arithmetic. See rule
 //
