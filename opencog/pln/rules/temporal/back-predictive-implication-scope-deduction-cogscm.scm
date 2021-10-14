@@ -146,7 +146,7 @@
         present-clauses
         precondition-clauses)
       (ExecutionOutput
-        (GroundedSchema "scm: predictive-implication-scope-deduction-cogscm")
+        (GroundedSchema "scm: back-predictive-implication-scope-deduction-cogscm")
         (List
             ;; Conclusion
             PAR
@@ -156,15 +156,15 @@
             ;; TODO: Use Lambda and Create a closed premise for P, Q and R.
             P
             Q
-            R      
+            R
             PQ
             QAR)))))
 
 ;; The formula can be derived from the definition of
 ;; PredictiveImplicationLink
 ;; https://wiki.opencog.org/w/PredictiveImplicationLink#Semantics
-(define (predictive-implication-scope-deduction-cogscm conclusion . premises)
-  (ure-logger-fine "(predictive-implication-scope-deduction conclusion=~a . premises=~a)" conclusion premises)
+(define (back-predictive-implication-scope-deduction-cogscm conclusion . premises)
+  (ure-logger-fine "(back-predictive-implication-scope-deduction conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 5)
      (let* ((PAR conclusion)
             (P (list-ref premises 0))
@@ -172,14 +172,14 @@
             (R (list-ref premises 2))
             (PQ (list-ref premises 3))
             (QAR (list-ref premises 4))
-            ;; From A lookback variant definition of PredictiveImplicationLink, 
+            ;; From A lookback variant definition of PredictiveImplicationLink,
             ;; the ImplicationLink equivalence for PQ, QAR and PAR is as follows:
             ;; PQ <=>
-            ;; (Implication 
-            ;;    (Lagged (Lambda (V T) (AtTime P T)) T1) 
+            ;; (Implication
+            ;;    (Lagged (Lambda (V T) (AtTime P T)) T1)
             ;;    (Lambda (V T) (AtTime Q T))
             ;; QAR <=>
-            ;; (Implication 
+            ;; (Implication
             ;;    (Lagged (Lambda (V T) (AtTime (And Q A) T)) T2)
             ;;    (Lambda (V T) (AtTime R T))
             ;;
@@ -210,7 +210,7 @@
                 (conditional-probability-consistency sA sB sAB))
             (or (= 0 cB) (= 0 cC) (= 0 cBC)
                 (conditional-probability-consistency sB sC sBC)))
-            (let* 
+            (let*
                 ((sPAR (simple-deduction-strength-formula sA sB sC sAB sBC))
                 (cPAR (min cAB cBC)))
                 (cog-merge-hi-conf-tv! PAR (stv sPAR cPAR)))))))
