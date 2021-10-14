@@ -270,8 +270,6 @@
          "opencog/pln/rules/term/present-deduction.scm"]
         [(string-match "^full-deduction-.*rule$" rn)
          "opencog/pln/rules/term/full-deduction.scm"]
-        [(string-match "^back-predictive-implication-scope-deduction-cogscm-rule$" rn)
-         "opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm"]
         [(string-match "^.*-deduction-rule$" rn)
          "opencog/pln/rules/term/deduction.scm"]
         [(string-match "^.*condition-negation-.+-rule$" rn)
@@ -308,6 +306,12 @@
         [(string-match "^intensional-difference-member-direct-introduction-rule$" rn)
          "opencog/pln/rules/intensional/intensional-difference-member-direct-introduction.scm"]
         ;; Temporal
+        [(string-match "^back-predictive-implication-scope-deduction-cogscm-rule$" rn)
+         "opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm"]
+        [(string-match "^back-predictive-implication-scope-direct-evaluation-rule$" rn)
+         "opencog/pln/rules/temporal/back-predictive-implication-scope-direct-evaluation.scm"]
+        [(string-match "^back-predictive-implication-scope-direct-introduction-rule$" rn)
+         "opencog/pln/rules/temporal/back-predictive-implication-scope-direct-introduction.scm"]
         [(string-match "^predictive-implication-scope-direct-introduction-rule$" rn)
          "opencog/pln/rules/temporal/predictive-implication-scope-direct-introduction.scm"]
         [(string-match "predictive-implication-direct-evaluation-rule" rn)
