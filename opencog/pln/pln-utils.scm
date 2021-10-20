@@ -272,6 +272,8 @@
          "opencog/pln/rules/term/full-deduction.scm"]
         [(string-match "^back-predictive-implication-scope-deduction-cogscm-rule$" rn)
          "opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm"]
+        [(string-match "^back-predictive-implication-scope-conditional-conjunction-introduction-rule$" rn)
+         "opencog/pln/rules/temporal/back-predictive-implication-scope-conditional-conjunction-introduction.scm"]
         [(string-match "^.*-deduction-rule$" rn)
          "opencog/pln/rules/term/deduction.scm"]
         [(string-match "^.*condition-negation-.+-rule$" rn)
@@ -334,6 +336,7 @@
    'full-deduction-implication
    'full-deduction-subset
    'back-predictive-implication-scope-deduction-cogscm
+   'back-predictive-implication-scope-conditional-conjunction-introduction
    'inheritance-present-deduction
    'subset-condition-negation
    'inheritance-modus-ponens

@@ -9,5 +9,6 @@ ADD_GUILE_MODULE(FILES
 	back-predictive-implication-scope-direct-introduction.scm
 	back-predictive-implication-scope-deduction-cogscm.scm
 	utils.scm
+	back-predictive-implication-scope-conditional-conjunction-introduction.scm
 	MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog/pln/rules/temporal"
 )

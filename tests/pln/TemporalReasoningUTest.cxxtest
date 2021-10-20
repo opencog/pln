@@ -85,6 +85,7 @@ public:
 	void tearDown();
 	void load_scm_files(std::vector<std::string>);
 	void test_cogscm_temporal_deduction();
+	void test_temporal_conditional_conjunction_introduction();
 };
 
 void TemporalReasoningUTest::tearDown()
@@ -168,3 +169,49 @@ void TemporalReasoningUTest::test_cogscm_temporal_deduction()
 	for (const auto& h : expected->getOutgoingSet()) 
 		TS_ASSERT(contains(results->getOutgoingSet(), h));
 }
+
+void TemporalReasoningUTest::test_temporal_conditional_conjunction_introduction()
+{
+	logger().debug("BEGIN TEST: %s", __FUNCTION__);
+
+	tearDown();
+
+	// load KB
+	load_scm_files({"tests/pln/rules/temporal-conditional-conjunction.scm"});
+
+	// Load rule
+	std::string rs = eval.eval("(pln-load-rule 'back-predictive-implication-scope-conditional-conjunction-introduction)");
+
+	Handle target = eval.eval_h("target");
+
+	Handle results = eval.eval_h("(pln-bc target");
+
+	Handle expected = eval.eval_h
+       ("(SetLink"
+	    "(BackPredictiveImplicationScopeLink"
+        "   (VariableSet)"
+        "   (SLink"
+        "       (ZLink))"
+        "   (AndLink"
+        "       (EvaluationLink"
+        "           (PredicateNode \"Pellet Position\")"
+        "           (ConceptNode \"Right Square\"))"
+        "       (EvaluationLink"
+        "           (PredicateNode \"Agent Position\")"
+        "           (ConceptNode \"Left Square\")))"
+        "       (ExecutionLink"
+        "           (SchemaNode \"Go Right\"))"
+        "   (AndLink"
+        "       (EvaluationLink"
+        "           (PredicateNode \"Pellet Position\")"
+        "           (ConceptNode \"Right Square\"))"
+        "       (EvaluationLink"
+        "           (PredicateNode \"Agent Position\")"
+        "           (ConceptNode \"Right Square\")))))");
+		
+	std::cout << "results = " << results->to_string();
+	std::cout << "expected = " << expected->to_string();
+
+	for (const auto& h : expected->getOutgoingSet()) 
+		TS_ASSERT(contains(results->getOutgoingSet(), h));
+	}
