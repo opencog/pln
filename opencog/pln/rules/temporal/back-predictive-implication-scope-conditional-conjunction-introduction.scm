@@ -72,12 +72,14 @@
           PR))))))
 
 (define (check_preconditions Q R)
-(cog-logger-info "(Q=~a . R=~a)" Q R)
-  (if (or (member R (cog-outgoing-set Q))
-          (member Q (cog-outgoing-set R)))
+  (define (andlink? atom)
+    (equal? (cog-type atom) 'AndLink))
+
+  (if (or (and (andlink? Q) (member R (cog-outgoing-set Q)))
+          (and (andlink? R) (member Q (cog-outgoing-set R))))
     (stv 0 1)
-    (stv 1 1)
-))
+    (stv 1 1))
+)
 
 ;; Formula
 (define (back-predictive-implication-scope-conditional-conjunction-introduction conclusion . premises)

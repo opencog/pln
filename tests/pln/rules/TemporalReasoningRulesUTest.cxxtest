@@ -170,7 +170,7 @@ void TemporalReasoningRulesUTest::test_temporal_conditional_conjunction_introduc
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
 
 	load_scm_files({"tests/pln/rules/temporal-conditional-conjunction.scm",
-	                "opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm"});
+	                "opencog/pln/rules/temporal/back-predictive-implication-scope-conditional-conjunction-introduction.scm"});
 	// Apply the rules
 	Handle rule = eval.eval_h("back-predictive-implication-scope-conditional-conjunction-introduction-rule");
 	Handle results = bindlink(&as, rule);
@@ -187,9 +187,9 @@ void TemporalReasoningRulesUTest::test_temporal_conditional_conjunction_introduc
         "           (ConceptNode \"Right Square\"))"
         "       (EvaluationLink"
         "           (PredicateNode \"Agent Position\")"
-        "           (ConceptNode \"Left Square\")))"
+        "           (ConceptNode \"Left Square\"))"
         "       (ExecutionLink"
-        "           (SchemaNode \"Go Right\"))"
+        "           (SchemaNode \"Go Right\")))"
         "   (AndLink"
         "       (EvaluationLink"
         "           (PredicateNode \"Pellet Position\")"

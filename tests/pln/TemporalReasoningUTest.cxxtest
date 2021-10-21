@@ -174,8 +174,6 @@ void TemporalReasoningUTest::test_temporal_conditional_conjunction_introduction(
 {
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
 
-	tearDown();
-
 	// load KB
 	load_scm_files({"tests/pln/rules/temporal-conditional-conjunction.scm"});
 
@@ -184,11 +182,10 @@ void TemporalReasoningUTest::test_temporal_conditional_conjunction_introduction(
 
 	Handle target = eval.eval_h("target");
 
-	Handle results = eval.eval_h("(pln-bc target");
+	Handle results = eval.eval_h("(pln-bc target)");
 
 	Handle expected = eval.eval_h
-       ("(SetLink"
-	    "(BackPredictiveImplicationScopeLink"
+       ("(BackPredictiveImplicationScopeLink"
         "   (VariableSet)"
         "   (SLink"
         "       (ZLink))"
@@ -198,20 +195,19 @@ void TemporalReasoningUTest::test_temporal_conditional_conjunction_introduction(
         "           (ConceptNode \"Right Square\"))"
         "       (EvaluationLink"
         "           (PredicateNode \"Agent Position\")"
-        "           (ConceptNode \"Left Square\")))"
+        "           (ConceptNode \"Left Square\"))"
         "       (ExecutionLink"
-        "           (SchemaNode \"Go Right\"))"
+        "           (SchemaNode \"Go Right\")))"
         "   (AndLink"
         "       (EvaluationLink"
         "           (PredicateNode \"Pellet Position\")"
         "           (ConceptNode \"Right Square\"))"
         "       (EvaluationLink"
         "           (PredicateNode \"Agent Position\")"
-        "           (ConceptNode \"Right Square\")))))");
-		
+        "           (ConceptNode \"Right Square\"))))");
+
 	std::cout << "results = " << results->to_string();
 	std::cout << "expected = " << expected->to_string();
 
-	for (const auto& h : expected->getOutgoingSet()) 
-		TS_ASSERT(contains(results->getOutgoingSet(), h));
-	}
+	TS_ASSERT(contains(results->getOutgoingSet(), expected));
+}
