@@ -81,6 +81,7 @@ public:
 	void tearDown() {};
 	void load_scm_files(std::vector<std::string>);
 	void test_cogscm_temporal_deduction();
+	void test_temporal_conditional_conjunction_introduction();
 };
 
 void TemporalReasoningRulesUTest::setUp()
@@ -153,6 +154,49 @@ void TemporalReasoningRulesUTest::test_cogscm_temporal_deduction()
 		 "	(EvaluationLink"
 		 "		(PredicateNode \"R\")"
 		 "		(VariableNode \"$X\"))))");
+
+	std::cout << "results = " << results->to_string();
+	std::cout << "expected = " << expected->to_string();
+
+	TS_ASSERT_EQUALS(results, expected);
+}
+
+/**
+ * Test temporal-conditional-conjunction-rule defined in:
+ * opencog/pln/rules/temporal/back-predictive-implication-scope-conditional-conjunction-introduction.scm
+ */
+void TemporalReasoningRulesUTest::test_temporal_conditional_conjunction_introduction()
+{
+	logger().debug("BEGIN TEST: %s", __FUNCTION__);
+
+	load_scm_files({"tests/pln/rules/temporal-conditional-conjunction.scm",
+	                "opencog/pln/rules/temporal/back-predictive-implication-scope-conditional-conjunction-introduction.scm"});
+	// Apply the rules
+	Handle rule = eval.eval_h("back-predictive-implication-scope-conditional-conjunction-introduction-rule");
+	Handle results = bindlink(&as, rule);
+
+	Handle expected = eval.eval_h
+       ("(SetLink"
+	    "(BackPredictiveImplicationScopeLink"
+        "   (VariableSet)"
+        "   (SLink"
+        "       (ZLink))"
+        "   (AndLink"
+        "       (EvaluationLink"
+        "           (PredicateNode \"Pellet Position\")"
+        "           (ConceptNode \"Right Square\"))"
+        "       (EvaluationLink"
+        "           (PredicateNode \"Agent Position\")"
+        "           (ConceptNode \"Left Square\"))"
+        "       (ExecutionLink"
+        "           (SchemaNode \"Go Right\")))"
+        "   (AndLink"
+        "       (EvaluationLink"
+        "           (PredicateNode \"Pellet Position\")"
+        "           (ConceptNode \"Right Square\"))"
+        "       (EvaluationLink"
+        "           (PredicateNode \"Agent Position\")"
+        "           (ConceptNode \"Right Square\")))))");
 
 	std::cout << "results = " << results->to_string();
 	std::cout << "expected = " << expected->to_string();
