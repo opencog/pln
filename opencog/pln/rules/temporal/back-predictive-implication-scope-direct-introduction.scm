@@ -104,7 +104,7 @@
 
 ;; Formula
 (define (back-predictive-implication-scope-direct-introduction conclusion . premises)
-  (cog-logger-info "(back-predictive-implication-scope-direct-introduction conclusion=~a . premises=~a)" conclusion premises)
+  (cog-logger-fine "(back-predictive-implication-scope-direct-introduction conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 4)
       (let* ((P1 (list-ref premises 0))
          (P2 (list-ref premises 1))

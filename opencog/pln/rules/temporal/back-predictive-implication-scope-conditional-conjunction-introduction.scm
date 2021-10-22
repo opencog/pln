@@ -15,7 +15,7 @@
 ;;   V
 ;;   T
 ;;   P
-;;   And 
+;;   And
 ;;      Q
 ;;      R
 ;;
@@ -83,7 +83,7 @@
 
 ;; Formula
 (define (back-predictive-implication-scope-conditional-conjunction-introduction conclusion . premises)
-  (cog-logger-info "(back-predictive-implication-scope-conditional-conjunction-introduction conclusion=~a . premises=~a)" conclusion premises)
+  (cog-logger-fine "(back-predictive-implication-scope-conditional-conjunction-introduction conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 1)
       (let* ((premises (car premises))
         (PQ (gar premises))
