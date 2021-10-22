@@ -44,11 +44,11 @@ using namespace std;
 class TemporalReasoningUTest: public CxxTest::TestSuite
 {
 private:
-	AtomSpace as;
+	AtomSpacePtr as;
 	SchemeEval eval;
 
 public:
-	TemporalReasoningUTest() : eval(&as)
+	TemporalReasoningUTest() : as(createAtomSpace()), eval(as)
 	{
 		logger().set_level(Logger::DEBUG);
 		logger().set_timestamp_flag(false);
@@ -89,7 +89,7 @@ public:
 
 void TemporalReasoningUTest::tearDown()
 {
-	as.clear();
+	as->clear();
 }
 
 void TemporalReasoningUTest::setUp()

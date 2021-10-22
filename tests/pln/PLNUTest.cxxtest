@@ -20,11 +20,11 @@ using namespace opencog;
 class PLNUTest: public CxxTest::TestSuite
 {
 private:
-	AtomSpace as;
+	AtomSpacePtr as;
 	SchemeEval eval;
 
 public:
-	PLNUTest() : eval(&as)
+	PLNUTest() : as(createAtomSpace()), eval(as)
 	{
 		logger().set_level(Logger::DEBUG);
 		logger().set_timestamp_flag(false);
@@ -65,7 +65,7 @@ public:
 
 void PLNUTest::tearDown()
 {
-	as.clear();
+	as->clear();
 }
 
 void PLNUTest::setUp()

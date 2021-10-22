@@ -32,19 +32,19 @@
 
 using namespace opencog;
 
-#define al as.add_link
-#define an as.add_node
-#define gl as.get_link
-#define gn as.get_node
+#define al as->add_link
+#define an as->add_node
+#define gl as->get_link
+#define gn as->get_node
 
 class MOSESPLNSynergyUTest: public CxxTest::TestSuite
 {
 private:
-	AtomSpace as;
+	AtomSpacePtr as;
 	SchemeEval eval;
 
 public:
-	MOSESPLNSynergyUTest() : eval(&as)
+	MOSESPLNSynergyUTest() : as(createAtomSpace()), eval(as)
 	{
 		logger().set_level(Logger::INFO);
 		logger().set_timestamp_flag(false);
@@ -147,7 +147,7 @@ void MOSESPLNSynergyUTest::test_moses_pln_synergy_fc()
 	// 	   eval.eval_h("being-well-hydrated-tends-to-speed-up-injury-recovery"));
 	// Handle rbs = eval.eval_h("pln-rbs");
 	// HandleSeq focus_set = {};
-	// ForwardChainer fc(as, rbs, hsources, focus_set);
+	// ForwardChainer fc(*as.get(), rbs, hsources, focus_set);
     // fc.do_chain();
     // UnorderedHandleSet result = fc.get_chaining_result();
 
@@ -190,7 +190,7 @@ void MOSESPLNSynergyUTest::test_moses_pln_synergy_bc()
 
 	// Handle target = eval.eval_h("moses-model");
 	// Handle rbs = eval.eval_h("pln-rbs");
-	// BackwardChainer bc(as, rbs, target);
+	// BackwardChainer bc(*as.get(), rbs, target);
 	// bc.do_chain();
 
 	// // Query the TV of the inference target, which should be
