@@ -155,8 +155,8 @@ void TemporalReasoningRulesUTest::test_cogscm_temporal_deduction()
 		 "		(PredicateNode \"R\")"
 		 "		(VariableNode \"$X\"))))");
 
-	std::cout << "results = " << results->to_string();
-	std::cout << "expected = " << expected->to_string();
+	logger().debug() << "results = " << results->to_string();
+	logger().debug() << "expected = " << expected->to_string();
 
 	TS_ASSERT_EQUALS(results, expected);
 }
@@ -198,8 +198,8 @@ void TemporalReasoningRulesUTest::test_temporal_conditional_conjunction_introduc
 		 "           (PredicateNode \"Agent Position\")"
 		 "           (ConceptNode \"Right Square\")))))");
 
-	std::cout << "results = " << results->to_string();
-	std::cout << "expected = " << expected->to_string();
+	logger().debug() << "results = " << results->to_string();
+	logger().debug() << "expected = " << expected->to_string();
 
 	TS_ASSERT_EQUALS(results, expected);
 }
