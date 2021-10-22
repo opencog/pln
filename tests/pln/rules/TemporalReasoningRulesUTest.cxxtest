@@ -176,27 +176,27 @@ void TemporalReasoningRulesUTest::test_temporal_conditional_conjunction_introduc
 	Handle results = bindlink(as, rule);
 
 	Handle expected = eval.eval_h
-       ("(SetLink"
-	    "(BackPredictiveImplicationScopeLink"
-        "   (VariableSet)"
-        "   (SLink"
-        "       (ZLink))"
-        "   (AndLink"
-        "       (EvaluationLink"
-        "           (PredicateNode \"Pellet Position\")"
-        "           (ConceptNode \"Right Square\"))"
-        "       (EvaluationLink"
-        "           (PredicateNode \"Agent Position\")"
-        "           (ConceptNode \"Left Square\"))"
-        "       (ExecutionLink"
-        "           (SchemaNode \"Go Right\")))"
-        "   (AndLink"
-        "       (EvaluationLink"
-        "           (PredicateNode \"Pellet Position\")"
-        "           (ConceptNode \"Right Square\"))"
-        "       (EvaluationLink"
-        "           (PredicateNode \"Agent Position\")"
-        "           (ConceptNode \"Right Square\")))))");
+		("(SetLink"
+		 "(BackPredictiveImplicationScopeLink"
+		 "   (VariableSet)"
+		 "   (SLink"
+		 "       (ZLink))"
+		 "   (AndLink"
+		 "       (EvaluationLink"
+		 "           (PredicateNode \"Pellet Position\")"
+		 "           (ConceptNode \"Right Square\"))"
+		 "       (EvaluationLink"
+		 "           (PredicateNode \"Agent Position\")"
+		 "           (ConceptNode \"Left Square\"))"
+		 "       (ExecutionLink"
+		 "           (SchemaNode \"Go Right\")))"
+		 "   (AndLink"
+		 "       (EvaluationLink"
+		 "           (PredicateNode \"Pellet Position\")"
+		 "           (ConceptNode \"Right Square\"))"
+		 "       (EvaluationLink"
+		 "           (PredicateNode \"Agent Position\")"
+		 "           (ConceptNode \"Right Square\")))))");
 
 	std::cout << "results = " << results->to_string();
 	std::cout << "expected = " << expected->to_string();
