@@ -173,7 +173,7 @@ void TemporalReasoningRulesUTest::test_temporal_conditional_conjunction_introduc
 	                "opencog/pln/rules/temporal/back-predictive-implication-scope-conditional-conjunction-introduction.scm"});
 	// Apply the rules
 	Handle rule = eval.eval_h("back-predictive-implication-scope-conditional-conjunction-introduction-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 
 	Handle expected = eval.eval_h
        ("(SetLink"
