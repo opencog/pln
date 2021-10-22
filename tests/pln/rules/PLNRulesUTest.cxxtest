@@ -39,11 +39,11 @@ using namespace std;
 class PLNRulesUTest: public CxxTest::TestSuite
 {
 private:
-	AtomSpace as;
+	AtomSpacePtr as;
 	SchemeEval eval;
 
 public:
-	PLNRulesUTest() : eval(&as)
+	PLNRulesUTest() : as(createAtomSpace()), eval(as)
 	{
 		logger().set_level(Logger::DEBUG);
 		logger().set_timestamp_flag(false);
@@ -116,7 +116,7 @@ void PLNRulesUTest::tearDown()
 
 void PLNRulesUTest::setUp()
 {
-	as.clear();
+	as->clear();
 }
 
 void PLNRulesUTest::load_scm_files(std::vector<std::string> files)
@@ -132,9 +132,9 @@ void PLNRulesUTest::load_scm_files(std::vector<std::string> files)
 
 #define getarity(hand) hand->get_arity()
 
-static inline Handle bindlink(AtomSpace* as, const Handle& hlink)
+static inline Handle bindlink(AtomSpacePtr as, const Handle& hlink)
 {
-   return HandleCast(hlink->execute(as));
+   return HandleCast(hlink->execute(as.get()));
 }
 
 /**
@@ -273,7 +273,7 @@ void PLNRulesUTest::test_forall_total_instantiation()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("forall-total-instantiation-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 
 	/**
 	 * It should contain 4 groundings:
@@ -316,7 +316,7 @@ void PLNRulesUTest::test_forall_partial_instantiation()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("forall-partial-instantiation-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 
 	/**
 	 * It should contain 1 groundings:
@@ -341,7 +341,7 @@ void PLNRulesUTest::test_forall_implication_to_higher_order()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("forall-implication-to-higher-order-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
 		 "   (ImplicationLink"
@@ -379,7 +379,7 @@ void PLNRulesUTest::test_implication_total_instantiation()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("implication-total-instantiation-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
 		 "   (EvaluationLink"
@@ -410,7 +410,7 @@ void PLNRulesUTest::test_implication_total_instantiation_extra_variables()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("implication-total-instantiation-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
 		 "   (EvaluationLink"
@@ -438,7 +438,7 @@ void PLNRulesUTest::test_implication_partial_instantiation()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("implication-partial-instantiation-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 
 	// Depending on the random seed the result can be one of the other
 	// (partial instantiation occurs on $X or $Y).
@@ -496,7 +496,7 @@ void PLNRulesUTest::test_implication_scope_to_implication()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("implication-scope-to-implication-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
 		 "   (ImplicationLink"
@@ -576,7 +576,7 @@ void PLNRulesUTest::test_and_lambda_distribution()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("and-lambda-distribution-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
 		 "   (AndLink"
@@ -610,7 +610,7 @@ void PLNRulesUTest::test_implication_implicant_distribution()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("implication-implicant-distribution-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
 		 "   (ImplicationLink"
@@ -638,7 +638,7 @@ void PLNRulesUTest::test_implication_introduction()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("implication-introduction-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
 		 "   (ImplicationLink"
@@ -667,7 +667,7 @@ void PLNRulesUTest::test_closed_lambda_introduction()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("closed-lambda-introduction-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 	Handle expected = eval.eval_h
 		("(LambdaLink"
 		 "   (VariableNode \"$X\")"
@@ -699,10 +699,10 @@ void PLNRulesUTest::test_equivalence_to_implication()
 	// Apply the rule
 	Handle rule_alias =
 		eval.eval_h("equivalence-to-implication-rule-name"),
-		rbs = as.add_node(CONCEPT_NODE, "dummy rbs"),
-		rule_ml = as.add_link(MEMBER_LINK, rule_alias, rbs);
+		rbs = as->add_node(CONCEPT_NODE, "dummy rbs"),
+		rule_ml = as->add_link(MEMBER_LINK, rule_alias, rbs);
 	Rule rule(rule_ml);
-	Handle results = bindlink(&as, rule.get_rule());
+	Handle results = bindlink(as, rule.get_rule());
 	Handle expected = eval.eval_h(
 		"(SetLink"
 		"  (ImplicationLink"
@@ -734,7 +734,7 @@ void PLNRulesUTest::test_implication_and_lambda_factorization()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("implication-and-lambda-factorization-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
 		 "  (ImplicationLink"
@@ -785,7 +785,7 @@ void PLNRulesUTest::test_implication_implicant_conjunction()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("implication-implicant-conjunction-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
 		 "   (Implication"
@@ -813,7 +813,7 @@ void PLNRulesUTest::test_implication_direct_evaluation()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("implication-direct-evaluation-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
 		 "   (ImplicationLink"
@@ -842,7 +842,7 @@ void PLNRulesUTest::test_conditional_total_instantiation_meta_rule()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("conditional-total-instantiation-implication-scope-meta-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
 		 "  (BindLink"
@@ -908,7 +908,7 @@ void PLNRulesUTest::test_consequent_disjunction_elimination()
 
 	// Apply the rule
 	Handle rule = eval.eval_h("consequent-disjunction-elimination-implication-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 	Handle expected = eval.eval_h
 		("(SetLink"
 		 "   (Implication"
@@ -931,7 +931,7 @@ void PLNRulesUTest::test_contraposition()
 	// Apply the rule
 	Handle rbs = eval.eval_h("rbs");
 	Handle target = eval.eval_h("target");
-	BackwardChainer bc(as, rbs, target);
+	BackwardChainer bc(*as.get(), rbs, target);
 	bc.do_chain();
 
 	// Check the result

@@ -40,11 +40,11 @@ using namespace std;
 class TemporalReasoningRulesUTest: public CxxTest::TestSuite
 {
 private:
-	AtomSpace as;
+	AtomSpacePtr as;
 	SchemeEval eval;
 
 public:
-	TemporalReasoningRulesUTest() : eval(&as)
+	TemporalReasoningRulesUTest() : as(createAtomSpace()), eval(as)
 	{
 		logger().set_level(Logger::DEBUG);
 		logger().set_timestamp_flag(false);
@@ -85,7 +85,7 @@ public:
 
 void TemporalReasoningRulesUTest::setUp()
 {
-	as.clear();
+	as->clear();
 }
 
 void TemporalReasoningRulesUTest::load_scm_files(std::vector<std::string> files)
@@ -99,9 +99,9 @@ void TemporalReasoningRulesUTest::load_scm_files(std::vector<std::string> files)
 	}
 }
 
-static inline Handle bindlink(AtomSpace* as, const Handle& hlink)
+static inline Handle bindlink(AtomSpacePtr as, const Handle& hlink)
 {
-   return HandleCast(hlink->execute(as));
+   return HandleCast(hlink->execute(as.get()));
 }
 
 /**
@@ -116,7 +116,7 @@ void TemporalReasoningRulesUTest::test_cogscm_temporal_deduction()
 	                "opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm"});
 	// Apply the rules
 	Handle rule = eval.eval_h("back-predictive-implication-scope-deduction-cogscm-rule");
-	Handle results = bindlink(&as, rule);
+	Handle results = bindlink(as, rule);
 
 	Handle expected = eval.eval_h
 		("(SetLink"
