@@ -320,6 +320,8 @@
          "opencog/pln/rules/temporal/predictive-implication-scope-direct-evaluation.scm"]
         [(string-match "predictive-implication-scope-deduction-rule" rn)
          "opencog/pln/rules/temporal/predictive-implication-scope-deduction.scm"]
+        [(string-match "^back-predictive-implication-scope-conditional-conjunction-introduction-rule$" rn)
+         "opencog/pln/rules/temporal/back-predictive-implication-scope-conditional-conjunction-introduction.scm"]
         ;; Meta-rules
         [(string-match "^conditional-total-instantiation-.+-meta-rule$" rn)
          "opencog/pln/meta-rules/predicate/conditional-total-instantiation.scm"]
@@ -338,6 +340,7 @@
    'full-deduction-implication
    'full-deduction-subset
    'back-predictive-implication-scope-deduction-cogscm
+   'back-predictive-implication-scope-conditional-conjunction-introduction
    'inheritance-present-deduction
    'subset-condition-negation
    'inheritance-modus-ponens
