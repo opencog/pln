@@ -164,8 +164,8 @@ void TemporalReasoningUTest::xtest_cogscm_temporal_deduction()
 		 "		(PredicateNode \"R\")"
 		 "		(VariableNode \"$X\"))))");
 
-	std::cout << "results = " << results->to_string();
-	std::cout << "expected = " << expected->to_string();
+	logger().debug() << "results = " << results->to_string();
+	logger().debug() << "expected = " << expected->to_string();
 
 	for (const auto& h : expected->getOutgoingSet()) 
 		TS_ASSERT(contains(results->getOutgoingSet(), h));
@@ -207,8 +207,8 @@ void TemporalReasoningUTest::test_temporal_conditional_conjunction_introduction(
         "           (PredicateNode \"Agent Position\")"
         "           (ConceptNode \"Right Square\"))))");
 
-	std::cout << "results = " << results->to_string();
-	std::cout << "expected = " << expected->to_string();
+	logger().debug() << "results = " << results->to_string();
+	logger().debug() << "expected = " << expected->to_string();
 
 	TS_ASSERT(contains(results->getOutgoingSet(), expected));
 }
@@ -251,8 +251,8 @@ void TemporalReasoningUTest::test_temporal_deduction_with_conditional_conjunctio
         "       (PredicateNode \"Reward\")"
         "       (NumberNode \"1\")))");
 
-	std::cout << "results = " << results->to_string();
-	std::cout << "expected = " << expected->to_string();
+	logger().debug() << "results = " << results->to_string();
+	logger().debug() << "expected = " << expected->to_string();
 
 	TS_ASSERT(contains(results->getOutgoingSet(), expected));
 }
