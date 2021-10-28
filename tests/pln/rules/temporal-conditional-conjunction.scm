@@ -53,7 +53,8 @@
   (VariableSet
   ) 
   (SLink
-    (ZLink
+    (SLink
+      (ZLink)
     ) 
   ) 
   (AndLink
