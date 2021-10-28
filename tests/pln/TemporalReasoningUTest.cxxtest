@@ -84,7 +84,7 @@ public:
 	void setUp();
 	void tearDown();
 	void load_scm_files(std::vector<std::string>);
-	void test_cogscm_temporal_deduction();
+	void xtest_cogscm_temporal_deduction();
 	void test_temporal_conditional_conjunction_introduction();
 	void test_temporal_deduction_with_conditional_conjunction_introduction();
 };
@@ -113,7 +113,7 @@ void TemporalReasoningUTest::load_scm_files(std::vector<std::string> files)
  * Test cogscm temporal-deduction-rule defined in:
  * opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm
  */
-void TemporalReasoningUTest::test_cogscm_temporal_deduction()
+void TemporalReasoningUTest::xtest_cogscm_temporal_deduction()
 {
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
 
@@ -146,7 +146,7 @@ void TemporalReasoningUTest::test_cogscm_temporal_deduction()
 		 "		(VariableNode \"$X\")))"
 		 "(BackPredictiveImplicationScopeLink"
 		 "	(VariableNode \"$X\")"
-		 "	(SLink" 
+		 "	(SLink"
 		 "		(SLink"
 		 "			(ZLink)))"
 		 "	(BackSequentialAndLink"
@@ -167,8 +167,8 @@ void TemporalReasoningUTest::test_cogscm_temporal_deduction()
 	std::cout << "results = " << results->to_string();
 	std::cout << "expected = " << expected->to_string();
 
-	//for (const auto& h : expected->getOutgoingSet()) 
-	//	TS_ASSERT(contains(results->getOutgoingSet(), h));
+	for (const auto& h : expected->getOutgoingSet()) 
+		TS_ASSERT(contains(results->getOutgoingSet(), h));
 }
 
 void TemporalReasoningUTest::test_temporal_conditional_conjunction_introduction()
