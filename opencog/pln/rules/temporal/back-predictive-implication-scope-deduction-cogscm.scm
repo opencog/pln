@@ -108,7 +108,8 @@
      (T1 (Variable "$lag-1"))
      (T2 (Variable "$lag-2"))
      (P (Variable "$P"))
-     (Q (Variable "$Q"))
+     (Q (Glob "$Q"))
+     (semi-open (Interval (Number 0) (Number -1)))
      (R (Variable "$R"))
      (A (Variable "$A"))
      (ExecutionT (Type 'ExecutionLink))
@@ -129,10 +130,10 @@
             (TypedVariable T2 NaturalT)
             (TypedVariable A ExecutionT)
             P
-            Q
+            (TypedVariable Q semi-open)
             R))
      ;; Rule clauses
-     (PQ (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T1) (Unquote P) (Unquote Q))))
+     (PQ (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T1) (Unquote P) (Unquote (And Q)))))
      (QA (And Q A))
      (QAR (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T2) (Unquote QA) (Unquote R))))
      (present-clauses (Present PQ QAR))
@@ -155,7 +156,7 @@
             ;; variables which will result to ambiguty.
             ;; TODO: Use Lambda and Create a closed premise for P, Q and R.
             P
-            Q
+            (And Q)
             R
             PQ
             QAR)))))
