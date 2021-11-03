@@ -40,10 +40,25 @@
         (Type 'VariableSet)
         (Type 'VariableList)
         (Type 'TypedVariableLink)))
-     (PQ (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T) (Unquote P) (Unquote Q))))
-     (PR (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T) (Unquote P) (Unquote R))))
-     (QR (And Q R))
-     (PQR (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T) (Unquote P) (Unquote QR)))))
+     (P↝Q (Quote
+            (BackPredictiveImplicationScope
+              (Unquote V)
+              (Unquote T)
+              (Unquote P)
+              (Unquote Q))))
+     (P↝R (Quote
+            (BackPredictiveImplicationScope
+              (Unquote V)
+              (Unquote T)
+              (Unquote P)
+              (Unquote R))))
+     (Q∧R (And Q R))
+     (P↝Q∧R (Quote
+              (BackPredictiveImplicationScope
+                (Unquote V)
+                (Unquote T)
+                (Unquote P)
+                (Unquote Q∧R)))))
   (Bind
     (VariableSet
       (TypedVariable V VardeclT)
@@ -52,7 +67,7 @@
       Q
       R)
     (And
-      (Present PQ PR)
+      (Present P↝Q P↝R)
       (Not (Identical Q R))
       (EvaluationLink
         (GroundedPredicate "scm: check_preconditions")
@@ -65,11 +80,11 @@
       (GroundedSchema "scm: back-predictive-implication-scope-conditional-conjunction-introduction")
       (List
         ;; Conclusion
-        PQR
+        P↝Q∧R
         ;; Premises
         (Set
-          PQ
-          PR))))))
+          P↝Q
+          P↝R))))))
 
 (define (check_preconditions Q R)
   (define (andlink? atom)
@@ -86,14 +101,17 @@
   (cog-logger-fine "(back-predictive-implication-scope-conditional-conjunction-introduction conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 1)
       (let* ((premises (car premises))
-        (PQ (gar premises))
-        (PR (gdr premises))
-        (sPQ (cog-mean PQ))
-        (cPQ (cog-confidence PQ))
-        (sPR (cog-mean PR))
-        (cPR (cog-confidence PR))
-        (tv (stv (* sPQ sPR) (min cPQ cPR))))
-        (cog-merge-hi-conf-tv! conclusion tv))))
+        (P↝Q (gar premises))
+        (P↝R (gdr premises))
+        (sP↝Q (cog-mean PQ))
+        (cP↝Q (cog-confidence PQ))
+        (sP↝R (cog-mean PR))
+        (cP↝R (cog-confidence PR))
+        (sP↝Q∧R (* sP↝Q sP↝R))
+        (cP↝Q∧R (min cP↝Q cP↝R))
+        (tv (stv sP↝Q∧R cP↝Q∧R)))
+       (if (< 0 cP↝Q∧R)
+           (cog-merge-hi-conf-tv! conclusion tv)))))
 
 ;; Declaration
 (define back-predictive-implication-scope-conditional-conjunction-introduction-rule-name
