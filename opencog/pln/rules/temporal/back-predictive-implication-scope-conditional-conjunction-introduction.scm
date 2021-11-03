@@ -71,9 +71,9 @@
       (Not (Identical Q R))
       (EvaluationLink
         (GroundedPredicate "scm: check_preconditions")
-        (List 
-        Q 
-        R)
+        (List
+          Q
+          R)
       )
     )
     (ExecutionOutput
