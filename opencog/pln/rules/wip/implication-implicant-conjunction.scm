@@ -43,7 +43,7 @@
      (ImplicationLink
         (VariableNode "$B")
         (VariableNode "$C"))
-     (NotLink (EqualLink (VariableNode "$A") (VariableNode "$B")))))
+     (NotLink (IdenticalLink (VariableNode "$A") (VariableNode "$B")))))
 
 (define implication-implicant-conjunction-rewrite
   (ExecutionOutput

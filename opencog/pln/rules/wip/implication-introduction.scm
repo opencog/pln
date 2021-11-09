@@ -40,7 +40,7 @@
            (VariableNode "$P")
            (VariableNode "$Q")))
      (NotLink
-        (EqualLink
+        (IdenticalLink
            (VariableNode "$P")
            (VariableNode "$Q")))))
 

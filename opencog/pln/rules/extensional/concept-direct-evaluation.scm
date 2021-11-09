@@ -32,7 +32,7 @@
         (Evaluation
           (GroundedPredicate "scm: absolutely-true")
           (Member Y A))
-        (Not (Equal X Y)))
+        (Not (Identical X Y)))
       (ExecutionOutput
         (GroundedSchema "scm: concept-direct-evaluation")
         (List

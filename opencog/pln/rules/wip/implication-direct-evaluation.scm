@@ -66,7 +66,7 @@
         (Variable "$Q")
         (Variable "$X"))
      (Not
-        (Equal
+        (Identical
            (Variable "$P")
            (Variable "$Q")))))
 
