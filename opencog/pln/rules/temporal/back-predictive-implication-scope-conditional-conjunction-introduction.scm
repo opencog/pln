@@ -1,4 +1,15 @@
-;; BackPredictiveImplicationScope conditional conjuntion introduction rule
+;; BackPredictiveImplicationScope Conditional Conjuntion Introduction Rule
+;;
+;; This rule is similar to a conjunction introduction rule with an
+;; extra condition (more specifically the antecedent of a predictive
+;; implication).  Its compact notation is:
+;;
+;; P↝Q
+;; P↝R
+;; ⊢
+;; P↝(Q∧R)
+;;
+;; Its Atomese notation is:
 ;;
 ;; BackPredictiveImplicationScope <TV1>
 ;;   V
@@ -19,7 +30,8 @@
 ;;      Q
 ;;      R
 ;;
-;; where TV is calculated using TV1 and TV2.
+;; where TV is calculated using TV1 and TV2 (their product assuming
+;; P↝Q and P↝R are independent).
 
 (use-modules (opencog))
 (use-modules (opencog exec))
