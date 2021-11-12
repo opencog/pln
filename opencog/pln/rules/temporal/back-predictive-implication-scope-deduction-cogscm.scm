@@ -246,7 +246,6 @@
        (<= (smallest-intersection-probability sA sB) sAB)
        (<= sAB (largest-intersection-probability sA sB))))
 
-
 ;; Declaration
 (define back-predictive-implication-scope-deduction-cogscm-rule-name
   (DefinedSchemaNode "back-predictive-implication-scope-deduction-cogscm-rule"))
