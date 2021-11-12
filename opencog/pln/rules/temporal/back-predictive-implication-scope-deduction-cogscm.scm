@@ -165,7 +165,7 @@
 ;; PredictiveImplicationLink
 ;; https://wiki.opencog.org/w/PredictiveImplicationLink#Semantics
 (define (back-predictive-implication-scope-deduction-cogscm conclusion . premises)
-  (ure-logger-fine "(back-predictive-implication-scope-deduction conclusion=~a . premises=~a)" conclusion premises)
+  (ure-logger-fine "(back-predictive-implication-scope-deduction-cogscm conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 5)
      (let* ((PAR conclusion)
             (P (list-ref premises 0))
