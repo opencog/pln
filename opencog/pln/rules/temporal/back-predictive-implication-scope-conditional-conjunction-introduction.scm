@@ -119,10 +119,24 @@
         (cP↝Q (cog-confidence P↝Q))
         (sP↝R (cog-mean P↝R))
         (cP↝R (cog-confidence P↝R))
-        (sP↝Q∧R (* sP↝Q sP↝R))
-        (cP↝Q∧R (min cP↝Q cP↝R))
-        (tv (stv sP↝Q∧R cP↝Q∧R)))
-       (if (< 0 cP↝Q∧R)
+        ;; This code:
+        ;;
+        ;;  (sP↝Q∧R (* sP↝Q sP↝R))
+        ;;  (cP↝Q∧R (min cP↝Q cP↝R))
+        ;;  (tv (stv sP↝Q∧R cP↝Q∧R)))
+        ;; (if (< 0 cP↝Q∧R)
+        ;;     (cog-merge-hi-conf-tv! conclusion tv)))))
+        ;;
+        ;; leads to the following warning:
+        ;;
+        ;;; WARNING: compilation of /home/nilg/Work/OpenCog/pln/opencog/pln/rules/temporal/back-predictive-implication-scope-conditional-conjunction-introduction.scm failed:
+        ;;; Throw to key `decoding-error' with args `("scm_from_utf8_stringn" "input locale conversion error" 22 #vu8(157 81 226 136 167 82))'.
+        ;;
+        ;; Just to be cautious it has been ASCII-fied for now
+        (sPQR (* sP↝Q sP↝R))
+        (cPQR (min cP↝Q cP↝R))
+        (tv (stv sPQR cPQR)))
+       (if (< 0 cPQR)
            (cog-merge-hi-conf-tv! conclusion tv)))))
 
 ;; Declaration
