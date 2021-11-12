@@ -150,16 +150,20 @@
         (GroundedSchema "scm: back-predictive-implication-scope-deduction-cogscm")
         (List
             ;; Conclusion
-            PAR
+            P≺A↝R
             ;; Premises
-            ;; Not closed premises are risky because inference tree would have free
-            ;; variables which will result to ambiguty.
-            ;; TODO: Use Lambda and Create a closed premise for P, Q and R.
-            P
-            (And Q)
+            ;;
+            ;; TODO: Use Lambda and create closed premises for P, Q
+            ;; and R (because non closed premises are generally risky
+            ;; as well as unnecessary).  Alternatively, we might be
+            ;; able to avoid variables altogether by using (non-scope)
+            ;; PredictiveImplicationLink coupled with appropriate
+            ;; predicate constructors.
+            P≺A
+            Q∧A
             R
-            PQ
-            QAR)))))
+            P↝Q
+            Q∧A↝R)))))
 
 ;; The formula can be derived from the definition of
 ;; PredictiveImplicationLink
@@ -167,72 +171,117 @@
 (define (back-predictive-implication-scope-deduction-cogscm conclusion . premises)
   (ure-logger-fine "(back-predictive-implication-scope-deduction-cogscm conclusion=~a . premises=~a)" conclusion premises)
   (if (= (length premises) 5)
-     (let* ((PAR conclusion)
-            (P (list-ref premises 0))
-            (Q (list-ref premises 1))
+     (let* ((P≺A↝R conclusion)
+            (P≺A (list-ref premises 0))
+            (Q∧A (list-ref premises 1))
             (R (list-ref premises 2))
-            (PQ (list-ref premises 3))
-            (QAR (list-ref premises 4))
-            ;; From A lookback variant definition of PredictiveImplicationLink,
-            ;; the ImplicationLink equivalence for PQ, QAR and PAR is as follows:
-            ;; PQ <=>
+            (P↝Q (list-ref premises 3))
+            (Q∧A↝R (list-ref premises 4))
+
+            ;; From a lookback variant definition of PredictiveImplicationLink,
+            ;; the ImplicationLink equivalence for P↝Q, Q∧A↝R and P≺A↝R is as follows:
+            ;;
+            ;; P↝Q <=>
             ;; (Implication
             ;;    (Lagged (Lambda (V T) (AtTime P T)) T1)
             ;;    (Lambda (V T) (AtTime Q T))
-            ;; QAR <=>
+            ;;
+            ;; Q∧A↝R <=>
             ;; (Implication
             ;;    (Lagged (Lambda (V T) (AtTime (And Q A) T)) T2)
             ;;    (Lambda (V T) (AtTime R T))
             ;;
-            ;; use simple-deduction-strength-formula to get TV for the conclusion, PAR.
-            ;; Hence, based on deduction rule:
-            ;; A->B
-            ;; B->C
-            ;; A = (Lagged (Lambda (V T) (AtTime P T)) T1)
-            ;; A <TV> is similar to P <TV>
-            (sA (cog-mean P))
-            (cA (cog-confidence P))
+            ;; use simple-deduction-strength-formula to get TV for the conclusion, P≺A↝R.
+            ;;
+            ;; Hence, based on deduction rule (WARNING: do not confuse
+            ;; A a concept or predicate, as defined in the regular
+            ;; deduction rule, such as in A->B, and A an action, as
+            ;; defined in this file) we obtain the following mapping
+            ;; from temporal deduction to regular deduction:
+            ;;
+            ;; A = (And (Lagged (Lambda (V T) (AtTime P T)) T1) (Lambda T (AtTime A T)))
+            ;; A <TV> is similar to P≺A <TV>
+            ;;
             ;; B = (Lagged (Lambda (V T) (AtTime (And Q A) T)) T2)
-            ;; B <TV> is similar to Q <TV>
-            (sB (cog-mean Q))
-            (cB (cog-confidence Q))
+            ;; B <TV> is similar to Q∧A <TV>
+            ;;
             ;; C = (Lambda (V T) (AtTime R T))
             ;; C <TV> is similar to R <TV>
-            (sC (cog-mean R))
-            (cC (cog-confidence R))
-            ;; A->B <=> PQ
-            (sAB (cog-mean PQ))
-            (cAB (cog-confidence PQ))
-            ;; B->C <=> QAR
-            (sBC (cog-mean QAR))
-            (cBC (cog-confidence QAR)))
-        (if (and
-            (or (= 0 cA) (= 0 cB) (= 0 cAB)
-                (conditional-probability-consistency sA sB sAB))
-            (or (= 0 cB) (= 0 cC) (= 0 cBC)
-                (conditional-probability-consistency sB sC sBC)))
-            (let*
-                ((sPAR (simple-deduction-strength-formula sA sB sC sAB sBC))
-                (cPAR (min cAB cBC)))
-                (cog-merge-hi-conf-tv! PAR (stv sPAR cPAR)))))))
+            ;;
+            ;; AB <=> P↝Q
+            ;;
+            ;; BC <=> Q∧A↝R
+            (A P≺A)
+            (B Q∧A)
+            (C R)
+            (AB P↝Q)
+            (BC Q∧A↝R)
+            (AC P≺A↝R)
 
-;; Limit an number to be within a certain range
+            ;; Get TVs of premises
+            (A-tv (cog-tv A))
+            (B-tv (cog-tv B))
+            (C-tv (cog-tv C))
+            (AB-tv (cog-tv AB))
+            (BC-tv (cog-tv BC))
+
+            ;; Calculate TV of conclusion
+            (AC-tv (deduction-formula A-tv B-tv C-tv AB-tv BC-tv)))
+
+        ;; (ure-logger-fine "A := P≺A = ~a" P≺A)
+        ;; (ure-logger-fine "B := Q∧A = ~a" Q∧A)
+        ;; (ure-logger-fine "C := R = ~a" R)
+        ;; (ure-logger-fine "AB := P↝Q = ~a" P↝Q)
+        ;; (ure-logger-fine "BC := Q∧A↝R = ~a" Q∧A↝R)
+        ;; (ure-logger-fine "AC := P≺A↝R = ~a" P≺A↝R)
+        ;; (ure-logger-fine "AC-tv = ~a" AC-tv)
+
+        (if (< 0 (cog-tv-confidence AC-tv))
+            (cog-merge-hi-conf-tv! AC AC-tv)))))
+
+;; Limit a number to be within a certain range
 (define (limit x l u)
   (max l (min u x)))
 
-(define (simple-deduction-strength-formula sA sB sC sAB sBC)
+;; Calculate the TV of the conclusion of the deduction given the TVs
+;; of its premises
+(define (deduction-formula A-tv B-tv C-tv AB-tv BC-tv)
+  (define sA (cog-tv-mean A-tv))
+  (define cA (cog-tv-confidence A-tv))
+  (define sB (cog-tv-mean B-tv))
+  (define cB (cog-tv-confidence B-tv))
+  (define sC (cog-tv-mean C-tv))
+  (define cC (cog-tv-confidence C-tv))
+  (define sAB (cog-tv-mean AB-tv))
+  (define cAB (cog-tv-confidence AB-tv))
+  (define sBC (cog-tv-mean BC-tv))
+  (define cBC (cog-tv-confidence BC-tv))
+
   (if
      (and
-        (conditional-probability-consistency sA sB sAB)
-        (conditional-probability-consistency sB sC sBC))
+      ;; Since sA is not used in the deduction formula, if its
+      ;; confidence is null we don't do the conditional probability
+      ;; consistency check for AB, only for BC.
+      (or (= 0 cA) (conditional-probability-consistency sA sB sAB))
+      (conditional-probability-consistency sB sC sBC))
+
      ;; Preconditions are met
-     (if (< 0.99 sB)
-        ;; sB tends to 1
-        sC
-        ;; otherwise
-        (+ (* sAB sBC) (/ (* (- 1 sAB) (- sC (* sB sBC))) (- 1 sB))))
+     (stv (naive-deduction-strength-formula sA sB sC sAB sBC)
+          (naive-deduction-confidence-formula cAB cBC))
+
      ;; Preconditions are not met
-     0))
+     (stv 1 0)))
+
+;; Naive formula for calculating the strength of the conclusion given
+;; the strengths of its premises
+(define (naive-deduction-strength-formula sA sB sC sAB sBC)
+  (+ (* sAB sBC) (/ (* (- 1 sAB) (- sC (* sB sBC))) (- 1 sB))))
+
+;; Naive formula for calculating the confidence of the conclusion
+;; given the confidences of its premises
+(define (naive-deduction-confidence-formula cAB cBC)
+  (define α 0.9) ; Degradation factor
+  (* (min cAB cBC) α))
 
 ; Consistency Conditions
 (define (smallest-intersection-probability sA sB)
