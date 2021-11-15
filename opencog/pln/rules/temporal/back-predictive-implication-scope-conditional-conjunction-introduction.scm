@@ -105,8 +105,7 @@
   (if (or (and (andlink? Q) (member R (cog-outgoing-set Q)))
           (and (andlink? R) (member Q (cog-outgoing-set R))))
     (stv 0 1)
-    (stv 1 1))
-)
+    (stv 1 1)))
 
 ;; Formula
 (define (back-predictive-implication-scope-conditional-conjunction-introduction conclusion . premises)
