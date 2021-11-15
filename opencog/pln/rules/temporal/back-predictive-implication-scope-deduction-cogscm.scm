@@ -133,14 +133,29 @@
             (TypedVariable Q semi-open)
             R))
      ;; Rule clauses
-     (PQ (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T1) (Unquote P) (Unquote (And Q)))))
-     (QA (And Q A))
-     (QAR (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T2) (Unquote QA) (Unquote R))))
-     (present-clauses (Present PQ QAR))
-     (precondition-clauses (IsClosed PQ QAR))
+     (P↝Q (Quote
+            (BackPredictiveImplicationScope
+              (Unquote V)
+              (Unquote T1)
+              (Unquote P)
+              (Unquote (And Q)))))
+     (Q∧A (And Q A))
+     (Q∧A↝R (Quote
+              (BackPredictiveImplicationScope
+                (Unquote V)
+                (Unquote T2)
+                (Unquote Q∧A)
+                (Unquote R))))
+     (present-clauses (Present P↝Q Q∧A↝R))
+     (precondition-clauses (IsClosed P↝Q Q∧A↝R))
      ;; Rule rewriting term
-     (PA (BackSequentialAnd T1 P A))
-     (PAR (Quote (BackPredictiveImplicationScope (Unquote V) (Unquote T2) (Unquote PA) (Unquote R)))))
+     (P≺A (BackSequentialAnd T1 P A))
+     (P≺A↝R (Quote
+               (BackPredictiveImplicationScope
+                 (Unquote V)
+                 (Unquote T2)
+                 (Unquote P≺A)
+                 (Unquote R)))))
     (Bind
       vardecl
       (And
