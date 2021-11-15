@@ -98,6 +98,9 @@
           P↝Q
           P↝R))))))
 
+;; Make sure that Q is not in the outgoing of R and that R is not in
+;; the outgoing of Q.  This is to avoid redundant conjuncts after
+;; introducing the conjunction.
 (define (check_preconditions Q R)
   (define (andlink? atom)
     (equal? (cog-type atom) 'AndLink))
