@@ -36,7 +36,7 @@
                 (VariableNode "$A")
                 (VariableNode "$C"))
             (NotLink
-                (EqualLink
+                (IdenticalLink
                     (VariableNode "$B")
                     (VariableNode "$C"))))
         (ExecutionOutputLink
@@ -66,7 +66,7 @@
                 (VariableNode "$A")
                 (VariableNode "$C"))
             (NotLink
-                (EqualLink
+                (IdenticalLink
                     (VariableNode "$B")
                     (VariableNode "$C"))))
         (ExecutionOutputLink
@@ -96,7 +96,7 @@
                 (VariableNode "$A")
                 (VariableNode "$C"))
             (NotLink
-                (EqualLink
+                (IdenticalLink
                     (VariableNode "$B")
                     (VariableNode "$C"))))
         (ExecutionOutputLink

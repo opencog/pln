@@ -37,7 +37,7 @@
                 (VariableNode "$C")
                 (VariableNode "$B"))
             (NotLink
-                (EqualLink
+                (IdenticalLink
                     (VariableNode "$A")
                     (VariableNode "$C"))))
         (ExecutionOutputLink

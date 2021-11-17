@@ -92,7 +92,7 @@
             (Attraction A X)
             (Attraction B X)))
         ;; A and B are different
-        (Not (Equal A B)))
+        (Not (Identical A B)))
       (ExecutionOutput
         (GroundedSchema "scm: intensional-inheritance-direct-introduction")
         (List

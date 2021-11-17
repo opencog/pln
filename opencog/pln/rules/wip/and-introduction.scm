@@ -40,7 +40,7 @@
         (VariableNode "$A")
         (VariableNode "$B")
         (NotLink
-           (EqualLink
+           (IdenticalLink
               (VariableNode "$A")
               (VariableNode "$B"))))
      (ExecutionOutputLink
@@ -98,15 +98,15 @@
         ;; Weird this doesn't work at all. Instead we put this in
         ;; condition in the formula.
         (NotLink
-           (EqualLink
+           (IdenticalLink
               (VariableNode "$A")
               (VariableNode "$B")))
         (NotLink
-           (EqualLink
+           (IdenticalLink
               (VariableNode "$B")
               (VariableNode "$C")))
         (NotLink
-           (EqualLink
+           (IdenticalLink
               (VariableNode "$C")
               (VariableNode "$A")))
         (EvaluationLink

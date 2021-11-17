@@ -80,7 +80,7 @@
       (TypedVariable Q EvalT))
     (And
       (Present P1 P2 A Q)
-      (Not (Equal P1 P2))
+      (Not (Identical P1 P2))
       ;; TODO: add Satisfaction to fulfill the existential condition
       )
     (ExecutionOutput
