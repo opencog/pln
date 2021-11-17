@@ -115,9 +115,9 @@
   (pln-supported-rule)
 "
 
-  (define filepath (pln-rule-name->filepath (rule-symbol->rule-name RULE-SYMBOL)))
+  (define filepath (pln-rule-name->filepath (rule-symbol->rule-name META-RULE-SYMBOL)))
   (pln-load-from-path filepath)
-  (apply pln-add-rule (cons RULE-SYMBOL TV)))
+  (apply pln-add-rule (cons META-RULE-SYMBOL TV)))
 
 (define-public (pln-load-rules RULE-TYPE)
 "
