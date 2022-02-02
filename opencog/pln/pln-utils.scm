@@ -306,7 +306,9 @@
         [(string-match "^intensional-difference-member-direct-introduction-rule$" rn)
          "opencog/pln/rules/intensional/intensional-difference-member-direct-introduction.scm"]
         ;; Temporal
-        [(string-match "^back-predictive-implication-scope-deduction-cogscm-rule$" rn)
+        [(string-match "^back-predictive-implication-scope-deduction-cogscm-Q-conjunction-rule$" rn)
+         "opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm"]
+        [(string-match "^back-predictive-implication-scope-deduction-cogscm-Q-evaluation-rule$" rn)
          "opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm"]
         [(string-match "^back-predictive-implication-scope-direct-evaluation-rule$" rn)
          "opencog/pln/rules/temporal/back-predictive-implication-scope-direct-evaluation.scm"]
@@ -339,7 +341,8 @@
    'full-deduction-inheritance
    'full-deduction-implication
    'full-deduction-subset
-   'back-predictive-implication-scope-deduction-cogscm
+   'back-predictive-implication-scope-deduction-cogscm-Q-conjunction
+   'back-predictive-implication-scope-deduction-cogscm-Q-evaluation
    'back-predictive-implication-scope-conditional-conjunction-introduction
    'inheritance-present-deduction
    'subset-condition-negation
