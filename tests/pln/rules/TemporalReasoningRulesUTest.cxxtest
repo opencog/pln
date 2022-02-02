@@ -81,6 +81,7 @@ public:
 	void tearDown() {};
 	void load_scm_files(std::vector<std::string>);
 	void test_cogscm_Q_conjunction_temporal_deduction();
+	void test_cogscm_Q_evaluation_temporal_deduction();
 	void test_temporal_conditional_conjunction_introduction();
 };
 
@@ -159,7 +160,53 @@ void TemporalReasoningRulesUTest::test_cogscm_Q_conjunction_temporal_deduction()
 	logger().debug() << "results = " << results->to_string();
 	logger().debug() << "expected = " << expected->to_string();
 
-	//TS_ASSERT_EQUALS(results, expected);
+	// TS_ASSERT_EQUALS(results, expected);
+}
+
+/**
+ * Test cogscm temporal deduction rule (assuming that Q is an
+ * evaluation) defined in:
+ * opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm
+ */
+void TemporalReasoningRulesUTest::test_cogscm_Q_evaluation_temporal_deduction()
+{
+	logger().debug("BEGIN TEST: %s", __FUNCTION__);
+
+	load_scm_files({"tests/pln/rules/complex-temporal-deduction-kb.scm",
+	                "opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm"});
+	// Apply the rules
+	Handle rule = eval.eval_h("back-predictive-implication-scope-deduction-cogscm-Q-evaluation-rule");
+	Handle results = bindlink(as, rule);
+
+	Handle expected = eval.eval_h
+		("(SetLink"
+		 "  (BackPredictiveImplicationScopeLink"
+		 "    (VariableSet)"
+		 "    (SLink"
+		 "      (ZLink))"
+		 "    (BackSequentialAndLink"
+		 "      (SLink"
+		 "        (ZLink))"
+		 "      (AndLink"
+		 "        (EvaluationLink"
+		 "          (PredicateNode \"outside\")"
+		 "          (ListLink"
+		 "            (ConceptNode \"self\")"
+		 "            (ConceptNode \"house\")))"
+		 "        (ExecutionLink"
+		 "          (SchemaNode \"go_to_key\")))"
+		 "      (ExecutionLink"
+		 "        (SchemaNode \"go_to_house\")))"
+		 "    (EvaluationLink"
+		 "      (PredicateNode \"inside\")"
+		 "      (ListLink"
+		 "        (ConceptNode \"self\")"
+		 "        (ConceptNode \"house\")))))");
+
+	logger().debug() << "results = " << results->to_string();
+	logger().debug() << "expected = " << expected->to_string();
+
+	TS_ASSERT_EQUALS(results, expected);
 }
 
 /**

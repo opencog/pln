@@ -180,6 +180,84 @@
             P↝Q
             Q∧A↝R)))))
 
+;; Rule (assumes Q is an EvaluationLink)
+(define back-predictive-implication-scope-deduction-cogscm-Q-evaluation-rule
+  (let* ((V (Variable "$vardecl"))
+     (T1 (Variable "$lag-1"))
+     (T2 (Variable "$lag-2"))
+     (P (Variable "$P"))
+     (Q (Variable "$Q"))
+     (R (Variable "$R"))
+     (A (Variable "$A"))
+     (ExecutionT (Type 'ExecutionLink))
+     (NaturalT (TypeInh 'NaturalLink))
+     (VariableT (TypeInh 'VariableNode))
+     (VariableSetT (Type 'VariableSet))
+     (VariableListT (Type 'VariableList))
+     (TypedVariableT (Type 'TypedVariableLink))
+     (EvaluationT (Type 'EvaluationLink))
+     (VardeclT (TypeChoice
+             VariableT
+             VariableSetT
+             VariableListT
+             TypedVariableT))
+     ;; Rule vardecl
+     (vardecl (VariableSet
+            (TypedVariable V VardeclT)
+            (TypedVariable T1 NaturalT)
+            (TypedVariable T2 NaturalT)
+            (TypedVariable A ExecutionT)
+            P
+            (TypedVariable Q EvaluationT)
+            R))
+     ;; Rule clauses
+     (P↝Q (Quote
+            (BackPredictiveImplicationScope
+              (Unquote V)
+              (Unquote T1)
+              (Unquote P)
+              (Unquote Q))))
+     (Q∧A (And Q A))
+     (Q∧A↝R (Quote
+              (BackPredictiveImplicationScope
+                (Unquote V)
+                (Unquote T2)
+                (Unquote Q∧A)
+                (Unquote R))))
+     (present-clauses (Present P↝Q Q∧A↝R))
+     (precondition-clauses (IsClosed P↝Q Q∧A↝R))
+     ;; Rule rewriting term
+     (P≺A (BackSequentialAnd T1 P A))
+     (P≺A↝R (Quote
+               (BackPredictiveImplicationScope
+                 (Unquote V)
+                 (Unquote T2)
+                 (Unquote P≺A)
+                 (Unquote R)))))
+    (Bind
+      vardecl
+      (And
+        present-clauses
+        precondition-clauses)
+      (ExecutionOutput
+        (GroundedSchema "scm: back-predictive-implication-scope-deduction-cogscm")
+        (List
+            ;; Conclusion
+            P≺A↝R
+            ;; Premises
+            ;;
+            ;; TODO: Use Lambda and create closed premises for P, Q
+            ;; and R (because non closed premises are generally risky
+            ;; as well as unnecessary).  Alternatively, we might be
+            ;; able to avoid variables altogether by using (non-scope)
+            ;; PredictiveImplicationLink coupled with appropriate
+            ;; predicate constructors.
+            P≺A
+            Q∧A
+            R
+            P↝Q
+            Q∧A↝R)))))
+
 ;; The formula can be derived from the definition of
 ;; PredictiveImplicationLink
 ;; https://wiki.opencog.org/w/PredictiveImplicationLink#Semantics
@@ -310,8 +388,14 @@
        (<= (smallest-intersection-probability sA sB) sAB)
        (<= sAB (largest-intersection-probability sA sB))))
 
-;; Declaration
+;; Declaration (assumes Q is a conjunction)
 (define back-predictive-implication-scope-deduction-cogscm-Q-conjunction-rule-name
   (DefinedSchemaNode "back-predictive-implication-scope-deduction-cogscm-Q-conjunction-rule"))
 (DefineLink back-predictive-implication-scope-deduction-cogscm-Q-conjunction-rule-name
   back-predictive-implication-scope-deduction-cogscm-Q-conjunction-rule)
+
+;; Declarations (assumes Q is an evaluation)
+(define back-predictive-implication-scope-deduction-cogscm-Q-evaluation-rule-name
+  (DefinedSchemaNode "back-predictive-implication-scope-deduction-cogscm-Q-evaluation-rule"))
+(DefineLink back-predictive-implication-scope-deduction-cogscm-Q-evaluation-rule-name
+  back-predictive-implication-scope-deduction-cogscm-Q-evaluation-rule)
