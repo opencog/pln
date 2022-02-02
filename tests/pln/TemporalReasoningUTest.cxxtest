@@ -118,7 +118,7 @@ void TemporalReasoningUTest::xtest_cogscm_temporal_deduction()
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
 
 	// load KB
-	load_scm_files({"tests/pln/rules/temporal-deduction.scm"});
+	load_scm_files({"tests/pln/rules/simple-temporal-deduction-kb.scm"});
 
 	// Load rule
 	std::string rs = eval.eval("(pln-load-rule 'back-predictive-implication-scope-deduction-cogscm-Q-conjunction)");

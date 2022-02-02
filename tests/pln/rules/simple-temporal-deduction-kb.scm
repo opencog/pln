@@ -17,7 +17,7 @@
     (EvaluationLink
       (PredicateNode "Q")
       (VariableNode "$X"))
-    (ExecutionLink 
+    (ExecutionLink
     (SchemaNode "A2")))
   (EvaluationLink
     (PredicateNode "R")

@@ -80,7 +80,7 @@ public:
 	void setUp();
 	void tearDown() {};
 	void load_scm_files(std::vector<std::string>);
-	void test_cogscm_temporal_deduction();
+	void test_cogscm_Q_conjunction_temporal_deduction();
 	void test_temporal_conditional_conjunction_introduction();
 };
 
@@ -106,14 +106,15 @@ static inline Handle bindlink(AtomSpacePtr as, const Handle& hlink)
 }
 
 /**
- * Test cogscm temporal-deduction-rule defined in:
+ * Test cogscm temporal deduction rule (assuming that Q is a
+ * conjunction) defined in:
  * opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm
  */
-void TemporalReasoningRulesUTest::test_cogscm_temporal_deduction()
+void TemporalReasoningRulesUTest::test_cogscm_Q_conjunction_temporal_deduction()
 {
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
 
-	load_scm_files({"tests/pln/rules/temporal-deduction.scm",
+	load_scm_files({"tests/pln/rules/simple-temporal-deduction-kb.scm",
 	                "opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm"});
 	// Apply the rules
 	Handle rule = eval.eval_h("back-predictive-implication-scope-deduction-cogscm-Q-conjunction-rule");
