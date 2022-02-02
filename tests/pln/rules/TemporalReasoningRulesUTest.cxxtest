@@ -26,6 +26,7 @@
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/ure/Rule.h>
+#include <opencog/ure/URELogger.h>
 #include <opencog/ure/backwardchainer/BackwardChainer.h>
 #include <opencog/util/Logger.h>
 #include <opencog/util/algorithm.h>
@@ -49,6 +50,10 @@ public:
 		logger().set_level(Logger::DEBUG);
 		logger().set_timestamp_flag(false);
 		logger().set_print_to_stdout_flag(true);
+
+		ure_logger().set_level(Logger::FINE);
+		ure_logger().set_timestamp_flag(false);
+		ure_logger().set_print_to_stdout_flag(true);
 
 		string cur_ppp_dir = string(PROJECT_SOURCE_DIR),
 			cur_dir = cur_ppp_dir + "/tests/pln/rules",
