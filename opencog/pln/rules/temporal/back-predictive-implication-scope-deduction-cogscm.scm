@@ -102,8 +102,8 @@
 (use-modules (opencog pln))
 (use-modules (opencog logger))
 
-;; Rule
-(define back-predictive-implication-scope-deduction-cogscm-rule
+;; Rule (assumes Q is a conjunction)
+(define back-predictive-implication-scope-deduction-cogscm-Q-conjunction-rule
   (let* ((V (Variable "$vardecl"))
      (T1 (Variable "$lag-1"))
      (T2 (Variable "$lag-2"))
@@ -311,7 +311,7 @@
        (<= sAB (largest-intersection-probability sA sB))))
 
 ;; Declaration
-(define back-predictive-implication-scope-deduction-cogscm-rule-name
-  (DefinedSchemaNode "back-predictive-implication-scope-deduction-cogscm-rule"))
-(DefineLink back-predictive-implication-scope-deduction-cogscm-rule-name
-  back-predictive-implication-scope-deduction-cogscm-rule)
+(define back-predictive-implication-scope-deduction-cogscm-Q-conjunction-rule-name
+  (DefinedSchemaNode "back-predictive-implication-scope-deduction-cogscm-Q-conjunction-rule"))
+(DefineLink back-predictive-implication-scope-deduction-cogscm-Q-conjunction-rule-name
+  back-predictive-implication-scope-deduction-cogscm-Q-conjunction-rule)

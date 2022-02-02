@@ -116,7 +116,7 @@ void TemporalReasoningRulesUTest::test_cogscm_temporal_deduction()
 	load_scm_files({"tests/pln/rules/temporal-deduction.scm",
 	                "opencog/pln/rules/temporal/back-predictive-implication-scope-deduction-cogscm.scm"});
 	// Apply the rules
-	Handle rule = eval.eval_h("back-predictive-implication-scope-deduction-cogscm-rule");
+	Handle rule = eval.eval_h("back-predictive-implication-scope-deduction-cogscm-Q-conjunction-rule");
 	Handle results = bindlink(as, rule);
 
 	Handle expected = eval.eval_h

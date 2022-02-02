@@ -121,7 +121,7 @@ void TemporalReasoningUTest::xtest_cogscm_temporal_deduction()
 	load_scm_files({"tests/pln/rules/temporal-deduction.scm"});
 
 	// Load rule
-	std::string rs = eval.eval("(pln-load-rule 'back-predictive-implication-scope-deduction-cogscm)");
+	std::string rs = eval.eval("(pln-load-rule 'back-predictive-implication-scope-deduction-cogscm-Q-conjunction)");
 
 	Handle target = eval.eval_h("target");
 	Handle results = eval.eval_h("(pln-bc target)");
@@ -223,7 +223,7 @@ void TemporalReasoningUTest::test_temporal_deduction_with_conditional_conjunctio
 	// Load rule
 	std::string rs;
 	rs = eval.eval("(pln-load-rule 'back-predictive-implication-scope-conditional-conjunction-introduction)");
-	rs = eval.eval("(pln-load-rule 'back-predictive-implication-scope-deduction-cogscm)");
+	rs = eval.eval("(pln-load-rule 'back-predictive-implication-scope-deduction-cogscm-Q-conjunction)");
 
 	Handle results = eval.eval_h("(pln-fc target)");
 
