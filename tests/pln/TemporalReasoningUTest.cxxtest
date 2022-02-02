@@ -167,7 +167,7 @@ void TemporalReasoningUTest::xtest_cogscm_temporal_deduction()
 	logger().debug() << "results = " << results->to_string();
 	logger().debug() << "expected = " << expected->to_string();
 
-	for (const auto& h : expected->getOutgoingSet()) 
+	for (const auto& h : expected->getOutgoingSet())
 		TS_ASSERT(contains(results->getOutgoingSet(), h));
 }
 
