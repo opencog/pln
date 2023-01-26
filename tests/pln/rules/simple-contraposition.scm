@@ -1,4 +1,4 @@
-(use-modules (opencog) (opencog query) (opencog exec))
+(use-modules (opencog) (opencog exec))
 (use-modules (opencog ure))
 
 ;; Knowledge base

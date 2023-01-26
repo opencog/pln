@@ -65,7 +65,6 @@ public:
 
 		eval.eval("(use-modules (opencog))");
 		eval.eval("(use-modules (opencog attention-bank))");
-		eval.eval("(use-modules (opencog query))");
 		eval.eval("(use-modules (opencog exec))");
 		eval.eval("(use-modules (opencog logger))");
 		eval.eval("(use-modules (opencog ure))");

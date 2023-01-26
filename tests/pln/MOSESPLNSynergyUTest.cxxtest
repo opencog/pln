@@ -90,7 +90,6 @@ void MOSESPLNSynergyUTest::setUp()
 	}
 
 	eval.eval("(use-modules (opencog))");
-	eval.eval("(use-modules (opencog query))");
 	eval.eval("(use-modules (opencog logger))");
 }
 
