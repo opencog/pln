@@ -1,4 +1,4 @@
-;; Consequent Disjunction Elimination Rule. Eliminate one on the
+;; Consequent Disjunction Elimination Rule. Eliminate one or the
 ;; argument under a disjunction that is the consequent of an
 ;; implication.
 ;;
@@ -21,7 +21,7 @@
 ;; instead of C as well.
 ;;
 ;; TODO for now it is assumed that B and C are conditionally
-;; independent on A, this assumption should be replaced by an extra
+;; independent of A. This assumption should be replaced by an extra
 ;; premise (<implication-link> A (And B C)) to find out P(B,C|A).
 
 (define (gen-consequent-disjunction-elimination-rule impl-type var-type)
