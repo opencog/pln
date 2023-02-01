@@ -20,6 +20,14 @@
 ;; commutative the rule automatically takes care of eliminating B
 ;; instead of C as well.
 ;;
+;; FIXME: This fails if B and C are swapped. That's because OrLink is
+;; an UnorderedLink, and the actual order depends on how the Atom is
+;; hashed. This shows up in the PLNRulesUTest unit test, which fails
+;; on `test_consequent_disjunction_elimination()`. Note that the unit
+;; test will pass fine, if the OrLinks in here are replaced by
+;; SequentialOrLink. So the basic idea works, but the ordering is
+;; borken.
+;;
 ;; TODO for now it is assumed that B and C are conditionally
 ;; independent of A. This assumption should be replaced by an extra
 ;; premise (<implication-link> A (And B C)) to find out P(B,C|A).
