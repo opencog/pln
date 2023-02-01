@@ -914,8 +914,8 @@ void PLNRulesUTest::test_consequent_disjunction_elimination()
 		 "      (Predicate \"P\")"
 		 "      (Predicate \"Q1\")))");
 
-	std::cout << "results = " << results->to_string();
-	std::cout << "expected = " << expected->to_string();
+	std::cout << "results = " << results->to_string() << endl;
+	std::cout << "expected = " << expected->to_string() << endl;
 
 	TS_ASSERT_EQUALS(results, expected);
 }
