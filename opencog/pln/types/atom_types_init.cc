@@ -19,6 +19,7 @@
  * Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#include <opencog/ure/types/atom_types.h>
 
 #include "opencog/pln/types/atom_types.definitions"
 

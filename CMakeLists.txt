@@ -193,10 +193,6 @@ IF (CXXTEST_FOUND)
 		)
 	ENDIF (CMAKE_BUILD_TYPE STREQUAL "Coverage")
 
-	# When CMP00037 is finally turned off, just remove these two lines.
-	ADD_CUSTOM_TARGET(test)
-	ADD_DEPENDENCIES(test check)
-
 ENDIF (CXXTEST_FOUND)
 
 ADD_CUSTOM_TARGET(cscope
