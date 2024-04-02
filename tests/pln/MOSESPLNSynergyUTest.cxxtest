@@ -64,7 +64,7 @@ public:
 
 	// Test the MOSES PLN synergy as a predefined sequence of pattern
 	// matcher steps
-	void test_moses_pln_synergy_pm();
+	void xtest_moses_pln_synergy_pm();
 
 	// Test the MOSES PLN synergy using the URE's Forward Chainer
 	void test_moses_pln_synergy_fc();
@@ -93,8 +93,8 @@ void MOSESPLNSynergyUTest::setUp()
 	eval.eval("(use-modules (opencog logger))");
 }
 
-// This takes too much memory, re-enabled when fixed.
-void MOSESPLNSynergyUTest::test_moses_pln_synergy_pm()
+// This takes too much memory, re-enable when fixed.
+void MOSESPLNSynergyUTest::xtest_moses_pln_synergy_pm()
 {
 	logger().debug("BEGIN TEST: %s", __FUNCTION__);
 

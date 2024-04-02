@@ -2,6 +2,9 @@
 ;; General background knowledge ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-modules (opencog))
+(use-modules (opencog ure))
+
 ;; If X takes Y and Y contains Z, then X takes Z
 (define if-X-takes-Y-and-Y-contains-Z-then-X-takes-Z
    (ImplicationScopeLink (stv 1 1)
