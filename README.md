@@ -15,8 +15,9 @@ distribution, i.e. a probabilistic distribution over probabilistic
 distributions. Doing so allows to capture uncertainty while remaining
 in the well known and proven framework of probability theory.
 
-# PLN is no longer maintained
-The lead developer has walked away from the project.
+# This version of PLN is no longer maintained
+
+Effort has been shifted to [Hyperon PLN](https://github.com/trueagi-io/hyperon-pln).
 
 ## Building and Installing
 
