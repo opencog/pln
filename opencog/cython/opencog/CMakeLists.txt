@@ -9,20 +9,14 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-strict-aliasing")
 
 INCLUDE_DIRECTORIES(
 	${ATOMSPACE_INCLUDE_DIR}
-	${PYTHON_INCLUDE_DIRS}
+	${Python3_INCLUDE_DIRS}
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_BINARY_DIR}
 )
 
-IF (${PYTHONLIBS_VERSION_STRING} VERSION_LESS 3.0.0)
-	SET(CYTHON_FLAGS "-2" "-f" "-Wextra" # "-Werror"
-		"-I" "${ATOMSPACE_INCLUDE_DIR}/opencog/cython"
-		"-I" "${ATOMSPACE_INCLUDE_DIR}/opencog/cython/opencog")
-ELSE ()
-	SET(CYTHON_FLAGS "-3" "-f" "-Wextra" # "-Werror"
-		"-I" "${ATOMSPACE_INCLUDE_DIR}/opencog/cython"
-		"-I" "${ATOMSPACE_INCLUDE_DIR}/opencog/cython/opencog")
-ENDIF ()
+SET(CYTHON_FLAGS "-3" "-f" "-Wextra" # "-Werror"
+	"-I" "${ATOMSPACE_INCLUDE_DIR}/opencog/cython"
+	"-I" "${ATOMSPACE_INCLUDE_DIR}/opencog/cython/opencog")
 
 # Use this as a guide:
 # https://github.com/OpenKinect/libfreenect/blob/master/wrappers/python/CMakeLists.txt
@@ -48,7 +42,7 @@ TARGET_LINK_LIBRARIES(pln_cython
 	${NO_AS_NEEDED}
 	pln-types
 	${ATOMSPACE_LIBRARIES}
-	${PYTHON_LIBRARIES}
+	${Python3_LIBRARIES}
 )
 
 SET_TARGET_PROPERTIES(pln_cython PROPERTIES
