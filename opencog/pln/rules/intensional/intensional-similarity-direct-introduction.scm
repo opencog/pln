@@ -107,7 +107,7 @@
   ;;   A
   ;;   X
   (define (get-attractions A)
-    (let* ((at-links (cog-filter 'AttractionLink (cog-incoming-set A)))
+    (let* ((at-links (cog-incoming-set A 'AttractionLink))
            (A-at? (lambda (x) (equal? A (gar x)))))
       (filter A-at? at-links)))
 

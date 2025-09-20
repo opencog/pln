@@ -12,7 +12,7 @@
   Given C, return all its member links,
   (except link with variable as member).
 "
-  (let* ((mbr-lnks (cog-filter 'MemberLink (cog-incoming-set C)))
+  (let* ((mbr-lnks (cog-incoming-by-type C 'MemberLink))
          (nonvar-mbr-of-C? (lambda (x)
 			     (and (equal? C (gdr x))
                                   (< 0 (cog-confidence x))
